@@ -203,26 +203,37 @@ export function AuthorBooks() {
                     <h3 className="font-serif font-bold text-base text-slate-900 group-hover:text-indigo-800 transition-colors line-clamp-2 leading-snug">
                       {b.title}
                     </h3>
+                    <span className="text-[10px] text-stone-400 font-mono block mt-1">
+                      {b.publication_date ? `Pub Date: ${new Date(b.publication_date).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}` : 'Status: Manuscript in Production'}
+                    </span>
                   </div>
                 </div>
 
                 {/* Body Meta */}
                 <div className="p-5 space-y-3.5">
-                  <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div className="grid grid-cols-3 gap-2 text-xs">
                     <div>
-                      <span className="text-[10px] text-stone-400 uppercase font-semibold block">Retail MRP</span>
+                      <span className="text-[9px] text-stone-400 uppercase font-semibold block">Retail MRP</span>
                       <span className="font-bold text-slate-900 font-mono"><Currency value={b.mrp} /></span>
                     </div>
                     <div>
-                      <span className="text-[10px] text-stone-400 uppercase font-semibold block">Copies Sold</span>
+                      <span className="text-[9px] text-stone-400 uppercase font-semibold block">Copies Sold</span>
                       <span className="font-bold text-slate-900 font-mono">{b.total_copies_sold.toLocaleString('en-IN')}</span>
                     </div>
                     <div>
-                      <span className="text-[10px] text-stone-400 uppercase font-semibold block">Author Share / Copy</span>
+                      <span className="text-[9px] text-stone-400 uppercase font-semibold block">Net / Copy</span>
                       <span className="font-bold text-indigo-700 font-mono"><Currency value={b.author_royalty_per_copy} /></span>
                     </div>
                     <div>
-                      <span className="text-[10px] text-stone-400 uppercase font-semibold block">Pending Royalty</span>
+                      <span className="text-[9px] text-stone-400 uppercase font-semibold block">Total Earned</span>
+                      <span className="font-bold text-slate-900 font-mono"><Currency value={b.total_royalty_earned} /></span>
+                    </div>
+                    <div>
+                      <span className="text-[9px] text-stone-400 uppercase font-semibold block">Royalty Paid</span>
+                      <span className="font-bold text-emerald-700 font-mono"><Currency value={b.royalty_paid} /></span>
+                    </div>
+                    <div>
+                      <span className="text-[9px] text-stone-400 uppercase font-semibold block">Pending Payout</span>
                       <span className="font-bold text-amber-700 font-mono"><Currency value={b.royalty_pending} /></span>
                     </div>
                   </div>
@@ -245,14 +256,16 @@ export function AuthorBooks() {
             <table className="w-full text-left text-xs text-slate-700">
               <thead className="bg-stone-50/80 text-stone-500 font-semibold border-b border-stone-200 uppercase tracking-wider text-[10px]">
                 <tr>
-                  <th className="px-6 py-4">Title & Genre</th>
-                  <th className="px-4 py-4">Status</th>
-                  <th className="px-4 py-4">ISBN</th>
-                  <th className="px-4 py-4 text-right">MRP</th>
-                  <th className="px-4 py-4 text-right">Copies Sold</th>
-                  <th className="px-4 py-4 text-right">Royalty Earned</th>
-                  <th className="px-4 py-4 text-right">Pending</th>
-                  <th className="px-6 py-4 text-center">Action</th>
+                  <th className="px-5 py-4">Title & Genre</th>
+                  <th className="px-3 py-4">Status</th>
+                  <th className="px-3 py-4">ISBN</th>
+                  <th className="px-3 py-4">Pub Date</th>
+                  <th className="px-3 py-4 text-right">MRP</th>
+                  <th className="px-3 py-4 text-right">Sold</th>
+                  <th className="px-3 py-4 text-right">Earned</th>
+                  <th className="px-3 py-4 text-right">Paid</th>
+                  <th className="px-3 py-4 text-right">Pending</th>
+                  <th className="px-5 py-4 text-center">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-100">
@@ -262,21 +275,25 @@ export function AuthorBooks() {
                     onClick={() => setSelectedBook(b)}
                     className="hover:bg-stone-50/90 transition-colors cursor-pointer"
                   >
-                    <td className="px-6 py-4 font-bold text-slate-900 font-serif">
+                    <td className="px-5 py-4 font-bold text-slate-900 font-serif">
                       <div>{b.title}</div>
                       <div className="text-[10px] text-stone-400 font-sans font-normal">{b.genre}</div>
                     </td>
-                    <td className="px-4 py-4">
+                    <td className="px-3 py-4">
                       <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-800 border border-indigo-200">
                         {b.status}
                       </span>
                     </td>
-                    <td className="px-4 py-4 font-mono text-stone-500">{b.isbn || 'Pending'}</td>
-                    <td className="px-4 py-4 text-right font-mono font-medium"><Currency value={b.mrp} /></td>
-                    <td className="px-4 py-4 text-right font-mono font-medium">{b.total_copies_sold.toLocaleString('en-IN')}</td>
-                    <td className="px-4 py-4 text-right font-mono font-bold text-indigo-700"><Currency value={b.total_royalty_earned} /></td>
-                    <td className="px-4 py-4 text-right font-mono font-bold text-amber-700"><Currency value={b.royalty_pending} /></td>
-                    <td className="px-6 py-4 text-center">
+                    <td className="px-3 py-4 font-mono text-stone-500">{b.isbn || 'Pending'}</td>
+                    <td className="px-3 py-4 font-mono text-stone-500 text-[11px]">
+                      {b.publication_date ? new Date(b.publication_date).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }) : '—'}
+                    </td>
+                    <td className="px-3 py-4 text-right font-mono font-medium"><Currency value={b.mrp} /></td>
+                    <td className="px-3 py-4 text-right font-mono font-medium">{b.total_copies_sold.toLocaleString('en-IN')}</td>
+                    <td className="px-3 py-4 text-right font-mono font-bold text-indigo-700"><Currency value={b.total_royalty_earned} /></td>
+                    <td className="px-3 py-4 text-right font-mono font-semibold text-emerald-700"><Currency value={b.royalty_paid} /></td>
+                    <td className="px-3 py-4 text-right font-mono font-bold text-amber-700"><Currency value={b.royalty_pending} /></td>
+                    <td className="px-5 py-4 text-center">
                       <Button size="sm" variant="secondary">
                         Inspect
                       </Button>
@@ -306,7 +323,7 @@ export function AuthorBooks() {
                   {selectedBook.title}
                 </h2>
                 <p className="text-xs text-stone-500 font-mono mt-0.5">
-                  ISBN: {selectedBook.isbn || 'Pending registration'}
+                  ISBN: {selectedBook.isbn || 'Pending registration'} • Published: {selectedBook.publication_date ? new Date(selectedBook.publication_date).toLocaleDateString('en-IN', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Manuscript in Production'}
                 </p>
               </div>
               <button
@@ -384,18 +401,26 @@ export function AuthorBooks() {
                   Net Profit = MRP minus In-House Printing Cost, Channel Platform Fees (Amazon/Flipkart), and Courier Shipping. Author receives <strong>80% of net profit</strong> per book.
                 </p>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 pt-1">
                   <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
                     <span className="text-[10px] text-stone-400 uppercase font-semibold block">Retail MRP</span>
                     <span className="font-bold text-slate-900 text-sm mt-0.5 block font-mono"><Currency value={selectedBook.mrp} /></span>
                   </div>
                   <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
-                    <span className="text-[10px] text-stone-400 uppercase font-semibold block">Author Share / Copy</span>
+                    <span className="text-[10px] text-stone-400 uppercase font-semibold block">Net / Copy</span>
                     <span className="font-bold text-indigo-700 text-sm mt-0.5 block font-mono"><Currency value={selectedBook.author_royalty_per_copy} /></span>
                   </div>
                   <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
-                    <span className="text-[10px] text-stone-400 uppercase font-semibold block">Total Copies Sold</span>
+                    <span className="text-[10px] text-stone-400 uppercase font-semibold block">Copies Sold</span>
                     <span className="font-bold text-slate-900 text-sm mt-0.5 block font-mono">{selectedBook.total_copies_sold.toLocaleString('en-IN')}</span>
+                  </div>
+                  <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
+                    <span className="text-[10px] text-stone-400 uppercase font-semibold block">Total Earned</span>
+                    <span className="font-bold text-slate-900 text-sm mt-0.5 block font-mono"><Currency value={selectedBook.total_royalty_earned} /></span>
+                  </div>
+                  <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
+                    <span className="text-[10px] text-stone-400 uppercase font-semibold block">Royalty Paid</span>
+                    <span className="font-bold text-emerald-700 text-sm mt-0.5 block font-mono"><Currency value={selectedBook.royalty_paid} /></span>
                   </div>
                   <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
                     <span className="text-[10px] text-stone-400 uppercase font-semibold block">Pending Payout</span>
