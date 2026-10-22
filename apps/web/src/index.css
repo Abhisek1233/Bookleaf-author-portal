@@ -1,87 +1,73 @@
 @import "tailwindcss";
 
-@theme {
-  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-serif: 'Lora', Georgia, Cambria, 'Times New Roman', serif;
-  
-  --color-canvas: #FAF9F5;
-  --color-canvas-subtle: #F3F1EB;
-  --color-ink-950: #0B0F19;
-  --color-ink-900: #111827;
-  --color-ink-700: #334155;
-  --color-ink-500: #64748B;
-  
-  --color-bookleaf-50: #EEF2FF;
-  --color-bookleaf-100: #E0E7FF;
-  --color-bookleaf-600: #4338CA;
-  --color-bookleaf-700: #3730A3;
-  --color-bookleaf-800: #312E81;
-  --color-bookleaf-900: #1E1B4B;
-  --color-bookleaf-950: #121033;
-}
-
 @layer base {
+  :root {
+    --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    background-color: #F8FAFC;
+    color: #0F172A;
+    scroll-behavior: smooth;
+  }
+
   body {
     font-family: var(--font-sans);
-    background-color: #FAF9F5;
-    color: #111827;
+    background-color: #F8FAFC;
+    color: #0F172A;
     -webkit-font-smoothing: antialiased;
-  }
-
-  h1, h2, h3, .font-serif {
-    font-family: var(--font-serif);
-    letter-spacing: -0.015em;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
-/* Subtle editorial paper texture & borders */
-.paper-card {
-  background: #FFFFFF;
-  border: 1px solid rgba(229, 231, 235, 0.9);
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+/* Universal Clean Scrollbar System */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E1 transparent;
 }
 
-.paper-card:hover {
-  border-color: rgba(209, 213, 219, 1);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-}
-
-/* 3D Realistic Book Spine Effect */
-.book-spine-card {
-  position: relative;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.book-spine-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.12), 0 4px 8px -4px rgba(15, 23, 42, 0.06);
-}
-
-.book-spine-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 7px;
-  background: linear-gradient(to right, rgba(0,0,0,0.2) 0%, rgba(255,255,255,0.15) 50%, rgba(0,0,0,0.1) 100%);
-  border-top-left-radius: inherit;
-  border-bottom-left-radius: inherit;
-  z-index: 10;
-}
-
-/* Custom Sleek Scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #CBD5E1;
   border-radius: 9999px;
+  transition: background-color 0.2s ease;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #94A3B8;
+}
+
+/* Utility to completely hide scrollbar while preserving scroll functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Glass & Card Aesthetics */
+.panel-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
+}
+
+.panel-card-hover {
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.panel-card-hover:hover {
+  border-color: #CBD5E1;
+  box-shadow: 0 6px 16px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -2px rgba(15, 23, 42, 0.04);
+  transform: translateY(-1px);
 }
