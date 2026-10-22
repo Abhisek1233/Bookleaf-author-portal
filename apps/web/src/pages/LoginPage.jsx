@@ -1,8 +1,22 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { Button } from '../components/common/Button.jsx';
-import { Eye, EyeOff, Lock, Mail, ShieldAlert, Sparkles, User, CheckCircle2 } from 'lucide-react';
+import {
+  Eye,
+  EyeOff,
+  Lock,
+  Mail,
+  ShieldAlert,
+  Sparkles,
+  BookOpen,
+  ShieldCheck,
+  TrendingUp,
+  Award,
+  ArrowRight,
+  CheckCircle2,
+  Users
+} from 'lucide-react';
 
 export function LoginPage() {
   const [email, setEmail] = useState('');
@@ -10,10 +24,10 @@ export function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [activeTab, setActiveTab] = useState('author'); // 'author' | 'admin'
 
   const { login } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
@@ -33,7 +47,7 @@ export function LoginPage() {
         navigate('/author/dashboard', { replace: true });
       }
     } catch (err) {
-      setError(err.message || 'Login failed. Please check your credentials.');
+      setError(err.message || 'Login failed. Please verify your credentials.');
     } finally {
       setIsSubmitting(false);
     }
@@ -43,7 +57,6 @@ export function LoginPage() {
     setEmail(demoEmail);
     setPassword(demoPass);
     setError('');
-    // Trigger immediate login
     setIsSubmitting(true);
     login(demoEmail, demoPass)
       .then((user) => {
@@ -59,32 +72,203 @@ export function LoginPage() {
       });
   };
 
-  const demoAuthors = [
-    { name: 'Priya Sharma', email: 'priya.sharma@email.com', role: 'Author (Fiction)' },
-    { name: 'Rohit Kapoor', email: 'rohit.kapoor@email.com', role: 'Author (Tech / Business)' },
-    { name: 'Ananya Reddy', email: 'ananya.reddy@email.com', role: 'Author (Historical)' },
-    { name: 'Sneha Kulkarni', email: 'sneha.kulkarni@email.com', role: 'Author (3 Books)' },
-    { name: 'Farhan Sheikh', email: 'farhan.sheikh@email.com', role: 'Author (Poetry)' }
+  const authorPersonas = [
+    {
+      name: 'Priya Sharma',
+      email: 'priya.sharma@email.com',
+      genre: 'Fiction & Memoir',
+      stats: '2 Titles • ₹3,570 Pending',
+      color: 'bg-emerald-600'
+    },
+    {
+      name: 'Rohit Kapoor',
+      email: 'rohit.kapoor@email.com',
+      genre: 'Tech & Startups',
+      stats: '2 Titles • ₹7,744 Pending',
+      color: 'bg-blue-600'
+    },
+    {
+      name: 'Ananya Reddy',
+      email: 'ananya.reddy@email.com',
+      genre: 'Historical Fiction',
+      stats: '1 Title • ₹2,546 Pending (Zero Paid)',
+      color: 'bg-amber-600'
+    },
+    {
+      name: 'Sneha Kulkarni',
+      email: 'sneha.kulkarni@email.com',
+      genre: 'Romance & Fiction',
+      stats: '3 Titles • 1 in Cover Design',
+      color: 'bg-purple-600'
+    }
   ];
 
   return (
-    <div className="min-h-screen bg-[#FBFBF9] flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        {/* Brand Crest */}
-        <div className="w-14 h-14 rounded-2xl bg-indigo-950 flex items-center justify-center text-white font-serif font-bold text-2xl shadow-md mx-auto mb-4">
-          B
+    <div className="min-h-screen bg-[#FAF9F5] flex flex-col lg:flex-row">
+      {/* Left Showcase Banner (Editorial Branding) */}
+      <div className="lg:w-5/12 bg-gradient-to-br from-[#121033] via-[#1E1B4B] to-[#0F172A] text-white p-8 sm:p-12 lg:p-16 flex flex-col justify-between relative overflow-hidden">
+        {/* Subtle background decoration */}
+        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-indigo-500/10 blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-amber-500/10 blur-2xl pointer-events-none" />
+
+        {/* Brand Header */}
+        <div className="relative z-10">
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-xl bg-white text-indigo-950 font-serif font-black text-2xl flex items-center justify-center shadow-lg">
+              B
+            </div>
+            <div>
+              <span className="font-serif font-bold text-2xl text-white tracking-tight block">BookLeaf</span>
+              <span className="text-[11px] font-semibold tracking-widest text-indigo-300 uppercase">Publishing Portal</span>
+            </div>
+          </div>
+
+          <div className="mt-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-900/60 border border-indigo-700/50 text-indigo-200 text-xs font-medium">
+            <Award className="w-3.5 h-3.5 text-amber-400" />
+            <span>Featured on Shark Tank India Season 4</span>
+          </div>
+
+          <div className="mt-8 space-y-3">
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold tracking-tight text-white leading-tight">
+              Where Authors Build Their Publishing Legacy.
+            </h2>
+            <p className="text-sm text-indigo-200/90 leading-relaxed max-w-md">
+              A transparent, two-sided support ecosystem uniting authors and our Delhi editorial operations team with AI-assisted response workflows.
+            </p>
+          </div>
         </div>
-        <h1 className="font-serif text-3xl font-bold tracking-tight text-neutral-900">
-          BookLeaf Publishing
-        </h1>
-        <p className="mt-1.5 text-sm text-neutral-600">
-          Author Support & Communication Portal
-        </p>
+
+        {/* Catalog Statistics Grid */}
+        <div className="my-10 relative z-10 grid grid-cols-2 gap-4">
+          <div className="bg-white/5 border border-white/10 rounded-xl p-4 backdrop-blur-xs">
+            <span className="text-2xl font-bold font-serif text-white block">22,000+</span>
+            <span className="text-xs text-indigo-200/80">Titles in Active Catalog</span>
+          </div>
+          <div className="bg-white/5 border border-white/10 rounded-xl p-4 backdrop-blur-xs">
+            <span className="text-2xl font-bold font-serif text-white block">1,200+</span>
+            <span className="text-xs text-indigo-200/80">Books Published Monthly</span>
+          </div>
+          <div className="bg-white/5 border border-white/10 rounded-xl p-4 backdrop-blur-xs">
+            <span className="text-2xl font-bold font-serif text-amber-300 block">80/20</span>
+            <span className="text-xs text-indigo-200/80">Net Profit Royalty Split</span>
+          </div>
+          <div className="bg-white/5 border border-white/10 rounded-xl p-4 backdrop-blur-xs">
+            <span className="text-2xl font-bold font-serif text-emerald-400 block">&lt; 48h</span>
+            <span className="text-xs text-indigo-200/80">Operational Triage Resolution</span>
+          </div>
+        </div>
+
+        {/* Footer Note */}
+        <div className="relative z-10 pt-6 border-t border-white/10 text-xs text-indigo-300/70 flex items-center justify-between">
+          <span>In-House Delhi Printing Hub & Repro India</span>
+          <span>India & United States</span>
+        </div>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4 sm:px-0">
-        <div className="bg-white py-8 px-6 shadow-sm rounded-2xl border border-neutral-200 sm:px-10">
-          <form className="space-y-5" onSubmit={handleSubmit}>
+      {/* Right Login & Persona Selection Panel */}
+      <div className="lg:w-7/12 flex items-center justify-center p-6 sm:p-12 lg:p-16">
+        <div className="w-full max-w-lg space-y-6">
+          {/* Header */}
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-serif font-bold text-neutral-900">
+              Sign In to Your Workspace
+            </h1>
+            <p className="text-sm text-neutral-500 mt-1">
+              Select your role or choose a demo persona for instant one-click access.
+            </p>
+          </div>
+
+          {/* Persona Mode Switcher Tabs */}
+          <div className="bg-neutral-200/70 p-1 rounded-xl flex gap-1 text-xs font-semibold">
+            <button
+              type="button"
+              onClick={() => setActiveTab('author')}
+              className={`flex-1 py-2.5 rounded-lg flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                activeTab === 'author'
+                  ? 'bg-white text-indigo-950 shadow-xs'
+                  : 'text-neutral-600 hover:text-neutral-900'
+              }`}
+            >
+              <Users className="w-4 h-4 text-indigo-700" />
+              Author Accounts (10 Seeded)
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('admin')}
+              className={`flex-1 py-2.5 rounded-lg flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                activeTab === 'admin'
+                  ? 'bg-white text-indigo-950 shadow-xs'
+                  : 'text-neutral-600 hover:text-neutral-900'
+              }`}
+            >
+              <ShieldCheck className="w-4 h-4 text-indigo-700" />
+              Operations Triage (Admin)
+            </button>
+          </div>
+
+          {/* Quick Persona Cards based on Tab */}
+          {activeTab === 'author' ? (
+            <div className="space-y-2">
+              <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider block">
+                1-Click Author Access (Real Seed Records):
+              </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {authorPersonas.map((auth) => (
+                  <button
+                    key={auth.email}
+                    type="button"
+                    onClick={() => handleQuickLogin(auth.email, 'Author123!')}
+                    className="p-3 text-left bg-white border border-neutral-200/90 rounded-xl hover:border-indigo-600 hover:shadow-xs transition-all cursor-pointer group flex items-start gap-3"
+                  >
+                    <div className={`w-8 h-8 rounded-lg ${auth.color} text-white font-bold flex items-center justify-center text-xs shrink-0 mt-0.5 shadow-2xs`}>
+                      {auth.name.slice(0, 2).toUpperCase()}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-neutral-900 truncate group-hover:text-indigo-950">
+                          {auth.name}
+                        </span>
+                        <ArrowRight className="w-3 h-3 text-neutral-300 group-hover:text-indigo-600 shrink-0" />
+                      </div>
+                      <span className="text-[11px] text-neutral-500 block truncate">{auth.genre}</span>
+                      <span className="text-[10px] text-indigo-700 font-semibold block mt-0.5">{auth.stats}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="p-4 rounded-xl bg-indigo-50/70 border border-indigo-200/80 flex items-center justify-between">
+              <div className="space-y-1">
+                <span className="text-xs font-bold text-indigo-950 flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-indigo-700" />
+                  Editorial Operations Command Center
+                </span>
+                <p className="text-xs text-indigo-800">
+                  Manage queue, AI classifications, overrides, and grounded replies.
+                </p>
+                <span className="text-[11px] text-neutral-500 block font-mono">admin@bookleafpub.com</span>
+              </div>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => handleQuickLogin('admin@bookleafpub.com', 'AdminPassword123!')}
+              >
+                1-Click Launch →
+              </Button>
+            </div>
+          )}
+
+          {/* Divider */}
+          <div className="relative flex items-center justify-center">
+            <div className="border-t border-neutral-200 w-full" />
+            <span className="bg-[#FAF9F5] px-3 text-xs text-neutral-400 font-medium uppercase tracking-wider absolute">
+              Or sign in with email
+            </span>
+          </div>
+
+          {/* Custom Form */}
+          <form className="space-y-4" onSubmit={handleSubmit}>
             {error && (
               <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2.5">
                 <ShieldAlert className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
@@ -96,17 +280,15 @@ export function LoginPage() {
               <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1.5">
                 Email Address
               </label>
-              <div className="relative rounded-lg shadow-2xs">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-neutral-400">
-                  <Mail className="h-4 w-4" />
-                </div>
+              <div className="relative">
+                <Mail className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="author@example.com"
-                  className="block w-full pl-9 pr-3 py-2.5 text-sm border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-700 focus:border-indigo-700 bg-white"
+                  className="w-full pl-9 pr-3 py-2.5 text-sm border border-neutral-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-700 bg-white shadow-2xs"
                 />
               </div>
             </div>
@@ -115,24 +297,22 @@ export function LoginPage() {
               <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1.5">
                 Password
               </label>
-              <div className="relative rounded-lg shadow-2xs">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-neutral-400">
-                  <Lock className="h-4 w-4" />
-                </div>
+              <div className="relative">
+                <Lock className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="block w-full pl-9 pr-10 py-2.5 text-sm border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-700 focus:border-indigo-700 bg-white"
+                  className="w-full pl-9 pr-10 py-2.5 text-sm border border-neutral-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-700 bg-white shadow-2xs"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-neutral-400 hover:text-neutral-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600"
                 >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
@@ -140,60 +320,13 @@ export function LoginPage() {
             <Button
               type="submit"
               variant="primary"
-              size="md"
+              size="lg"
               className="w-full"
               isLoading={isSubmitting}
             >
-              Sign In to Portal
+              Sign In to BookLeaf Portal
             </Button>
           </form>
-
-          {/* 1-Click Demo Credentials Helper */}
-          <div className="mt-8 pt-6 border-t border-neutral-100">
-            <div className="flex items-center gap-1.5 mb-3 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              1-Click Demo Login (Instant Evaluation)
-            </div>
-
-            {/* Admin 1-Click */}
-            <div className="mb-3">
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('admin@bookleafpub.com', 'AdminPassword123!')}
-                className="w-full p-2.5 rounded-lg border border-indigo-200 bg-indigo-50/70 hover:bg-indigo-100/70 transition-all flex items-center justify-between text-left cursor-pointer group"
-              >
-                <div>
-                  <p className="text-xs font-bold text-indigo-950 flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-indigo-600" />
-                    Internal Operations Administrator
-                  </p>
-                  <p className="text-[11px] text-indigo-800">admin@bookleafpub.com</p>
-                </div>
-                <span className="text-[11px] font-semibold text-indigo-700 bg-white px-2 py-0.5 rounded shadow-2xs group-hover:bg-indigo-900 group-hover:text-white transition-colors">
-                  Login as Admin →
-                </span>
-              </button>
-            </div>
-
-            {/* Author 1-Click Options */}
-            <div className="space-y-1.5">
-              <p className="text-[11px] text-neutral-500 font-medium mb-1">Or login as any seeded author (Password: Author123!):</p>
-              {demoAuthors.map((auth) => (
-                <button
-                  key={auth.email}
-                  type="button"
-                  onClick={() => handleQuickLogin(auth.email, 'Author123!')}
-                  className="w-full px-2.5 py-1.5 rounded-md border border-neutral-200 hover:border-neutral-300 hover:bg-neutral-50 flex items-center justify-between text-left text-xs text-neutral-700 transition-colors cursor-pointer"
-                >
-                  <div className="truncate pr-2">
-                    <span className="font-medium text-neutral-900">{auth.name}</span>
-                    <span className="text-[10px] text-neutral-500 ml-1.5">({auth.role})</span>
-                  </div>
-                  <span className="text-[10px] text-indigo-900 shrink-0 font-medium">Use →</span>
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     </div>

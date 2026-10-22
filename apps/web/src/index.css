@@ -1,34 +1,87 @@
 @import "tailwindcss";
 
-@layer base {
-  :root {
-    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    --font-serif: 'Lora', Georgia, serif;
-  }
+@theme {
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Lora', Georgia, Cambria, 'Times New Roman', serif;
+  
+  --color-canvas: #FAF9F5;
+  --color-canvas-subtle: #F3F1EB;
+  --color-ink-950: #0B0F19;
+  --color-ink-900: #111827;
+  --color-ink-700: #334155;
+  --color-ink-500: #64748B;
+  
+  --color-bookleaf-50: #EEF2FF;
+  --color-bookleaf-100: #E0E7FF;
+  --color-bookleaf-600: #4338CA;
+  --color-bookleaf-700: #3730A3;
+  --color-bookleaf-800: #312E81;
+  --color-bookleaf-900: #1E1B4B;
+  --color-bookleaf-950: #121033;
+}
 
+@layer base {
   body {
     font-family: var(--font-sans);
-    background-color: #FBFBF9;
+    background-color: #FAF9F5;
     color: #111827;
+    -webkit-font-smoothing: antialiased;
   }
 
-  h1, h2, .font-serif {
+  h1, h2, h3, .font-serif {
     font-family: var(--font-serif);
+    letter-spacing: -0.015em;
   }
 }
 
-/* Custom scrollbars */
+/* Subtle editorial paper texture & borders */
+.paper-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(229, 231, 235, 0.9);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+}
+
+.paper-card:hover {
+  border-color: rgba(209, 213, 219, 1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* 3D Realistic Book Spine Effect */
+.book-spine-card {
+  position: relative;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.book-spine-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.12), 0 4px 8px -4px rgba(15, 23, 42, 0.06);
+}
+
+.book-spine-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 7px;
+  background: linear-gradient(to right, rgba(0,0,0,0.2) 0%, rgba(255,255,255,0.15) 50%, rgba(0,0,0,0.1) 100%);
+  border-top-left-radius: inherit;
+  border-bottom-left-radius: inherit;
+  z-index: 10;
+}
+
+/* Custom Sleek Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #E5E7EB;
+  background: #CBD5E1;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #D1D5DB;
+  background: #94A3B8;
 }
