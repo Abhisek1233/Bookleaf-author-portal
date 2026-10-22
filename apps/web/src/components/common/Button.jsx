@@ -16,11 +16,11 @@ export function Button({
   const base = 'inline-flex items-center justify-center font-semibold rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer';
 
   const variants = {
-    primary: 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs focus:ring-indigo-500 active:scale-[0.99]',
-    secondary: 'bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-2xs focus:ring-slate-400',
-    outline: 'bg-transparent border border-indigo-600 text-indigo-600 hover:bg-indigo-50 focus:ring-indigo-500',
+    primary: 'bg-indigo-700 hover:bg-indigo-800 text-white shadow-xs focus:ring-indigo-600 active:scale-[0.99]',
+    secondary: 'bg-white hover:bg-stone-50 text-slate-800 border border-stone-200 shadow-2xs focus:ring-stone-400',
+    outline: 'bg-transparent border border-indigo-700 text-indigo-700 hover:bg-indigo-50 focus:ring-indigo-600',
     danger: 'bg-rose-600 hover:bg-rose-700 text-white shadow-xs focus:ring-rose-500',
-    ghost: 'bg-transparent hover:bg-slate-100 text-slate-600 focus:ring-slate-400'
+    ghost: 'bg-transparent hover:bg-stone-100 text-stone-600 focus:ring-stone-400'
   };
 
   const sizes = {

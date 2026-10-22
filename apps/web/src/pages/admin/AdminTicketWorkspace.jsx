@@ -159,9 +159,9 @@ export function AdminTicketWorkspace() {
         ...prev,
         ticket: { ...prev.ticket, ...res.data }
       }));
-      alert('Override saved successfully');
+      alert('Triage classification updated successfully!');
     } catch (err) {
-      alert('Failed to override: ' + err.message);
+      alert('Failed to update triage: ' + err.message);
     } finally {
       setIsOverriding(false);
     }
@@ -184,14 +184,14 @@ export function AdminTicketWorkspace() {
     }
   };
 
-  // Handle Assign to Self
+  // Handle Self-Assignment
   const handleAssignToMe = async () => {
     try {
       setIsAssigning(true);
       const res = await api.assignTicket(ticketId, user.id);
       setTicketData((prev) => ({
         ...prev,
-        ticket: { ...prev.ticket, ...res.data, assigned_admin_name: user.name }
+        ticket: { ...prev.ticket, ...res.data }
       }));
     } catch (err) {
       alert('Failed to assign ticket: ' + err.message);
@@ -200,7 +200,21 @@ export function AdminTicketWorkspace() {
     }
   };
 
-  // Handle Add Internal Note
+  // Generate Grounded AI Draft
+  const handleGenerateDraft = async (force = false) => {
+    try {
+      setIsDrafting(true);
+      const res = await api.generateAiDraft(ticketId, force);
+      setAiDraft(res.data.draft_text);
+      setDraftModel(res.data.model_used);
+    } catch (err) {
+      alert('AI draft generation failed: ' + err.message);
+    } finally {
+      setIsDrafting(false);
+    }
+  };
+
+  // Add Internal Note
   const handleAddNote = async (e) => {
     e.preventDefault();
     if (!noteContent.trim()) return;
@@ -214,46 +228,30 @@ export function AdminTicketWorkspace() {
       }));
       setNoteContent('');
     } catch (err) {
-      alert('Failed to save internal note: ' + err.message);
+      alert('Failed to add note: ' + err.message);
     } finally {
       setIsSubmittingNote(false);
     }
   };
 
-  // Generate / Regenerate AI Draft
-  const handleGenerateDraft = async (force = false) => {
-    try {
-      setIsDrafting(true);
-      const res = await api.generateAiDraft(ticketId, force);
-      setAiDraft(res.data.draft_text);
-      setDraftModel(res.data.model_used || 'Gemini');
-    } catch (err) {
-      alert('AI draft generation failed: ' + err.message);
-    } finally {
-      setIsDrafting(false);
-    }
-  };
-
-  // Send Public Reply to Author
+  // Send Public Response
   const handleSendReply = async (e) => {
-    if (e) e.preventDefault();
+    e.preventDefault();
     if (!replyMessage.trim()) return;
 
     try {
       setIsSendingReply(true);
-      const targetStatus = autoResolveOnReply ? 'Resolved' : 'In Progress';
-      const res = await api.sendAdminReply(ticketId, {
-        message: replyMessage.trim(),
-        status: targetStatus
-      });
+      const res = await api.replyAdminTicket(ticketId, replyMessage.trim());
+
       setTicketData((prev) => ({
         ...prev,
-        messages: [...prev.messages, res.data.message],
-        ticket: res.data.ticket
+        messages: [...prev.messages, res.data]
       }));
-      setStatus(res.data.ticket.status);
       setReplyMessage('');
-      alert('Official response sent to author!');
+
+      if (autoResolveOnReply && status !== 'Resolved') {
+        await handleStatusChange('Resolved');
+      }
     } catch (err) {
       alert('Failed to send reply: ' + err.message);
     } finally {
@@ -266,7 +264,7 @@ export function AdminTicketWorkspace() {
       <div className="space-y-6">
         <Skeleton className="h-10 w-48" />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Skeleton className="lg:col-span-2 h-96 rounded-3xl" />
+          <Skeleton className="h-96 lg:col-span-2 rounded-3xl" />
           <Skeleton className="h-96 rounded-3xl" />
         </div>
       </div>
@@ -285,29 +283,29 @@ export function AdminTicketWorkspace() {
     );
   }
 
-  const { ticket, author, book, messages, internal_notes } = ticketData;
+  const { ticket, author, book, messages, internal_notes, ai_draft } = ticketData;
 
   return (
     <div className="space-y-6">
-      {/* Top Operations Command Bar */}
-      <div className="bg-white rounded-2xl border border-neutral-200/90 p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Top Action Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 sm:p-5 rounded-3xl border border-stone-200 shadow-xs">
         <div className="flex items-center gap-3">
           <Link
             to="/admin/tickets"
-            className="p-2 rounded-xl bg-neutral-100 hover:bg-neutral-200 text-neutral-700 transition-colors"
-            title="Back to queue"
+            className="p-2 rounded-xl text-stone-500 hover:text-slate-900 hover:bg-stone-100 transition-colors"
+            title="Back to Support Queue"
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-mono text-xs font-bold text-neutral-500 bg-neutral-100 px-2 py-0.5 rounded">
+              <span className="font-mono text-xs font-bold text-stone-600 bg-stone-100 px-2.5 py-0.5 rounded-md">
                 {ticket.ticket_number}
               </span>
               <StatusBadge status={ticket.status} />
               <PriorityBadge priority={ticket.priority} />
             </div>
-            <h2 className="text-base font-bold font-serif text-neutral-900 mt-0.5 line-clamp-1">
+            <h2 className="text-base font-serif font-bold text-slate-900 mt-1 line-clamp-1">
               {ticket.subject}
             </h2>
           </div>
@@ -325,11 +323,11 @@ export function AdminTicketWorkspace() {
             {ticket.assigned_to_id === user.id ? 'Assigned to You' : 'Assign to Me'}
           </Button>
 
-          <div className="flex items-center border border-neutral-200 rounded-xl overflow-hidden bg-white shadow-2xs">
+          <div className="flex items-center border border-stone-200 rounded-xl overflow-hidden bg-white shadow-2xs">
             <button
               onClick={() => handleStatusChange('Open')}
               className={`px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer ${
-                status === 'Open' ? 'bg-amber-500 text-white' : 'text-neutral-600 hover:bg-neutral-50'
+                status === 'Open' ? 'bg-amber-500 text-white' : 'text-stone-600 hover:bg-stone-50'
               }`}
             >
               Open
@@ -337,7 +335,7 @@ export function AdminTicketWorkspace() {
             <button
               onClick={() => handleStatusChange('In Progress')}
               className={`px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer ${
-                status === 'In Progress' ? 'bg-indigo-900 text-white' : 'text-neutral-600 hover:bg-neutral-50'
+                status === 'In Progress' ? 'bg-indigo-900 text-white' : 'text-stone-600 hover:bg-stone-50'
               }`}
             >
               In Progress
@@ -345,7 +343,7 @@ export function AdminTicketWorkspace() {
             <button
               onClick={() => handleStatusChange('Resolved')}
               className={`px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer ${
-                status === 'Resolved' ? 'bg-emerald-600 text-white' : 'text-neutral-600 hover:bg-neutral-50'
+                status === 'Resolved' ? 'bg-emerald-600 text-white' : 'text-stone-600 hover:bg-stone-50'
               }`}
             >
               Resolved
@@ -353,7 +351,7 @@ export function AdminTicketWorkspace() {
             <button
               onClick={() => handleStatusChange('Closed')}
               className={`px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer ${
-                status === 'Closed' ? 'bg-slate-700 text-white' : 'text-neutral-600 hover:bg-neutral-50'
+                status === 'Closed' ? 'bg-slate-700 text-white' : 'text-stone-600 hover:bg-stone-50'
               }`}
             >
               Closed
@@ -367,26 +365,26 @@ export function AdminTicketWorkspace() {
         {/* Left Column (2 Cols): Inquiry Context, Author Dossier, Discussion, Reply Composer */}
         <div className="lg:col-span-2 space-y-6">
           {/* Author Dossier & Inquiry Card */}
-          <div className="bg-white rounded-3xl border border-neutral-200/90 shadow-sm p-6 sm:p-8 space-y-5">
+          <div className="bg-white rounded-3xl border border-stone-200 shadow-xs p-6 sm:p-8 space-y-5">
             {/* Author Background Strip */}
-            <div className="bg-neutral-50 p-4 rounded-2xl border border-neutral-200/80 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+            <div className="bg-stone-50 p-4 rounded-2xl border border-stone-200/80 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
               <div>
-                <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block">Author Profile</span>
-                <span className="font-bold text-neutral-900 text-sm">{author.name}</span>
-                <span className="text-neutral-500 block truncate">{author.email}</span>
-                <span className="text-neutral-400 text-[11px] block mt-0.5">{author.phone} • {author.city}</span>
+                <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider block">Author Profile</span>
+                <span className="font-bold text-slate-900 text-sm">{author.name}</span>
+                <span className="text-stone-500 block truncate font-mono">{author.email}</span>
+                <span className="text-stone-400 text-[11px] block mt-0.5 font-mono">{author.phone} • {author.city}</span>
               </div>
               <div>
-                <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block">Catalog Experience</span>
-                <span className="font-medium text-neutral-800 text-sm">{author.total_books} Published Books</span>
-                <span className="text-neutral-500 block">Member since {new Date(author.joined_date).getFullYear()}</span>
+                <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider block">Catalog Experience</span>
+                <span className="font-medium text-slate-800 text-sm font-mono">{author.total_books} Published Titles</span>
+                <span className="text-stone-500 block">Member since {new Date(author.joined_date).getFullYear()}</span>
               </div>
               <div>
-                <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block">Accrued Royalties</span>
-                <span className="font-bold text-sm text-amber-700 block">
+                <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider block">Accrued Royalties</span>
+                <span className="font-bold text-sm text-amber-700 block font-mono">
                   Pending: <Currency value={author.total_royalty_pending} />
                 </span>
-                <span className="text-[11px] text-neutral-500">
+                <span className="text-[11px] text-stone-500">
                   {author.total_royalty_pending >= 1000 ? '✓ Exceeds ₹1k threshold' : 'Below payout threshold'}
                 </span>
               </div>
@@ -398,7 +396,7 @@ export function AdminTicketWorkspace() {
                 <div className="flex items-center justify-between">
                   <div className="font-bold text-indigo-950 flex items-center gap-2">
                     <BookOpen className="w-4 h-4 text-indigo-700" />
-                    "{book.title}" ({book.genre})
+                    <span className="font-serif text-sm">"{book.title}"</span> ({book.genre})
                   </div>
                   <span className="font-mono text-indigo-900 bg-white px-2 py-0.5 rounded border border-indigo-200 font-bold">
                     ISBN: {book.isbn}
@@ -406,35 +404,35 @@ export function AdminTicketWorkspace() {
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] pt-1">
                   <div>
-                    <span className="text-neutral-500 block">Copies Sold:</span>
-                    <span className="font-bold text-neutral-900">{book.total_copies_sold.toLocaleString('en-IN')}</span>
+                    <span className="text-stone-500 block">Copies Sold:</span>
+                    <span className="font-bold text-slate-900 font-mono">{book.total_copies_sold.toLocaleString('en-IN')}</span>
                   </div>
                   <div>
-                    <span className="text-neutral-500 block">Royalty Earned:</span>
-                    <span className="font-bold text-indigo-950"><Currency value={book.total_royalty_earned} /></span>
+                    <span className="text-stone-500 block">Royalty Earned:</span>
+                    <span className="font-bold text-indigo-950 font-mono"><Currency value={book.total_royalty_earned} /></span>
                   </div>
                   <div>
-                    <span className="text-neutral-500 block">Royalty Pending:</span>
-                    <span className="font-bold text-amber-800"><Currency value={book.royalty_pending} /></span>
+                    <span className="text-stone-500 block">Royalty Pending:</span>
+                    <span className="font-bold text-amber-800 font-mono"><Currency value={book.royalty_pending} /></span>
                   </div>
                   <div>
-                    <span className="text-neutral-500 block">Print Hub:</span>
-                    <span className="font-bold text-neutral-900">{book.print_partner || 'In-House Delhi'}</span>
+                    <span className="text-stone-500 block">Print Hub:</span>
+                    <span className="font-bold text-slate-900">{book.print_partner || 'In-House Delhi'}</span>
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="text-xs text-neutral-500 italic bg-neutral-50 p-3 rounded-xl border border-neutral-100">
+              <div className="text-xs text-stone-500 italic bg-stone-50 p-3 rounded-xl border border-stone-100">
                 General Query (Account Level)
               </div>
             )}
 
             {/* Full Query Description */}
             <div>
-              <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block mb-1.5">
+              <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider block mb-1.5">
                 Author Inquiry Text
               </span>
-              <div className="bg-neutral-50/80 p-5 rounded-2xl border border-neutral-200 text-sm text-neutral-900 whitespace-pre-wrap leading-relaxed">
+              <div className="bg-stone-50/80 p-5 rounded-2xl border border-stone-200 text-sm text-slate-900 whitespace-pre-wrap leading-relaxed">
                 {ticket.description}
               </div>
             </div>
@@ -442,16 +440,16 @@ export function AdminTicketWorkspace() {
 
           {/* Conversation Timeline */}
           <div className="space-y-4">
-            <h3 className="text-sm font-bold font-serif text-neutral-900">
+            <h3 className="text-sm font-serif font-bold text-slate-900">
               Public Discussion Stream ({messages.length} replies)
             </h3>
 
             {messages.length === 0 ? (
-              <div className="bg-white rounded-2xl p-6 text-center border border-neutral-200 text-xs text-neutral-500">
+              <div className="bg-white rounded-2xl p-6 text-center border border-stone-200 text-xs text-stone-500">
                 No replies sent to the author yet. Use the AI response draft from the right panel to compose an official response.
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
                 {messages.map((m) => {
                   const isAdmin = m.sender_role === 'admin';
                   return (
@@ -460,28 +458,28 @@ export function AdminTicketWorkspace() {
                       className={`p-6 rounded-3xl border ${
                         isAdmin
                           ? 'bg-indigo-50/60 border-indigo-200/90 sm:mr-8 shadow-xs'
-                          : 'bg-white border-neutral-200 sm:ml-8 shadow-2xs'
+                          : 'bg-white border-stone-200 sm:ml-8 shadow-2xs'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-2.5">
                         <div className="flex items-center gap-2">
                           <div
                             className={`w-7 h-7 rounded-xl flex items-center justify-center text-xs font-bold ${
-                              isAdmin ? 'bg-indigo-950 text-white' : 'bg-neutral-300 text-neutral-800'
+                              isAdmin ? 'bg-indigo-950 text-white font-serif' : 'bg-stone-300 text-stone-800'
                             }`}
                           >
                             {isAdmin ? <ShieldCheck className="w-4 h-4 text-indigo-300" /> : <User className="w-4 h-4" />}
                           </div>
                           <div>
-                            <span className="text-xs font-bold text-neutral-900">
+                            <span className="text-xs font-bold text-slate-900">
                               {isAdmin ? `BookLeaf Staff (${m.sender_name})` : m.sender_name}
                             </span>
-                            <span className="text-[10px] text-neutral-400 block">
+                            <span className="text-[10px] text-stone-400 block">
                               {isAdmin ? 'Official Staff Reply' : 'Author Message'}
                             </span>
                           </div>
                         </div>
-                        <span className="text-[11px] text-neutral-400">
+                        <span className="text-[11px] text-stone-400 font-mono">
                           {new Date(m.created_at).toLocaleDateString('en-IN', {
                             month: 'short',
                             day: 'numeric',
@@ -490,7 +488,7 @@ export function AdminTicketWorkspace() {
                           })}
                         </span>
                       </div>
-                      <div className="text-sm text-neutral-800 whitespace-pre-wrap leading-relaxed pl-9">
+                      <div className="text-sm text-slate-800 whitespace-pre-wrap leading-relaxed pl-9">
                         {m.message}
                       </div>
                     </div>
@@ -502,13 +500,13 @@ export function AdminTicketWorkspace() {
           </div>
 
           {/* Official Response Composer */}
-          <form onSubmit={handleSendReply} className="bg-white rounded-3xl border border-neutral-200/90 shadow-sm p-6 sm:p-7 space-y-4">
+          <form onSubmit={handleSendReply} className="bg-white rounded-3xl border border-stone-200 shadow-xs p-6 sm:p-7 space-y-4">
             <div className="flex items-center justify-between">
-              <label className="block text-xs font-bold text-neutral-700 uppercase tracking-wider">
+              <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider">
                 Compose Official Response to Author
               </label>
               <div className="flex items-center gap-2 text-xs">
-                <label className="flex items-center gap-1.5 cursor-pointer text-neutral-600 font-medium select-none">
+                <label className="flex items-center gap-1.5 cursor-pointer text-stone-600 font-medium select-none">
                   <input
                     type="checkbox"
                     checked={autoResolveOnReply}
@@ -526,11 +524,11 @@ export function AdminTicketWorkspace() {
               value={replyMessage}
               onChange={(e) => setReplyMessage(e.target.value)}
               placeholder="Type your official resolution or insert AI Draft from the right panel..."
-              className="w-full text-sm border border-neutral-300 rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-indigo-700 bg-white"
+              className="w-full text-sm border border-stone-300 rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-indigo-700 bg-white"
             />
 
             <div className="flex justify-between items-center pt-1">
-              <span className="text-[11px] text-neutral-400">
+              <span className="text-[11px] text-stone-400">
                 ⚡ Author will see this response immediately in real time.
               </span>
               <Button
@@ -549,7 +547,7 @@ export function AdminTicketWorkspace() {
         {/* Right Column (1 Col): AI Copilot, Overrides, Response Draft, Internal Scratchpad */}
         <div className="space-y-6">
           {/* AI Copilot & Classification Card */}
-          <div className="bg-white rounded-3xl border border-neutral-200/90 shadow-sm p-6 space-y-4">
+          <div className="bg-white rounded-3xl border border-stone-200 shadow-xs p-6 space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-indigo-950 flex items-center gap-2 uppercase tracking-wider">
                 <Sparkles className="w-4 h-4 text-indigo-600" />
@@ -561,41 +559,41 @@ export function AdminTicketWorkspace() {
             </div>
 
             {/* AI Suggested Breakdown */}
-            <div className="bg-neutral-50 p-4 rounded-2xl border border-neutral-200/70 space-y-3 text-xs">
+            <div className="bg-stone-50 p-4 rounded-2xl border border-stone-200/70 space-y-3 text-xs">
               <div>
-                <span className="text-neutral-400 block text-[10px] uppercase font-bold">Suggested Category</span>
-                <span className="font-bold text-neutral-900 text-sm">{ticket.ai_category || ticket.category}</span>
+                <span className="text-stone-400 block text-[10px] uppercase font-bold">Suggested Category</span>
+                <span className="font-bold text-slate-900 text-sm">{ticket.ai_category || ticket.category}</span>
                 {ticket.ai_category_reason && (
-                  <p className="text-[11px] text-neutral-500 mt-1 leading-relaxed">{ticket.ai_category_reason}</p>
+                  <p className="text-[11px] text-stone-500 mt-1 leading-relaxed">{ticket.ai_category_reason}</p>
                 )}
               </div>
 
-              <div className="pt-2 border-t border-neutral-200/60">
-                <span className="text-neutral-400 block text-[10px] uppercase font-bold">Priority Assessment</span>
-                <span className="font-bold text-neutral-900 text-sm">{ticket.ai_priority || ticket.priority}</span>
+              <div className="pt-2 border-t border-stone-200/60">
+                <span className="text-stone-400 block text-[10px] uppercase font-bold">Priority Assessment</span>
+                <span className="font-bold text-slate-900 text-sm">{ticket.ai_priority || ticket.priority}</span>
                 {ticket.ai_priority_reason && (
-                  <p className="text-[11px] text-neutral-500 mt-1 leading-relaxed">{ticket.ai_priority_reason}</p>
+                  <p className="text-[11px] text-stone-500 mt-1 leading-relaxed">{ticket.ai_priority_reason}</p>
                 )}
               </div>
             </div>
 
             {/* Admin Override Controls */}
-            <form onSubmit={handleApplyOverride} className="space-y-3 pt-2 border-t border-neutral-100">
+            <form onSubmit={handleApplyOverride} className="space-y-3 pt-2 border-t border-stone-100">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-neutral-700">Administrator Override</span>
+                <span className="text-xs font-bold text-stone-700">Administrator Override</span>
                 {(ticket.is_category_overridden || ticket.is_priority_overridden) && (
-                  <span className="text-[10px] text-indigo-700 font-bold bg-indigo-50 px-2 py-0.5 rounded">
+                  <span className="text-[10px] text-indigo-700 font-bold bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">
                     Active Override
                   </span>
                 )}
               </div>
 
               <div>
-                <label className="text-[11px] text-neutral-500 block mb-1">Override Category</label>
+                <label className="text-[11px] text-stone-500 block mb-1">Override Category</label>
                 <select
                   value={overrideCategory}
                   onChange={(e) => setOverrideCategory(e.target.value)}
-                  className="w-full text-xs border border-neutral-300 rounded-xl p-2.5 bg-white text-neutral-800 font-medium"
+                  className="w-full text-xs border border-stone-300 rounded-xl p-2.5 bg-white text-slate-800 font-medium"
                 >
                   <option value="Royalty & Payments">Royalty & Payments</option>
                   <option value="ISBN & Metadata Issues">ISBN & Metadata Issues</option>
@@ -607,11 +605,11 @@ export function AdminTicketWorkspace() {
               </div>
 
               <div>
-                <label className="text-[11px] text-neutral-500 block mb-1">Override Priority</label>
+                <label className="text-[11px] text-stone-500 block mb-1">Override Priority</label>
                 <select
                   value={overridePriority}
                   onChange={(e) => setOverridePriority(e.target.value)}
-                  className="w-full text-xs border border-neutral-300 rounded-xl p-2.5 bg-white text-neutral-800 font-medium"
+                  className="w-full text-xs border border-stone-300 rounded-xl p-2.5 bg-white text-slate-800 font-medium"
                 >
                   <option value="Critical">Critical</option>
                   <option value="High">High</option>
@@ -634,7 +632,7 @@ export function AdminTicketWorkspace() {
           </div>
 
           {/* AI Response Drafting Card */}
-          <div className="bg-white rounded-3xl border border-neutral-200/90 shadow-sm p-6 space-y-4">
+          <div className="bg-white rounded-3xl border border-stone-200 shadow-xs p-6 space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-indigo-950 flex items-center gap-1.5 uppercase tracking-wider">
                 <Sparkles className="w-4 h-4 text-indigo-600" />
@@ -651,18 +649,18 @@ export function AdminTicketWorkspace() {
               </Button>
             </div>
 
-            <p className="text-[11px] text-neutral-500 leading-relaxed">
+            <p className="text-[11px] text-stone-500 leading-relaxed">
               Grounded strictly in BookLeaf policies (80/20 royalty formula, 45-day quarterly payout, free reprints) and verified catalog data.
             </p>
 
             {aiDraft ? (
               <div className="space-y-3">
-                <div className="bg-neutral-50 p-4 rounded-2xl border border-neutral-200/80 text-xs text-neutral-800 max-h-64 overflow-y-auto whitespace-pre-wrap leading-relaxed font-sans">
+                <div className="bg-stone-50 p-4 rounded-2xl border border-stone-200/80 text-xs text-slate-800 max-h-64 overflow-y-auto whitespace-pre-wrap leading-relaxed font-sans custom-scrollbar">
                   {aiDraft}
                 </div>
 
                 <div className="flex items-center justify-between pt-1">
-                  <span className="text-[10px] text-neutral-400 font-mono">
+                  <span className="text-[10px] text-stone-400 font-mono">
                     Provider: {draftModel}
                   </span>
                   <Button
@@ -679,8 +677,8 @@ export function AdminTicketWorkspace() {
                 </div>
               </div>
             ) : (
-              <div className="p-6 text-center border border-dashed border-neutral-200 rounded-2xl bg-neutral-50/50 space-y-2">
-                <p className="text-xs text-neutral-500">Draft response ready to generate based on policy context.</p>
+              <div className="p-6 text-center border border-dashed border-stone-200 rounded-2xl bg-stone-50/50 space-y-2">
+                <p className="text-xs text-stone-500">Draft response ready to generate based on policy context.</p>
                 <Button
                   size="sm"
                   variant="primary"
@@ -695,7 +693,7 @@ export function AdminTicketWorkspace() {
           </div>
 
           {/* Private Ops Internal Notes (Confidential) */}
-          <div className="bg-[#FFFDF5] rounded-3xl border border-amber-200/90 shadow-sm p-6 space-y-4">
+          <div className="bg-[#FFFDF5] rounded-3xl border border-amber-200/90 shadow-xs p-6 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
                 <Lock className="w-4 h-4 text-amber-700" />
@@ -713,7 +711,7 @@ export function AdminTicketWorkspace() {
             </p>
 
             {/* Existing Notes */}
-            <div className="space-y-2.5 max-h-48 overflow-y-auto">
+            <div className="space-y-2.5 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
               {internal_notes.length === 0 ? (
                 <p className="text-xs text-amber-700/60 italic">No internal notes logged yet.</p>
               ) : (
@@ -721,11 +719,11 @@ export function AdminTicketWorkspace() {
                   <div key={n.id} className="p-3 rounded-xl bg-white/80 border border-amber-200 text-xs shadow-2xs">
                     <div className="flex items-center justify-between text-[10px] text-amber-900 font-bold mb-1">
                       <span>{n.admin_name}</span>
-                      <span className="text-neutral-400 font-normal">
+                      <span className="text-stone-400 font-normal font-mono">
                         {new Date(n.created_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
-                    <div className="text-neutral-800 whitespace-pre-wrap">{n.content}</div>
+                    <div className="text-slate-800 whitespace-pre-wrap">{n.content}</div>
                   </div>
                 ))
               )}

@@ -14,7 +14,8 @@ import {
   FileText,
   Clock,
   ShieldCheck,
-  Zap
+  Zap,
+  X
 } from 'lucide-react';
 
 const COMMON_TEMPLATES = [
@@ -34,7 +35,7 @@ const COMMON_TEMPLATES = [
     label: 'Print Quality Defect Report',
     subject: 'Defective Print / Binding Issue in Author Copies',
     category: 'Printing & Quality',
-    description: 'Hello BookLeaf Team,\n\nI received my batch of author copies today, but unfortunately several copies have noticeable print defects (misaligned page trimming and blurry chapter headings). Under BookLeaf’s free reprint policy, I would like to request a replacement reprint. I can provide photographs upon request.\n\nWarm regards!'
+    description: 'Hello BookLeaf Team,\n\nI received my batch of author copies today, but unfortunately several copies have noticeable print defects (misaligned page trimming and blurry chapter headings). Under BookLeaf\'s free reprint policy, I would like to request a replacement reprint. I can provide photographs upon request.\n\nWarm regards!'
   },
   {
     label: 'Amazon "Currently Unavailable" Sync',
@@ -71,8 +72,8 @@ export function AuthorCreateTicket() {
   // Live Heuristic / AI Category Prediction
   const getPredictedCategory = () => {
     const text = `${subject} ${description}`.toLowerCase();
-    if (text.includes('isbn') || text.includes('asin') || text.includes('barcode')) return { cat: 'ISBN & Metadata Issues', priority: 'High', sla: '< 48h' };
-    if (text.includes('royalt') || text.includes('payout') || text.includes('payment') || text.includes('money')) return { cat: 'Royalty & Payments', priority: 'High', sla: '< 48h' };
+    if (text.includes('isbn') || text.includes('asin') || text.includes('barcode')) return { cat: 'ISBN & Metadata Issues', priority: 'High', sla: '< 48 Hours' };
+    if (text.includes('royalt') || text.includes('payout') || text.includes('payment') || text.includes('money')) return { cat: 'Royalty & Payments', priority: 'High', sla: '< 48 Hours' };
     if (text.includes('print') || text.includes('quality') || text.includes('blurry') || text.includes('defective')) return { cat: 'Printing & Quality', priority: 'High', sla: '5–7 Business Days' };
     if (text.includes('amazon') || text.includes('unavailable') || text.includes('stock')) return { cat: 'Distribution & Availability', priority: 'Medium', sla: '24–48 Hours' };
     if (text.includes('typesetting') || text.includes('cover') || text.includes('production') || text.includes('proof')) return { cat: 'Book Status & Production Updates', priority: 'Medium', sla: '< 48 Hours' };
@@ -95,9 +96,9 @@ export function AuthorCreateTicket() {
     }
 
     if (!description.trim()) {
-      newErrors.description = 'Please provide details of your query';
+      newErrors.description = 'Please describe your inquiry in detail';
     } else if (description.trim().length < 15) {
-      newErrors.description = 'Description must be at least 15 characters long';
+      newErrors.description = 'Please provide more detail (at least 15 characters)';
     }
 
     setErrors(newErrors);
@@ -109,19 +110,17 @@ export function AuthorCreateTicket() {
     if (!validate()) return;
 
     setIsSubmitting(true);
-    setErrors({});
-
     try {
-      const res = await api.createAuthorTicket({
-        book_id: selectedBookId || null,
+      const payload = {
         subject: subject.trim(),
         description: description.trim(),
-        attachment_name: attachmentName || null
-      });
+        book_id: selectedBookId || null
+      };
 
+      const res = await api.createTicket(payload);
       setCreatedTicket(res.data);
     } catch (err) {
-      setErrors({ form: err.message || 'Failed to submit support query' });
+      setErrors({ form: err.message || 'Failed to submit inquiry. Please try again.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -130,139 +129,160 @@ export function AuthorCreateTicket() {
   const handleSimulatedAttachment = (e) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        alert('File size exceeds 5MB limit.');
-        return;
-      }
       setAttachmentName(file.name);
     }
   };
 
+  // Success Confirmation Screen
   if (createdTicket) {
     return (
-      <div className="max-w-xl mx-auto bg-white rounded-3xl border border-neutral-200/90 p-8 sm:p-10 shadow-lg text-center space-y-6">
-        <div className="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center mx-auto shadow-inner">
-          <CheckCircle2 className="w-8 h-8" />
-        </div>
-        <div>
-          <span className="text-xs font-mono font-bold text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-            {createdTicket.ticket_number}
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-bold font-serif text-neutral-900 mt-3">
-            Ticket Received & Queued
-          </h2>
-          <p className="text-sm text-neutral-600 mt-1.5 max-w-md mx-auto">
-            Your query has been routed to our Delhi Editorial Operations team. AI classification and priority scoring are active.
+      <div className="max-w-xl mx-auto py-8">
+        <div className="bg-white rounded-3xl p-8 border border-stone-200 shadow-sm text-center space-y-5">
+          <div className="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto border border-emerald-200 shadow-xs">
+            <CheckCircle2 className="w-8 h-8" />
+          </div>
+
+          <div className="space-y-1.5">
+            <span className="text-[11px] font-bold text-emerald-800 bg-emerald-50 px-3 py-0.5 rounded-full uppercase tracking-wider border border-emerald-200">
+              Ticket Logged Successfully
+            </span>
+            <h2 className="text-2xl font-serif font-bold text-slate-900 pt-1">
+              Inquiry Dispatched to Operations
+            </h2>
+            <p className="text-xs text-stone-500 font-mono">
+              Ticket Reference: {createdTicket.ticket_number}
+            </p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80 text-xs text-stone-700 space-y-2 text-left">
+            <div className="flex justify-between">
+              <span className="text-stone-400 font-medium">Assigned Department:</span>
+              <span className="font-bold text-slate-900">{createdTicket.category}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-stone-400 font-medium">Priority Score:</span>
+              <span className="font-bold text-indigo-700">{createdTicket.priority}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-stone-400 font-medium">SLA Resolution Target:</span>
+              <span className="font-bold text-emerald-700">Within {prediction.sla}</span>
+            </div>
+          </div>
+
+          <p className="text-xs text-stone-500 leading-relaxed">
+            Our editorial operations specialists have received your ticket. You will receive real-time updates and notification when staff replies.
           </p>
-        </div>
 
-        <div className="bg-neutral-50 rounded-2xl p-4 text-xs text-left border border-neutral-200 space-y-2">
-          <div className="flex justify-between items-center pb-2 border-b border-neutral-200/60">
-            <span className="text-neutral-500 font-semibold uppercase text-[10px]">Classification</span>
-            <span className="font-bold text-indigo-950">{createdTicket.category}</span>
+          <div className="flex flex-col sm:flex-row gap-3 pt-2">
+            <Button
+              variant="primary"
+              className="flex-1"
+              onClick={() => navigate(`/author/tickets/${createdTicket.id}`)}
+              icon={ArrowRight}
+            >
+              Open Ticket Stream
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setCreatedTicket(null);
+                setSubject('');
+                setDescription('');
+                setSelectedBookId('');
+                setAttachmentName('');
+              }}
+            >
+              Submit Another Inquiry
+            </Button>
           </div>
-          <div className="flex justify-between items-center pb-2 border-b border-neutral-200/60">
-            <span className="text-neutral-500 font-semibold uppercase text-[10px]">Triage Priority</span>
-            <span className="font-bold text-neutral-900">{createdTicket.priority}</span>
-          </div>
-          <div>
-            <span className="text-neutral-500 font-semibold uppercase text-[10px] block mb-0.5">Subject</span>
-            <span className="font-medium text-neutral-900">{createdTicket.subject}</span>
-          </div>
-        </div>
-
-        <div className="flex flex-col sm:flex-row justify-center gap-3 pt-2">
-          <Button
-            variant="primary"
-            onClick={() => navigate(`/author/tickets/${createdTicket.id}`)}
-            icon={ArrowRight}
-          >
-            Open Ticket Timeline
-          </Button>
-          <Button
-            variant="secondary"
-            onClick={() => {
-              setCreatedTicket(null);
-              setSubject('');
-              setDescription('');
-              setSelectedBookId('');
-              setAttachmentName('');
-            }}
-          >
-            Submit Another Query
-          </Button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
-      {/* Page Title */}
+    <div className="space-y-7 max-w-4xl mx-auto">
+      {/* Header */}
       <div>
-        <span className="text-xs font-semibold text-indigo-700 uppercase tracking-wider bg-indigo-50 border border-indigo-200/60 px-2.5 py-0.5 rounded-full">
-          Author Support Desk
+        <span className="text-[11px] font-bold text-indigo-800 bg-indigo-50 border border-indigo-200/90 px-3 py-0.5 rounded-full uppercase tracking-wider">
+          Editorial Support Desk
         </span>
-        <h1 className="text-2xl sm:text-3xl font-bold font-serif text-neutral-900 mt-1">
-          Submit a Publishing Query
+        <h1 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 mt-1.5 tracking-tight">
+          Submit Support Inquiry
         </h1>
-        <p className="text-sm text-neutral-500 mt-0.5">
-          Connect directly with BookLeaf Publishing specialists for royalties, printing, ISBN, and distribution.
+        <p className="text-sm text-stone-500 mt-0.5">
+          Reach BookLeaf Publishing operations regarding royalties, ISBN catalog listings, and print quality.
         </p>
       </div>
 
-      {/* Quick Template Chips */}
-      <div className="bg-white p-5 rounded-2xl border border-neutral-200/80 shadow-xs space-y-2.5">
-        <span className="text-xs font-bold text-neutral-700 uppercase tracking-wider flex items-center gap-1.5">
-          <Zap className="w-3.5 h-3.5 text-amber-500" />
-          Common Query Templates (1-Click Pre-fill)
-        </span>
-        <div className="flex flex-wrap gap-2">
+      {/* 1-Click Quick Query Templates */}
+      <div className="space-y-2.5">
+        <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800">
+          <Zap className="w-3.5 h-3.5 text-indigo-600" />
+          <span>Quick Query Templates (Click to Auto-Fill):</span>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {COMMON_TEMPLATES.map((tmpl) => (
             <button
               key={tmpl.label}
               type="button"
               onClick={() => handleApplyTemplate(tmpl)}
-              className="text-xs bg-neutral-50 hover:bg-indigo-50 text-neutral-700 hover:text-indigo-950 border border-neutral-200 hover:border-indigo-300 px-3 py-1.5 rounded-lg transition-colors cursor-pointer font-medium"
+              className="p-3.5 text-left rounded-2xl bg-white border border-stone-200/90 hover:border-indigo-500 hover:shadow-xs transition-all cursor-pointer group"
             >
-              {tmpl.label} +
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-900 group-hover:text-indigo-800">
+                  {tmpl.label}
+                </span>
+                <span className="text-[10px] text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md font-semibold border border-indigo-100">
+                  {tmpl.category}
+                </span>
+              </div>
+              <p className="text-[11px] text-stone-500 line-clamp-1 mt-1">
+                {tmpl.subject}
+              </p>
             </button>
           ))}
         </div>
       </div>
 
       {/* Main Ticket Form Card */}
-      <div className="bg-white rounded-3xl border border-neutral-200/90 shadow-sm p-6 sm:p-8">
+      <div className="bg-white rounded-3xl border border-stone-200 shadow-xs p-6 sm:p-8">
         <form onSubmit={handleSubmit} className="space-y-5">
           {errors.form && (
-            <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+            <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2.5">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
               <span>{errors.form}</span>
             </div>
           )}
 
-          {/* Book Dropdown */}
+          {/* Book Selector (Optional) */}
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1.5">
-              Select Book / General Account Level *
+            <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">
+              Associated Book (Optional)
             </label>
-            <select
-              value={selectedBookId}
-              onChange={(e) => setSelectedBookId(e.target.value)}
-              className="w-full text-xs sm:text-sm border border-neutral-300 rounded-xl p-3 bg-white text-neutral-800 focus:outline-none focus:ring-2 focus:ring-indigo-700 font-medium"
-            >
-              <option value="">General / Account Level Query (No Specific Title)</option>
-              {books.map((b) => (
-                <option key={b.id} value={b.id}>
-                  {b.title} (ISBN: {b.isbn} • {b.status})
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <BookOpen className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400" />
+              <select
+                value={selectedBookId}
+                onChange={(e) => setSelectedBookId(e.target.value)}
+                className="w-full pl-10 pr-3 py-2.5 text-sm border border-stone-300 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-indigo-700"
+              >
+                <option value="">General Author Account / Non-Book Specific</option>
+                {books.map((b) => (
+                  <option key={b.id} value={b.id}>
+                    {b.title} {b.isbn ? `(ISBN: ${b.isbn})` : '(In Production)'}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <p className="text-[11px] text-stone-400 mt-1">
+              Select a book if your inquiry relates to royalties, ISBN, distribution, or print quality.
+            </p>
           </div>
 
           {/* Subject Line */}
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">
               Subject Line *
             </label>
             <input
@@ -272,7 +292,7 @@ export function AuthorCreateTicket() {
               onChange={(e) => setSubject(e.target.value)}
               placeholder="e.g. Inquiring regarding Q3 royalty distribution schedule"
               className={`w-full text-sm border rounded-xl p-3 bg-white focus:outline-none focus:ring-2 ${
-                errors.subject ? 'border-rose-400 focus:ring-rose-500' : 'border-neutral-300 focus:ring-indigo-700'
+                errors.subject ? 'border-rose-400 focus:ring-rose-500' : 'border-stone-300 focus:ring-indigo-700'
               }`}
             />
             {errors.subject && <p className="text-xs text-rose-600 mt-1">{errors.subject}</p>}
@@ -281,10 +301,10 @@ export function AuthorCreateTicket() {
           {/* Detailed Query Textarea */}
           <div>
             <div className="flex justify-between items-center mb-1.5">
-              <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider">
+              <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider">
                 Detailed Inquiry *
               </label>
-              <span className="text-[11px] text-neutral-400 font-mono">
+              <span className="text-[11px] text-stone-400 font-mono">
                 {description.length} / 4000
               </span>
             </div>
@@ -295,7 +315,7 @@ export function AuthorCreateTicket() {
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Provide exact details, order IDs, dates, or ISBN references to help our team resolve your query swiftly..."
               className={`w-full text-sm border rounded-xl p-3.5 bg-white focus:outline-none focus:ring-2 ${
-                errors.description ? 'border-rose-400 focus:ring-rose-500' : 'border-neutral-300 focus:ring-indigo-700'
+                errors.description ? 'border-rose-400 focus:ring-rose-500' : 'border-stone-300 focus:ring-indigo-700'
               }`}
             />
             {errors.description && <p className="text-xs text-rose-600 mt-1">{errors.description}</p>}
@@ -303,30 +323,30 @@ export function AuthorCreateTicket() {
 
           {/* Live AI Classification Indicator */}
           {description.length > 10 && (
-            <div className="p-3.5 rounded-xl bg-indigo-50/70 border border-indigo-100 flex items-center justify-between text-xs animate-in fade-in duration-200">
+            <div className="p-3.5 rounded-xl bg-indigo-50 border border-indigo-200/80 flex items-center justify-between text-xs animate-in fade-in duration-200">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-indigo-700 shrink-0" />
                 <span className="text-indigo-950 font-medium">
                   Auto-Triage Preview: <strong>{prediction.cat}</strong>
                 </span>
               </div>
-              <span className="text-[11px] text-indigo-700 bg-white px-2.5 py-0.5 rounded-full border border-indigo-200 font-semibold">
+              <span className="text-[11px] text-indigo-800 bg-white px-2.5 py-0.5 rounded-full border border-indigo-200 font-bold">
                 Est. Resolution: {prediction.sla}
               </span>
             </div>
           )}
 
-          {/* Photographic Attachment (UI Only) */}
-          <div className="border border-dashed border-neutral-300 rounded-2xl p-4 bg-neutral-50/70">
+          {/* Photographic Attachment UI */}
+          <div className="border border-dashed border-stone-300 rounded-2xl p-4 bg-stone-50/70">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-xs text-neutral-700">
-                <Paperclip className="w-4 h-4 text-neutral-500" />
+              <div className="flex items-center gap-2 text-xs text-stone-700">
+                <Paperclip className="w-4 h-4 text-stone-500" />
                 <div>
                   <span className="font-semibold block">Attach Photo / Screenshot</span>
-                  <span className="text-[10px] text-neutral-400">PDF, JPG, PNG up to 5MB (Useful for print defect verification)</span>
+                  <span className="text-[10px] text-stone-400">PDF, JPG, PNG up to 5MB (Useful for print defect verification)</span>
                 </div>
               </div>
-              <label className="cursor-pointer bg-white border border-neutral-300 hover:bg-neutral-50 px-3.5 py-1.5 rounded-xl text-xs font-bold text-neutral-800 transition-colors shadow-2xs">
+              <label className="cursor-pointer bg-white border border-stone-300 hover:bg-stone-50 px-3.5 py-1.5 rounded-xl text-xs font-bold text-slate-800 transition-colors shadow-2xs">
                 Select File
                 <input
                   type="file"
@@ -338,13 +358,16 @@ export function AuthorCreateTicket() {
             </div>
             {attachmentName && (
               <div className="mt-3 text-xs text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 flex items-center justify-between font-mono">
-                <span>✓ {attachmentName}</span>
+                <span className="flex items-center gap-1.5">
+                  <Paperclip className="w-3.5 h-3.5" />
+                  {attachmentName}
+                </span>
                 <button
                   type="button"
                   onClick={() => setAttachmentName('')}
-                  className="text-neutral-500 hover:text-neutral-800 font-bold"
+                  className="text-stone-500 hover:text-stone-800 font-bold cursor-pointer"
                 >
-                  ✕
+                  <X className="w-4 h-4" />
                 </button>
               </div>
             )}

@@ -1,32 +1,54 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Lora', 'Georgia', 'Merriweather', 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, monospace;
+}
+
 @layer base {
   :root {
-    --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-sans: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-serif: 'Lora', 'Georgia', 'Merriweather', 'Times New Roman', serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, monospace;
+    --canvas-bg: #FAF9F5;
+    --canvas-card: #FFFFFF;
+    --canvas-border: #E7E5E4;
+    --ink-primary: #0F172A;
+    --ink-secondary: #475569;
+    --ink-muted: #94A3B8;
   }
 
   html {
     font-family: var(--font-sans);
-    background-color: #F8FAFC;
-    color: #0F172A;
+    background-color: var(--canvas-bg);
+    color: var(--ink-primary);
     scroll-behavior: smooth;
+    scrollbar-gutter: stable;
   }
 
   body {
     font-family: var(--font-sans);
-    background-color: #F8FAFC;
-    color: #0F172A;
+    background-color: var(--canvas-bg);
+    color: var(--ink-primary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
   }
 }
 
-/* Universal Clean Scrollbar System */
+/* ==========================================================================
+   UNIVERSAL SLEEK SCROLLBAR SYSTEM
+   Replaces clunky browser tracks with slender, padded, rounded thumbs
+   ========================================================================== */
+
+/* Universal thin scrollbar for modern browsers */
 * {
   scrollbar-width: thin;
   scrollbar-color: #CBD5E1 transparent;
 }
 
+/* WebKit / Chromium (Chrome, Edge, Safari) */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -39,6 +61,8 @@
 ::-webkit-scrollbar-thumb {
   background: #CBD5E1;
   border-radius: 9999px;
+  border: 1px solid transparent;
+  background-clip: padding-box;
   transition: background-color 0.2s ease;
 }
 
@@ -46,7 +70,74 @@
   background: #94A3B8;
 }
 
-/* Utility to completely hide scrollbar while preserving scroll functionality */
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Explicit custom scrollbar container class with smooth gutter */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E1 transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+  background-clip: padding-box;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Dark mode scrollbar for dark sidebar navigation */
+.dark-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #334155 transparent;
+}
+
+.dark-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.dark-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dark-scrollbar::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 9999px;
+}
+
+.dark-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Horizontal scrollbar for wide data tables */
+.custom-scrollbar-h::-webkit-scrollbar {
+  height: 5px;
+}
+
+.custom-scrollbar-h::-webkit-scrollbar-thumb {
+  background: #E2E8F0;
+  border-radius: 9999px;
+}
+
+.custom-scrollbar-h::-webkit-scrollbar-thumb:hover {
+  background: #CBD5E1;
+}
+
+/* Hide scrollbar completely while maintaining full scroll capability */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -55,19 +146,27 @@
   scrollbar-width: none;
 }
 
-/* Glass & Card Aesthetics */
-.panel-card {
+/* ==========================================================================
+   EDITORIAL PUBLISHING DESIGN SYSTEM TOKENS
+   ========================================================================== */
+
+.editorial-card {
   background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
+  border: 1px solid #E7E5E4;
+  box-shadow: 0 1px 3px 0 rgba(28, 25, 23, 0.04), 0 1px 2px -1px rgba(28, 25, 23, 0.03);
 }
 
-.panel-card-hover {
+.editorial-card-hover {
   transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
 }
 
-.panel-card-hover:hover {
-  border-color: #CBD5E1;
-  box-shadow: 0 6px 16px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -2px rgba(15, 23, 42, 0.04);
+.editorial-card-hover:hover {
+  border-color: #D6D3D1;
+  box-shadow: 0 6px 16px -2px rgba(28, 25, 23, 0.06), 0 2px 6px -2px rgba(28, 25, 23, 0.04);
   transform: translateY(-1px);
+}
+
+/* Book spine 3D effect */
+.book-spine-effect {
+  box-shadow: inset 4px 0 6px -2px rgba(0, 0, 0, 0.25), 0 8px 20px -4px rgba(15, 23, 42, 0.15);
 }

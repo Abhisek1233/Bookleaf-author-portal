@@ -66,22 +66,22 @@ export function AuthorDashboard() {
   const thresholdPct = Math.min(100, Math.round((metrics.royalty_pending / 1000) * 100));
 
   return (
-    <div className="space-y-8">
-      {/* Welcome Banner */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <div className="space-y-7">
+      {/* Editorial Welcome Banner */}
+      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <span className="text-xs font-semibold text-indigo-700 bg-indigo-50 border border-indigo-200/80 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-            Author Account • ID: {author.id}
+          <span className="text-[11px] font-bold text-indigo-800 bg-indigo-50 border border-indigo-200/90 px-3 py-0.5 rounded-full uppercase tracking-wider">
+            Verified Author Record • ID: {author.id}
           </span>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mt-2 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-slate-900 mt-2.5 tracking-tight">
             Welcome back, {author.name}
           </h1>
-          <p className="text-sm text-slate-500 mt-0.5 font-medium">
+          <p className="text-sm text-stone-500 mt-1 font-medium max-w-xl">
             Track multi-channel retail distribution, quarterly royalty earnings, and BookLeaf support communication.
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-2.5">
+        <div className="flex flex-wrap gap-2.5 shrink-0">
           <Link to="/author/tickets/new">
             <Button variant="primary" icon={PlusCircle}>
               Submit Query
@@ -98,79 +98,79 @@ export function AuthorDashboard() {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Books */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Published Titles</span>
-            <BookOpen className="w-4 h-4 text-slate-400" />
+        <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between text-stone-400 mb-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-stone-500">Published Titles</span>
+            <BookOpen className="w-4 h-4 text-stone-400" />
           </div>
           <div className="text-3xl font-bold text-slate-900 font-mono tracking-tight">
             {metrics.total_books}
           </div>
-          <p className="text-xs text-slate-500 mt-1 font-medium">
-            {metrics.books_in_production > 0 ? `${metrics.books_in_production} in production` : 'All titles live'}
+          <p className="text-xs text-stone-500 mt-1 font-medium">
+            {metrics.books_in_production > 0 ? `${metrics.books_in_production} in production` : 'All titles live in catalog'}
           </p>
         </div>
 
         {/* Copies Sold */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Copies Sold</span>
+        <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between text-stone-400 mb-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-stone-500">Copies Sold</span>
             <TrendingUp className="w-4 h-4 text-emerald-600" />
           </div>
           <div className="text-3xl font-bold text-slate-900 font-mono tracking-tight">
             {metrics.total_copies_sold.toLocaleString('en-IN')}
           </div>
-          <p className="text-xs text-slate-500 mt-1 font-medium">Amazon, Flipkart & Store</p>
+          <p className="text-xs text-stone-500 mt-1 font-medium">Amazon, Flipkart & Direct</p>
         </div>
 
-        {/* Royalties Earned */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Royalties Earned</span>
+        {/* Total Royalty Earned */}
+        <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between text-stone-400 mb-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-stone-500">Cumulative Royalties</span>
             <CreditCard className="w-4 h-4 text-indigo-600" />
           </div>
-          <div className="text-3xl font-bold text-indigo-700 tracking-tight">
+          <div className="text-3xl font-bold text-indigo-700 tracking-tight font-mono">
             <Currency value={metrics.total_royalty_earned} />
           </div>
-          <p className="text-xs text-slate-500 mt-1 font-medium">80% Net profit share</p>
+          <p className="text-xs text-stone-500 mt-1 font-medium">80% Net profit share</p>
         </div>
 
         {/* Royalty Pending */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Pending Payout</span>
+        <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between text-stone-400 mb-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-stone-500">Pending Payout</span>
             <Clock className="w-4 h-4 text-amber-600" />
           </div>
-          <div className="text-3xl font-bold text-amber-700 tracking-tight">
+          <div className="text-3xl font-bold text-amber-700 tracking-tight font-mono">
             <Currency value={metrics.royalty_pending} />
           </div>
-          <p className="text-xs text-slate-500 mt-1 font-medium">
+          <p className="text-xs text-stone-500 mt-1 font-medium">
             {metrics.royalty_pending >= 1000 ? 'Eligible for quarterly payout' : 'Rolls over (< ₹1,000 threshold)'}
           </p>
         </div>
       </div>
 
       {/* Payout Threshold Progress Meter */}
-      <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs space-y-3">
+      <div className="bg-white p-6 rounded-3xl border border-stone-200 shadow-xs space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-amber-500" />
               Quarterly Payout Eligibility (₹1,000 Minimum Payout Threshold)
             </h3>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-stone-500 mt-0.5">
               Accumulated earnings are disbursed via direct bank transfer within 45 days of each quarter ending.
             </p>
           </div>
-          <span className="text-xs font-bold font-mono px-3 py-1 rounded-full bg-slate-100 text-slate-800 shrink-0">
+          <span className="text-xs font-bold font-mono px-3 py-1 rounded-full bg-stone-100 text-slate-800 shrink-0">
             Current Balance: <Currency value={metrics.royalty_pending} /> / ₹1,000
           </span>
         </div>
 
-        <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+        <div className="w-full bg-stone-100 h-2.5 rounded-full overflow-hidden">
           <div
             className={`h-full transition-all duration-500 ${
-              metrics.royalty_pending >= 1000 ? 'bg-emerald-500' : 'bg-indigo-600'
+              metrics.royalty_pending >= 1000 ? 'bg-emerald-600' : 'bg-indigo-600'
             }`}
             style={{ width: `${thresholdPct}%` }}
           />
@@ -178,11 +178,11 @@ export function AuthorDashboard() {
       </div>
 
       {/* Recent Support Tickets Section */}
-      <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
-        <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between">
+      <div className="bg-white rounded-3xl border border-stone-200 shadow-xs overflow-hidden">
+        <div className="px-6 py-5 border-b border-stone-100 flex items-center justify-between">
           <div>
-            <h2 className="text-base font-bold text-slate-900">Recent Support Inquiries</h2>
-            <p className="text-xs text-slate-500">Live communication history with BookLeaf Editorial Operations</p>
+            <h2 className="text-base font-serif font-bold text-slate-900">Recent Support Inquiries</h2>
+            <p className="text-xs text-stone-500">Live communication history with BookLeaf Editorial Operations</p>
           </div>
           <Link
             to="/author/tickets"
@@ -201,20 +201,20 @@ export function AuthorDashboard() {
             onAction={() => window.location.href = '/author/tickets/new'}
           />
         ) : (
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-stone-100">
             {recent_tickets.map((t) => (
               <Link
                 key={t.id}
                 to={`/author/tickets/${t.id}`}
-                className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50 transition-colors block"
+                className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-stone-50/80 transition-colors block"
               >
                 <div className="space-y-1 min-w-0 flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-mono text-xs font-semibold text-slate-500">{t.ticket_number}</span>
+                    <span className="font-mono text-xs font-semibold text-stone-500">{t.ticket_number}</span>
                     <StatusBadge status={t.status} />
                     <PriorityBadge priority={t.priority} />
                     {t.book_title && (
-                      <span className="text-xs text-slate-500 italic truncate">
+                      <span className="text-xs text-stone-500 font-serif italic truncate">
                         • {t.book_title}
                       </span>
                     )}
@@ -222,7 +222,7 @@ export function AuthorDashboard() {
                   <h4 className="text-sm font-semibold text-slate-900 truncate">{t.subject}</h4>
                 </div>
 
-                <div className="text-xs text-slate-400 shrink-0 text-left sm:text-right">
+                <div className="text-xs text-stone-400 shrink-0 text-left sm:text-right font-mono">
                   Updated {new Date(t.updated_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                 </div>
               </Link>

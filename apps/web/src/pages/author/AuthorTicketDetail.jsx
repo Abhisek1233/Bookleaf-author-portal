@@ -17,7 +17,8 @@ import {
   Paperclip,
   CheckCircle2,
   Sparkles,
-  Award
+  Award,
+  Zap
 } from 'lucide-react';
 
 export function AuthorTicketDetail() {
@@ -123,7 +124,6 @@ export function AuthorTicketDetail() {
     );
   }
 
-  const isResolved = ticket.status === 'Resolved';
   const isClosed = ticket.status === 'Closed';
 
   return (
@@ -132,106 +132,89 @@ export function AuthorTicketDetail() {
       <div className="flex items-center justify-between">
         <Link
           to="/author/tickets"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-600 hover:text-neutral-900"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-stone-600 hover:text-slate-900 transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           All Inquiries
         </Link>
-        <span className="text-xs font-mono font-bold text-neutral-400">
+        <span className="text-xs font-mono font-bold text-stone-400">
           Ref: {ticket.ticket_number}
         </span>
       </div>
 
       {/* Ticket Details Header Card */}
-      <div className="bg-white rounded-3xl border border-neutral-200/90 shadow-sm p-6 sm:p-8 space-y-5">
+      <div className="bg-white rounded-3xl border border-stone-200 shadow-xs p-6 sm:p-8 space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
           <div className="space-y-2">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-mono text-xs font-bold text-neutral-600 bg-neutral-100 px-2.5 py-0.5 rounded-md">
+              <span className="font-mono text-xs font-bold text-stone-600 bg-stone-100 px-2.5 py-0.5 rounded-md">
                 {ticket.ticket_number}
               </span>
               <StatusBadge status={ticket.status} />
               <PriorityBadge priority={ticket.priority} />
               <CategoryBadge category={ticket.category} />
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold font-serif text-neutral-900">
+            <h1 className="text-xl sm:text-2xl font-serif font-bold text-slate-900 leading-snug">
               {ticket.subject}
             </h1>
           </div>
 
-          <div className="text-xs text-neutral-400 space-y-1 sm:text-right shrink-0">
-            <div>Submitted {new Date(ticket.created_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
-            <div>Last Activity {new Date(ticket.updated_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</div>
+          <div className="text-left sm:text-right shrink-0 space-y-1">
+            <span className="text-[11px] text-stone-400 block font-mono">
+              Opened: {new Date(ticket.created_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}
+            </span>
+            <span className="text-[11px] text-stone-400 block font-mono">
+              Last Updated: {new Date(ticket.updated_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+            </span>
           </div>
         </div>
 
-        {/* Linked Book Strip */}
-        {ticket.book_title ? (
-          <div className="flex items-center justify-between bg-indigo-50/70 border border-indigo-100 text-indigo-950 p-3.5 rounded-2xl text-xs">
-            <div className="flex items-center gap-2.5">
+        {/* Associated Book Banner if Linked */}
+        {ticket.book_title && (
+          <div className="p-3.5 rounded-2xl bg-indigo-50/70 border border-indigo-100 flex items-center justify-between text-xs text-indigo-950">
+            <div className="flex items-center gap-2">
               <BookOpen className="w-4 h-4 text-indigo-700 shrink-0" />
-              <div>
-                <span className="font-bold">Catalog Title: </span>
-                {ticket.book_title}
-                {ticket.book_isbn && <span className="font-mono text-indigo-700 ml-2">({ticket.book_isbn})</span>}
-              </div>
-            </div>
-            {ticket.book_status && (
-              <span className="text-[11px] font-semibold bg-white text-indigo-900 px-2.5 py-0.5 rounded-full border border-indigo-200">
-                {ticket.book_status}
+              <span>
+                Linked Publication: <strong className="font-serif">{ticket.book_title}</strong>
               </span>
-            )}
-          </div>
-        ) : (
-          <div className="text-xs text-neutral-500 italic bg-neutral-50 p-3 rounded-xl border border-neutral-100">
-            Account Level Inquiry
+            </div>
+            <Link
+              to="/author/books"
+              className="text-xs font-bold text-indigo-700 hover:underline"
+            >
+              View Book Dossier →
+            </Link>
           </div>
         )}
 
-        {/* Original Description */}
-        <div>
-          <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block mb-1.5">
-            Original Author Query
-          </span>
-          <div className="bg-neutral-50 p-5 rounded-2xl border border-neutral-200/80 text-sm text-neutral-900 whitespace-pre-wrap leading-relaxed">
+        {/* Initial Query Description */}
+        <div className="p-5 rounded-2xl bg-stone-50/80 border border-stone-200/80 space-y-2">
+          <div className="flex items-center justify-between text-xs font-semibold text-stone-500">
+            <span>Original Author Statement:</span>
+            <span className="font-mono text-[11px] text-stone-400">Initial Request</span>
+          </div>
+          <p className="text-xs sm:text-sm text-slate-800 whitespace-pre-wrap leading-relaxed">
             {ticket.description}
-          </div>
+          </p>
         </div>
-
-        {ticket.attachment_name && (
-          <div className="text-xs text-neutral-600 flex items-center gap-2 pt-1 font-mono">
-            <Paperclip className="w-3.5 h-3.5 text-neutral-400" />
-            <span>Attachment: {ticket.attachment_name}</span>
-          </div>
-        )}
       </div>
-
-      {/* Resolution Banner */}
-      {isResolved && (
-        <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex items-center gap-3 text-xs text-emerald-900">
-          <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-          <div className="flex-1">
-            <span className="font-bold">This query has been marked as Resolved.</span> If you require further clarification, simply reply below and this ticket will reopen automatically.
-          </div>
-        </div>
-      )}
 
       {/* Conversation Thread */}
       <div className="space-y-4">
-        <h3 className="text-sm font-bold font-serif text-neutral-900">
-          Support Conversation Thread ({messages.length} replies)
+        <h3 className="text-xs font-bold text-stone-500 uppercase tracking-wider px-1">
+          Communication Thread ({messages.length} replies)
         </h3>
 
         {messages.length === 0 ? (
-          <div className="bg-white rounded-2xl p-8 text-center border border-neutral-200 text-xs text-neutral-500 space-y-2">
-            <Clock className="w-6 h-6 text-neutral-300 mx-auto" />
-            <p className="font-medium text-neutral-800">Awaiting Specialist Response</p>
-            <p className="max-w-md mx-auto text-neutral-500">
+          <div className="bg-white rounded-2xl p-8 text-center border border-stone-200 text-xs text-stone-500 space-y-2">
+            <Clock className="w-6 h-6 text-stone-300 mx-auto" />
+            <p className="font-medium text-slate-800">Awaiting Specialist Response</p>
+            <p className="max-w-md mx-auto text-stone-500">
               Our editorial operations team has received your ticket and is preparing a response grounded in BookLeaf policies. New replies will appear live.
             </p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-4 max-h-[550px] overflow-y-auto pr-1 custom-scrollbar">
             {messages.map((msg) => {
               const isAdmin = msg.sender_role === 'admin';
               return (
@@ -239,8 +222,8 @@ export function AuthorTicketDetail() {
                   key={msg.id}
                   className={`p-6 rounded-3xl border transition-all ${
                     isAdmin
-                      ? 'bg-gradient-to-br from-indigo-50/80 to-white border-indigo-200/90 sm:mr-8 shadow-xs'
-                      : 'bg-white border-neutral-200/90 sm:ml-8 shadow-2xs'
+                      ? 'bg-gradient-to-br from-indigo-50/80 via-white to-indigo-50/30 border-indigo-200/90 sm:mr-8 shadow-xs'
+                      : 'bg-white border-stone-200/90 sm:ml-8 shadow-2xs'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-3">
@@ -248,15 +231,15 @@ export function AuthorTicketDetail() {
                       <div
                         className={`w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold shadow-xs ${
                           isAdmin
-                            ? 'bg-indigo-950 text-white'
-                            : 'bg-neutral-200 text-neutral-800'
+                            ? 'bg-indigo-950 text-white font-serif'
+                            : 'bg-stone-200 text-stone-800'
                         }`}
                       >
                         {isAdmin ? <ShieldCheck className="w-4 h-4 text-indigo-300" /> : <User className="w-4 h-4" />}
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="text-xs font-bold text-neutral-900">
+                          <span className="text-xs font-bold text-slate-900">
                             {isAdmin ? 'BookLeaf Editorial Operations' : msg.sender_name}
                           </span>
                           {isAdmin && (
@@ -265,13 +248,13 @@ export function AuthorTicketDetail() {
                             </span>
                           )}
                         </div>
-                        <span className="text-[10px] text-neutral-400 block">
+                        <span className="text-[10px] text-stone-400 block">
                           {isAdmin ? 'Official Resolution' : 'Author'}
                         </span>
                       </div>
                     </div>
 
-                    <span className="text-[11px] text-neutral-400">
+                    <span className="text-[11px] text-stone-400 font-mono">
                       {new Date(msg.created_at).toLocaleDateString('en-IN', {
                         month: 'short',
                         day: 'numeric',
@@ -281,7 +264,7 @@ export function AuthorTicketDetail() {
                     </span>
                   </div>
 
-                  <div className="text-sm text-neutral-800 whitespace-pre-wrap leading-relaxed pl-10">
+                  <div className="text-sm text-slate-800 whitespace-pre-wrap leading-relaxed pl-10">
                     {msg.message}
                   </div>
                 </div>
@@ -294,8 +277,8 @@ export function AuthorTicketDetail() {
 
       {/* Reply Composer */}
       {!isClosed ? (
-        <form onSubmit={handleSendReply} className="bg-white rounded-3xl border border-neutral-200/90 shadow-sm p-6 space-y-3">
-          <label className="block text-xs font-bold text-neutral-700 uppercase tracking-wider">
+        <form onSubmit={handleSendReply} className="bg-white rounded-3xl border border-stone-200 shadow-xs p-6 space-y-3">
+          <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider">
             Reply to BookLeaf Support
           </label>
           <textarea
@@ -304,11 +287,12 @@ export function AuthorTicketDetail() {
             value={replyText}
             onChange={(e) => setReplyText(e.target.value)}
             placeholder="Type your response or additional context here..."
-            className="w-full text-sm border border-neutral-300 rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-indigo-700 bg-white"
+            className="w-full text-sm border border-stone-300 rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-indigo-700 bg-white"
           />
-          <div className="flex justify-between items-center pt-1">
-            <span className="text-[11px] text-neutral-400">
-              ⚡ Real-time updates active. No manual page refresh needed.
+          <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pt-1">
+            <span className="text-[11px] text-stone-400 flex items-center gap-1">
+              <Zap className="w-3.5 h-3.5 text-amber-500" />
+              Real-time socket sync active. No manual page refresh needed.
             </span>
             <Button
               type="submit"
@@ -322,7 +306,7 @@ export function AuthorTicketDetail() {
           </div>
         </form>
       ) : (
-        <div className="bg-neutral-100 rounded-2xl p-5 text-center text-xs text-neutral-600 border border-neutral-200">
+        <div className="bg-stone-100 rounded-2xl p-5 text-center text-xs text-stone-600 border border-stone-200">
           This ticket is Closed. If you need assistance with another matter, please raise a new query.
         </div>
       )}

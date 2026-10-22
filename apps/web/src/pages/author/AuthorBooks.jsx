@@ -88,24 +88,24 @@ export function AuthorBooks() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-semibold text-indigo-700 bg-indigo-50 border border-indigo-200/80 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-            Author Library
+          <span className="text-[11px] font-bold text-indigo-800 bg-indigo-50 border border-indigo-200/90 px-3 py-0.5 rounded-full uppercase tracking-wider">
+            Author Publishing Library
           </span>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mt-1 tracking-tight">
-            My Published Books
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 mt-1.5 tracking-tight">
+            My Published Titles
           </h1>
-          <p className="text-sm text-slate-500 mt-0.5">
+          <p className="text-sm text-stone-500 mt-0.5">
             Monitor print partner fulfillment, retail platforms, and 80/20 net profit royalty disbursements.
           </p>
         </div>
 
         {/* View Toggle */}
         <div className="flex items-center gap-2">
-          <div className="bg-white border border-slate-200 rounded-xl p-1 flex items-center shadow-xs">
+          <div className="bg-white border border-stone-200 rounded-xl p-1 flex items-center shadow-xs">
             <button
               onClick={() => setViewMode('grid')}
               className={`p-1.5 rounded-lg cursor-pointer transition-colors ${
-                viewMode === 'grid' ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-slate-800'
+                viewMode === 'grid' ? 'bg-indigo-700 text-white shadow-xs' : 'text-stone-500 hover:text-slate-800'
               }`}
               title="Card Grid View"
             >
@@ -114,7 +114,7 @@ export function AuthorBooks() {
             <button
               onClick={() => setViewMode('table')}
               className={`p-1.5 rounded-lg cursor-pointer transition-colors ${
-                viewMode === 'table' ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-slate-800'
+                viewMode === 'table' ? 'bg-indigo-700 text-white shadow-xs' : 'text-stone-500 hover:text-slate-800'
               }`}
               title="Data Table View"
             >
@@ -125,136 +125,113 @@ export function AuthorBooks() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs flex flex-col sm:flex-row gap-3 items-center justify-between">
+      <div className="bg-white p-3.5 rounded-2xl border border-stone-200 shadow-xs flex flex-col sm:flex-row gap-3 items-center justify-between">
         <form onSubmit={handleSearchSubmit} className="relative w-full sm:w-80">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400" />
           <input
             type="text"
-            placeholder="Search by title, ISBN, or genre..."
+            placeholder="Search by title, ISBN, genre..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-slate-50/50"
+            className="w-full pl-9 pr-3 py-2 text-xs border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-stone-50/50"
           />
         </form>
 
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <Filter className="w-4 h-4 text-slate-400" />
+          <Filter className="w-4 h-4 text-stone-400" />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="text-xs border border-slate-200 rounded-xl px-3 py-2 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-600 font-medium"
+            className="text-xs border border-stone-200 rounded-xl px-3 py-2 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-600 font-medium"
           >
-            <option value="">All Publication Statuses</option>
-            <option value="Published & Live">Published & Live</option>
-            <option value="In Production - Cover Design">In Production - Cover Design</option>
-            <option value="In Production - Typesetting">In Production - Typesetting</option>
+            <option value="">All Publishing Statuses</option>
+            <option value="Published">Published & Live</option>
+            <option value="Distribution">Distribution Setup</option>
+            <option value="Printing">Printing & Production</option>
+            <option value="ISBN">ISBN Assignment</option>
+            <option value="Editing">Editing & Typesetting</option>
           </select>
         </div>
       </div>
 
-      {/* Content */}
+      {/* Books Content */}
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <Skeleton className="h-64 rounded-2xl" />
-          <Skeleton className="h-64 rounded-2xl" />
-          <Skeleton className="h-64 rounded-2xl" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Skeleton className="h-64 rounded-3xl" />
+          <Skeleton className="h-64 rounded-3xl" />
+          <Skeleton className="h-64 rounded-3xl" />
         </div>
       ) : books.length === 0 ? (
         <EmptyState
           icon={BookOpen}
-          title="No titles found"
-          description="Try broadening your search term or clearing publication status filters."
+          title="No books found"
+          description="We couldn't find any titles matching your filter criteria."
           actionLabel="Clear Filters"
-          onAction={() => { setSearch(''); setStatusFilter(''); fetchBooks(); }}
+          onAction={() => { setSearch(''); setStatusFilter(''); }}
         />
       ) : viewMode === 'grid' ? (
-        /* Modern Card Grid */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        /* Card Grid View with 3D Book Spine Aesthetic */
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {books.map((b) => {
-            const isLive = b.status.includes('Published');
+            const isLive = b.status?.includes('Published');
             return (
               <div
                 key={b.id}
-                className="bg-white rounded-2xl border border-slate-200 shadow-xs hover:border-slate-300 hover:shadow-md transition-all flex flex-col justify-between overflow-hidden group"
+                onClick={() => setSelectedBook(b)}
+                className="bg-white rounded-3xl border border-stone-200 shadow-xs hover:border-indigo-300 hover:shadow-md transition-all cursor-pointer overflow-hidden flex flex-col justify-between group"
               >
-                {/* Book Card Top Banner */}
-                <div className="p-5 border-b border-slate-100 bg-gradient-to-b from-slate-50 to-white">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md bg-white border border-slate-200 text-slate-600 shadow-2xs">
-                      {b.id}
-                    </span>
-                    <span className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${
-                      isLive
-                        ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                        : 'bg-amber-50 text-amber-800 border-amber-200'
-                    }`}>
-                      {b.status}
-                    </span>
+                {/* Book Spine Visual Header */}
+                <div className="p-6 bg-gradient-to-br from-stone-50 via-white to-stone-100/60 border-b border-stone-100 flex gap-4 items-start relative">
+                  {/* Decorative Book Spine */}
+                  <div className="w-12 h-16 rounded-r-md bg-indigo-950 text-indigo-200 font-serif font-black flex items-center justify-center text-xs shadow-md shrink-0 border-l-4 border-indigo-500 book-spine-effect">
+                    BL
                   </div>
 
-                  <h3 className="font-bold text-lg text-slate-900 tracking-tight line-clamp-1 group-hover:text-indigo-600 transition-colors">
-                    {b.title}
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-0.5 font-medium">{b.genre}</p>
-
-                  <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600">
-                    <span className="font-mono text-[11px]">ISBN: {b.isbn}</span>
-                    <span className="font-bold text-slate-900">
-                      {b.mrp ? <Currency value={b.mrp} /> : <span className="text-slate-400 font-normal">Pre-Launch</span>}
-                    </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5 flex-wrap mb-1">
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${
+                        isLive ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-amber-50 text-amber-800 border border-amber-200'
+                      }`}>
+                        {b.status || 'In Production'}
+                      </span>
+                      {b.genre && (
+                        <span className="text-[10px] text-stone-500 font-semibold bg-stone-100 px-2 py-0.5 rounded-full">
+                          {b.genre}
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="font-serif font-bold text-base text-slate-900 group-hover:text-indigo-800 transition-colors line-clamp-2 leading-snug">
+                      {b.title}
+                    </h3>
                   </div>
                 </div>
 
-                {/* Performance Stats */}
-                <div className="p-5 space-y-4 flex-1 flex flex-col justify-between">
-                  <div className="grid grid-cols-3 gap-2 text-center">
-                    <div className="bg-slate-50/80 p-2.5 rounded-xl border border-slate-100">
-                      <span className="text-[10px] uppercase font-semibold text-slate-400 block">Copies Sold</span>
-                      <span className="font-bold font-mono text-sm text-slate-900 mt-0.5 block">{b.total_copies_sold.toLocaleString('en-IN')}</span>
+                {/* Body Meta */}
+                <div className="p-5 space-y-3.5">
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div>
+                      <span className="text-[10px] text-stone-400 uppercase font-semibold block">Retail MRP</span>
+                      <span className="font-bold text-slate-900 font-mono"><Currency value={b.mrp} /></span>
                     </div>
-                    <div className="bg-slate-50/80 p-2.5 rounded-xl border border-slate-100">
-                      <span className="text-[10px] uppercase font-semibold text-slate-400 block">Earned</span>
-                      <span className="font-bold text-xs text-indigo-700 mt-0.5 block"><Currency value={b.total_royalty_earned} /></span>
+                    <div>
+                      <span className="text-[10px] text-stone-400 uppercase font-semibold block">Copies Sold</span>
+                      <span className="font-bold text-slate-900 font-mono">{b.total_copies_sold.toLocaleString('en-IN')}</span>
                     </div>
-                    <div className="bg-slate-50/80 p-2.5 rounded-xl border border-slate-100">
-                      <span className="text-[10px] uppercase font-semibold text-slate-400 block">Pending</span>
-                      <span className="font-bold text-xs text-amber-700 mt-0.5 block"><Currency value={b.royalty_pending} /></span>
+                    <div>
+                      <span className="text-[10px] text-stone-400 uppercase font-semibold block">Author Share / Copy</span>
+                      <span className="font-bold text-indigo-700 font-mono"><Currency value={b.author_royalty_per_copy} /></span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-stone-400 uppercase font-semibold block">Pending Royalty</span>
+                      <span className="font-bold text-amber-700 font-mono"><Currency value={b.royalty_pending} /></span>
                     </div>
                   </div>
 
-                  {/* Platforms */}
-                  <div>
-                    <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-1.5">
-                      Live Retail Outlets
+                  <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-[11px] text-stone-500">
+                    <span className="font-mono truncate max-w-[170px]">ISBN: {b.isbn || 'Pending Assignment'}</span>
+                    <span className="text-indigo-700 font-bold group-hover:underline flex items-center gap-0.5">
+                      View Details <ArrowRight className="w-3 h-3" />
                     </span>
-                    {b.available_on && b.available_on.length > 0 ? (
-                      <div className="flex flex-wrap gap-1.5">
-                        {b.available_on.map((p) => (
-                          <span key={p} className="text-[10px] font-medium bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md border border-slate-200">
-                            {p}
-                          </span>
-                        ))}
-                      </div>
-                    ) : (
-                      <span className="text-xs text-slate-400 italic">Pre-launch distribution in progress.</span>
-                    )}
-                  </div>
-
-                  {/* Card Actions */}
-                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      className="flex-1"
-                      onClick={() => setSelectedBook(b)}
-                    >
-                      Production & Royalties
-                    </Button>
-                    <Link to="/author/tickets/new">
-                      <Button variant="ghost" size="sm" title="Raise Query for this Book">
-                        <HelpCircle className="w-4 h-4 text-slate-500" />
-                      </Button>
-                    </Link>
                   </div>
                 </div>
               </div>
@@ -263,44 +240,44 @@ export function AuthorBooks() {
         </div>
       ) : (
         /* Data Table View */
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider">
+        <div className="bg-white rounded-3xl border border-stone-200 shadow-xs overflow-hidden">
+          <div className="overflow-x-auto custom-scrollbar-h">
+            <table className="w-full text-left text-xs text-slate-700">
+              <thead className="bg-stone-50/80 text-stone-500 font-semibold border-b border-stone-200 uppercase tracking-wider text-[10px]">
                 <tr>
-                  <th className="px-5 py-3.5">Title & Genre</th>
-                  <th className="px-5 py-3.5">ISBN</th>
-                  <th className="px-5 py-3.5">Status</th>
-                  <th className="px-5 py-3.5 text-right">MRP</th>
-                  <th className="px-5 py-3.5 text-right">Copies Sold</th>
-                  <th className="px-5 py-3.5 text-right">Earned</th>
-                  <th className="px-5 py-3.5 text-right">Pending</th>
-                  <th className="px-5 py-3.5 text-center">Action</th>
+                  <th className="px-6 py-4">Title & Genre</th>
+                  <th className="px-4 py-4">Status</th>
+                  <th className="px-4 py-4">ISBN</th>
+                  <th className="px-4 py-4 text-right">MRP</th>
+                  <th className="px-4 py-4 text-right">Copies Sold</th>
+                  <th className="px-4 py-4 text-right">Royalty Earned</th>
+                  <th className="px-4 py-4 text-right">Pending</th>
+                  <th className="px-6 py-4 text-center">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-stone-100">
                 {books.map((b) => (
-                  <tr key={b.id} className="hover:bg-slate-50/70 transition-colors">
-                    <td className="px-5 py-4">
-                      <div className="font-bold text-slate-900 text-sm">{b.title}</div>
-                      <div className="text-[11px] text-slate-500">{b.genre}</div>
+                  <tr
+                    key={b.id}
+                    onClick={() => setSelectedBook(b)}
+                    className="hover:bg-stone-50/90 transition-colors cursor-pointer"
+                  >
+                    <td className="px-6 py-4 font-bold text-slate-900 font-serif">
+                      <div>{b.title}</div>
+                      <div className="text-[10px] text-stone-400 font-sans font-normal">{b.genre}</div>
                     </td>
-                    <td className="px-5 py-4 font-mono text-slate-600">{b.isbn}</td>
-                    <td className="px-5 py-4">
-                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium border ${
-                        b.status.includes('Published')
-                          ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                          : 'bg-amber-50 text-amber-800 border-amber-200'
-                      }`}>
+                    <td className="px-4 py-4">
+                      <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-800 border border-indigo-200">
                         {b.status}
                       </span>
                     </td>
-                    <td className="px-5 py-4 text-right font-medium"><Currency value={b.mrp} /></td>
-                    <td className="px-5 py-4 text-right font-mono font-medium">{b.total_copies_sold.toLocaleString('en-IN')}</td>
-                    <td className="px-5 py-4 text-right font-bold text-indigo-700"><Currency value={b.total_royalty_earned} /></td>
-                    <td className="px-5 py-4 text-right font-bold text-amber-700"><Currency value={b.royalty_pending} /></td>
-                    <td className="px-5 py-4 text-center">
-                      <Button size="sm" variant="secondary" onClick={() => setSelectedBook(b)}>
+                    <td className="px-4 py-4 font-mono text-stone-500">{b.isbn || 'Pending'}</td>
+                    <td className="px-4 py-4 text-right font-mono font-medium"><Currency value={b.mrp} /></td>
+                    <td className="px-4 py-4 text-right font-mono font-medium">{b.total_copies_sold.toLocaleString('en-IN')}</td>
+                    <td className="px-4 py-4 text-right font-mono font-bold text-indigo-700"><Currency value={b.total_royalty_earned} /></td>
+                    <td className="px-4 py-4 text-right font-mono font-bold text-amber-700"><Currency value={b.royalty_pending} /></td>
+                    <td className="px-6 py-4 text-center">
+                      <Button size="sm" variant="secondary">
                         Inspect
                       </Button>
                     </td>
@@ -312,78 +289,82 @@ export function AuthorBooks() {
         </div>
       )}
 
-      {/* Book Inspection Modal (Fixed Header/Footer, Sleek Padding, No Ugly Scrollbar Line) */}
+      {/* Book Inspection Modal (Fixed Layout, Dedicated Internal Scroll, No Right-Edge Scrollbar Line) */}
       {selectedBook && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[88vh] animate-in fade-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150">
+          <div
+            className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full border border-stone-200 flex flex-col max-h-[90vh] overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Pinned Modal Header */}
-            <div className="p-6 border-b border-slate-100 flex items-start justify-between bg-white shrink-0">
-              <div>
-                <span className="text-xs font-mono font-bold text-indigo-600 uppercase tracking-wider">
-                  Catalog Entry • {selectedBook.id}
+            <div className="p-6 border-b border-stone-100 flex items-start justify-between bg-white shrink-0">
+              <div className="min-w-0 pr-4">
+                <span className="text-[10px] font-bold text-indigo-800 bg-indigo-50 border border-indigo-200 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                  Book Dossier • {selectedBook.genre || 'General'}
                 </span>
-                <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mt-0.5 tracking-tight">
+                <h2 className="text-xl sm:text-2xl font-serif font-bold text-slate-900 mt-1.5 leading-snug">
                   {selectedBook.title}
                 </h2>
-                <p className="text-xs text-slate-500">{selectedBook.genre}</p>
+                <p className="text-xs text-stone-500 font-mono mt-0.5">
+                  ISBN: {selectedBook.isbn || 'Pending registration'}
+                </p>
               </div>
               <button
                 onClick={() => setSelectedBook(null)}
-                className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+                className="p-2 text-stone-400 hover:text-stone-800 rounded-full hover:bg-stone-100 cursor-pointer shrink-0 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Scrollable Modal Body (Sleek Inner Padding, Clean Scrollbar) */}
-            <div className="p-6 space-y-6 overflow-y-auto flex-1">
-              {/* 9-Stage Publishing Milestone Tracker (Crisp Layout, No Text Truncation) */}
-              <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4">
+            {/* Scrollable Modal Body (Dedicated internal scroll with comfortable padding) */}
+            <div className="p-6 space-y-6 overflow-y-auto max-h-[calc(90vh-140px)] custom-scrollbar">
+              {/* Publishing Stage Progress (All 9 Stages, non-truncated) */}
+              <div className="bg-stone-50/80 p-5 rounded-2xl border border-stone-200/80 space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                  <h3 className="font-bold text-slate-900 uppercase tracking-wider text-xs flex items-center gap-1.5">
                     <Layers className="w-4 h-4 text-indigo-600" />
-                    Publishing Milestone Progression
-                  </span>
-                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-800 border border-indigo-200">
-                    Active: {selectedBook.status}
+                    BookLeaf 9-Stage Publishing Lifecycle
+                  </h3>
+                  <span className="text-[11px] font-bold text-indigo-800 bg-white px-2.5 py-0.5 rounded-full border border-stone-200">
+                    Stage {getStageIndex(selectedBook.status)} of 9
                   </span>
                 </div>
 
-                {/* Milestone Stepper */}
                 <div className="space-y-2">
                   {PRODUCTION_STAGES.map((st) => {
                     const currentIdx = getStageIndex(selectedBook.status);
-                    const isCompleted = st.id <= currentIdx;
+                    const isDone = st.id < currentIdx;
                     const isCurrent = st.id === currentIdx;
 
                     return (
                       <div
                         key={st.id}
-                        className={`flex items-center gap-3 p-2.5 rounded-xl border transition-all ${
+                        className={`flex items-center gap-3 p-2.5 rounded-xl text-xs transition-colors ${
                           isCurrent
-                            ? 'bg-indigo-50 border-indigo-200'
-                            : isCompleted
-                            ? 'bg-white border-slate-200'
-                            : 'bg-transparent border-transparent opacity-50'
+                            ? 'bg-indigo-50 border border-indigo-200 font-bold text-indigo-950'
+                            : isDone
+                            ? 'text-slate-800 bg-white/70 border border-stone-100'
+                            : 'text-stone-400'
                         }`}
                       >
                         <div
-                          className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
-                            isCompleted
-                              ? 'bg-indigo-600 text-white'
-                              : 'bg-slate-200 text-slate-500'
+                          className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 ${
+                            isDone
+                              ? 'bg-emerald-600 text-white'
+                              : isCurrent
+                              ? 'bg-indigo-700 text-white shadow-xs'
+                              : 'bg-stone-200 text-stone-500'
                           }`}
                         >
-                          {isCompleted ? <CheckCircle2 className="w-4 h-4" /> : st.id}
+                          {isDone ? '✓' : st.id}
                         </div>
                         <div className="min-w-0 flex-1">
-                          <span className={`text-xs block ${isCurrent ? 'font-bold text-indigo-950' : 'font-medium text-slate-800'}`}>
-                            {st.name}
-                          </span>
-                          <span className="text-[11px] text-slate-500 block truncate">{st.desc}</span>
+                          <span className="block truncate">{st.name}</span>
+                          <span className="text-[10px] font-normal text-stone-500 block truncate">{st.desc}</span>
                         </div>
                         {isCurrent && (
-                          <span className="text-[10px] font-bold text-indigo-700 bg-white px-2 py-0.5 rounded-md border border-indigo-200 shrink-0">
+                          <span className="text-[10px] font-bold text-indigo-800 bg-white px-2 py-0.5 rounded-md border border-indigo-200 shrink-0">
                             Current Stage
                           </span>
                         )}
@@ -394,61 +375,61 @@ export function AuthorBooks() {
               </div>
 
               {/* 80/20 Net Royalty Breakdown Card */}
-              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+              <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-xs space-y-3">
                 <h3 className="font-bold text-slate-900 uppercase tracking-wider text-xs flex items-center gap-1.5">
                   <DollarSign className="w-4 h-4 text-indigo-600" />
                   BookLeaf 80/20 Royalty Profit Policy
                 </h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
+                <p className="text-xs text-stone-600 leading-relaxed">
                   Net Profit = MRP minus In-House Printing Cost, Channel Platform Fees (Amazon/Flipkart), and Courier Shipping. Author receives <strong>80% of net profit</strong> per book.
                 </p>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
-                  <div className="bg-slate-50 p-3 rounded-xl border border-slate-100 text-center">
-                    <span className="text-[10px] text-slate-400 uppercase font-semibold block">Retail MRP</span>
-                    <span className="font-bold text-slate-900 text-sm mt-0.5 block"><Currency value={selectedBook.mrp} /></span>
+                  <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
+                    <span className="text-[10px] text-stone-400 uppercase font-semibold block">Retail MRP</span>
+                    <span className="font-bold text-slate-900 text-sm mt-0.5 block font-mono"><Currency value={selectedBook.mrp} /></span>
                   </div>
-                  <div className="bg-slate-50 p-3 rounded-xl border border-slate-100 text-center">
-                    <span className="text-[10px] text-slate-400 uppercase font-semibold block">Author Share / Copy</span>
-                    <span className="font-bold text-indigo-700 text-sm mt-0.5 block"><Currency value={selectedBook.author_royalty_per_copy} /></span>
+                  <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
+                    <span className="text-[10px] text-stone-400 uppercase font-semibold block">Author Share / Copy</span>
+                    <span className="font-bold text-indigo-700 text-sm mt-0.5 block font-mono"><Currency value={selectedBook.author_royalty_per_copy} /></span>
                   </div>
-                  <div className="bg-slate-50 p-3 rounded-xl border border-slate-100 text-center">
-                    <span className="text-[10px] text-slate-400 uppercase font-semibold block">Total Copies Sold</span>
-                    <span className="font-bold text-slate-900 text-sm mt-0.5 block">{selectedBook.total_copies_sold.toLocaleString('en-IN')}</span>
+                  <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
+                    <span className="text-[10px] text-stone-400 uppercase font-semibold block">Total Copies Sold</span>
+                    <span className="font-bold text-slate-900 text-sm mt-0.5 block font-mono">{selectedBook.total_copies_sold.toLocaleString('en-IN')}</span>
                   </div>
-                  <div className="bg-slate-50 p-3 rounded-xl border border-slate-100 text-center">
-                    <span className="text-[10px] text-slate-400 uppercase font-semibold block">Pending Payout</span>
-                    <span className="font-bold text-amber-700 text-sm mt-0.5 block"><Currency value={selectedBook.royalty_pending} /></span>
+                  <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
+                    <span className="text-[10px] text-stone-400 uppercase font-semibold block">Pending Payout</span>
+                    <span className="font-bold text-amber-700 text-sm mt-0.5 block font-mono"><Currency value={selectedBook.royalty_pending} /></span>
                   </div>
                 </div>
               </div>
 
               {/* Retail Distribution & Print Partner */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <div className="bg-stone-50 p-4 rounded-xl border border-stone-200">
                   <span className="font-bold text-slate-800 block mb-2">Print & Fulfillment Partner</span>
                   <p className="text-slate-600 font-medium">{selectedBook.print_partner || 'In-House Delhi Facility'}</p>
-                  <p className="text-[11px] text-slate-400 mt-1">Standard print turnaround: 5–7 business days.</p>
+                  <p className="text-[11px] text-stone-400 mt-1">Standard print turnaround: 5–7 business days.</p>
                 </div>
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <div className="bg-stone-50 p-4 rounded-xl border border-stone-200">
                   <span className="font-bold text-slate-800 block mb-2">Retail Platforms</span>
                   {selectedBook.available_on && selectedBook.available_on.length > 0 ? (
                     <div className="flex flex-wrap gap-1.5">
                       {selectedBook.available_on.map((p) => (
-                        <span key={p} className="px-2 py-0.5 rounded-md bg-white text-slate-700 border border-slate-200 text-[11px] font-medium">
+                        <span key={p} className="px-2 py-0.5 rounded-md bg-white text-slate-700 border border-stone-200 text-[11px] font-medium">
                           {p}
                         </span>
                       ))}
                     </div>
                   ) : (
-                    <span className="text-slate-400 italic">Listing propagation pending.</span>
+                    <span className="text-stone-400 italic">Listing propagation pending.</span>
                   )}
                 </div>
               </div>
             </div>
 
             {/* Pinned Modal Footer */}
-            <div className="p-4 border-t border-slate-100 flex items-center justify-between bg-slate-50 shrink-0">
+            <div className="p-4 border-t border-stone-100 flex items-center justify-between bg-stone-50 shrink-0">
               <Link to="/author/tickets/new">
                 <Button variant="primary" size="sm" icon={HelpCircle}>
                   Ask Support About This Book

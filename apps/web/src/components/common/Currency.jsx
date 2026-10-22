@@ -2,7 +2,7 @@ import React from 'react';
 
 export function Currency({ value, className = '' }) {
   if (value === null || value === undefined) {
-    return <span className={className}>—</span>;
+    return <span className={`font-mono ${className}`}>—</span>;
   }
 
   const num = Number(value);
@@ -12,5 +12,5 @@ export function Currency({ value, className = '' }) {
     maximumFractionDigits: 0
   }).format(num);
 
-  return <span className={className}>{formatted}</span>;
+  return <span className={`font-mono ${className}`}>{formatted}</span>;
 }

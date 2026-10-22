@@ -10,7 +10,7 @@ import {
   LogOut,
   Menu,
   X,
-  ExternalLink
+  Sparkles
 } from 'lucide-react';
 
 export function AuthorLayout() {
@@ -32,21 +32,21 @@ export function AuthorLayout() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row text-slate-900 font-sans">
+    <div className="h-screen bg-[#FAF9F5] flex flex-col md:flex-row text-slate-900 font-sans overflow-hidden">
       {/* Mobile Top Header */}
-      <header className="md:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-slate-200 sticky top-0 z-40">
+      <header className="md:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-stone-200 sticky top-0 z-40 shrink-0">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-base shadow-xs">
+          <div className="w-8 h-8 rounded-lg bg-indigo-700 flex items-center justify-center text-white font-serif font-bold text-base shadow-xs">
             B
           </div>
           <div>
-            <span className="font-bold text-slate-900 tracking-tight block leading-none text-sm">BookLeaf</span>
-            <span className="text-[10px] text-indigo-700 font-semibold tracking-wider uppercase">Author Portal</span>
+            <span className="font-serif font-bold text-slate-900 tracking-tight block leading-none text-base">BookLeaf</span>
+            <span className="text-[10px] text-indigo-700 font-bold tracking-wider uppercase">Author Portal</span>
           </div>
         </div>
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="p-1.5 rounded-lg text-slate-600 hover:bg-slate-100"
+          className="p-1.5 rounded-lg text-slate-600 hover:bg-stone-100 transition-colors"
         >
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
@@ -54,23 +54,33 @@ export function AuthorLayout() {
 
       {/* Desktop Left Sidebar */}
       <aside className={`
-        ${mobileMenuOpen ? 'block' : 'hidden'} md:block
-        w-full md:w-64 bg-white border-r border-slate-200 shrink-0 md:min-h-screen flex flex-col justify-between z-30
+        ${mobileMenuOpen ? 'flex' : 'hidden'} md:flex
+        w-full md:w-64 bg-white border-r border-stone-200 shrink-0 md:h-screen flex-col justify-between z-30
+        custom-scrollbar overflow-y-auto
       `}>
         <div>
           {/* Brand Header */}
-          <div className="hidden md:flex items-center gap-3 px-6 py-6 border-b border-slate-100">
-            <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow-xs">
+          <div className="hidden md:flex items-center gap-3 px-6 py-6 border-b border-stone-100">
+            <div className="w-10 h-10 rounded-xl bg-indigo-700 flex items-center justify-center text-white font-serif font-bold text-xl shadow-xs">
               B
             </div>
             <div>
-              <span className="font-bold text-lg text-slate-900 tracking-tight block leading-tight">BookLeaf</span>
+              <span className="font-serif font-bold text-lg text-slate-900 tracking-tight block leading-tight">BookLeaf</span>
               <span className="text-[10px] text-indigo-700 font-bold tracking-widest uppercase">Author Portal</span>
             </div>
           </div>
 
+          {/* Publishing Badge */}
+          <div className="px-5 py-3 border-b border-stone-100 flex items-center justify-between text-xs text-stone-500 bg-stone-50/50">
+            <span className="text-[11px] font-semibold text-stone-600">Self-Publishing Hub</span>
+            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-indigo-800 bg-indigo-50 border border-indigo-200/80 px-2 py-0.5 rounded-full">
+              <Sparkles className="w-3 h-3 text-indigo-600" />
+              Verified
+            </span>
+          </div>
+
           {/* Navigation Links */}
-          <nav className="p-3 space-y-1">
+          <nav className="p-3.5 space-y-1">
             {navItems.map((item) => {
               const Icon = item.icon;
               return (
@@ -79,10 +89,10 @@ export function AuthorLayout() {
                   to={item.to}
                   onClick={() => setMobileMenuOpen(false)}
                   className={({ isActive }) => `
-                    flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all
+                    flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all
                     ${isActive
-                      ? 'bg-indigo-50 text-indigo-700 shadow-2xs font-bold border border-indigo-100'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}
+                      ? 'bg-indigo-50 text-indigo-800 shadow-2xs font-bold border border-indigo-200/90'
+                      : 'text-stone-600 hover:text-slate-900 hover:bg-stone-50'}
                   `}
                 >
                   <Icon className="w-4 h-4 shrink-0" />
@@ -94,14 +104,14 @@ export function AuthorLayout() {
         </div>
 
         {/* User Card & Logout */}
-        <div className="p-4 border-t border-slate-100 bg-slate-50/70">
+        <div className="p-4 border-t border-stone-100 bg-stone-50/70">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-9 h-9 rounded-full bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-xs shrink-0 border border-indigo-200">
+            <div className="w-9 h-9 rounded-full bg-indigo-100 text-indigo-800 font-bold flex items-center justify-center text-xs shrink-0 border border-indigo-200">
               {user?.name ? user.name.slice(0, 2).toUpperCase() : 'AU'}
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-xs font-bold text-slate-900 truncate">{user?.name}</p>
-              <p className="text-[11px] text-slate-500 truncate">{user?.email}</p>
+              <p className="text-[11px] text-stone-500 truncate font-mono">{user?.email}</p>
             </div>
           </div>
           <button
@@ -114,8 +124,8 @@ export function AuthorLayout() {
         </div>
       </aside>
 
-      {/* Main Content Area */}
-      <main className="flex-1 overflow-y-auto">
+      {/* Main Content Workspace (Single Clean Scroll Container) */}
+      <main className="flex-1 h-screen overflow-y-auto custom-scrollbar">
         <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
           <Outlet />
         </div>
