@@ -5,7 +5,7 @@ import { validateAiClassification } from '../validators.js';
 export class GeminiProvider {
   constructor() {
     this.apiKey = process.env.GEMINI_API_KEY || '';
-    this.modelName = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
+    this.modelName = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
     this.client = this.apiKey ? new GoogleGenerativeAI(this.apiKey) : null;
   }
 

@@ -27,7 +27,7 @@ export async function healthCheck(req, res) {
     },
     ai_service: {
       provider: 'Google Gemini',
-      model: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
+      model: process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite',
       status: aiStatus
     }
   });

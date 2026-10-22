@@ -21,7 +21,7 @@ Our solution is a **two-sided publishing support portal** powered by an **AI-ass
 ## 3. AI System Design & Knowledge Base Grounding
 AI integration is the central feature and was engineered with production rigor:
 
-1. **Provider Abstraction:** Implemented `GeminiProvider` using `@google/generative-ai` with configurable model selection via `GEMINI_MODEL` (default: `gemini-2.0-flash`).
+1. **Provider Abstraction:** Implemented `GeminiProvider` using `@google/generative-ai` with configurable model selection via `GEMINI_MODEL` (default: `gemini-3.5-flash-lite`).
 2. **Deterministic Heuristic Fallback:** If `GEMINI_API_KEY` is not provided, or when network latency/rate limits occur, the system automatically falls back to an explainable rule-based engine. It categorizes tickets across the exact 6 business categories and 4 priority levels, ensuring author ticket creation never fails due to an external AI outage.
 3. **Targeted Knowledge Base Retrieval (Cost-Conscious):** Instead of dumping the entire company knowledge base on every call, the prompt builder selects only the specific policy section matching the ticket category (e.g. 80/20 royalty formula and 45-day quarterly payout cycle for Royalty inquiries; Delhi print facility and 5–7 day free reprint policy for Printing defects).
 4. **Human-in-the-Loop Safeguard:** AI drafts are generated on-demand as editable suggestions in the triage workspace. AI text is **never sent automatically** without editorial sign-off.

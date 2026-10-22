@@ -56,7 +56,7 @@ In strict accordance with the project requirements:
 | **Database** | PostgreSQL 18 + `pg` (node-postgres) | Raw SQL migrations, parameterized queries, zero ORM bloat |
 | **Authentication** | JWT Bearer Tokens + bcryptjs | Secure stateless auth, 10-round salted password hashing |
 | **Real-Time** | Socket.IO | Bi-directional events with automatic polling fallback |
-| **AI Provider** | Google Gemini API (`@google/generative-ai`) | Low-cost model (`gemini-2.0-flash`) + Heuristic Fallback |
+| **AI Provider** | Google Gemini API (`@google/generative-ai`) | Fast, production model (`gemini-3.5-flash-lite`) + Heuristic Fallback |
 | **Testing** | Vitest + Supertest + Testing Library | High-speed unit and API integration testing |
 | **API Docs** | OpenAPI 3.0 (Swagger UI) + Postman | Interactive documentation at `/api/docs` |
 
@@ -191,7 +191,7 @@ cp .env.example .env
 | `JWT_SECRET` | Secret key for JWT session signing | `super_secret_jwt_key_bookleaf_support_portal_2026_dev` |
 | `JWT_EXPIRES_IN` | Token duration | `7d` |
 | `GEMINI_API_KEY` | Optional Google Gemini API Key | `AIzaSy...` (Leaves active fallback if unset) |
-| `GEMINI_MODEL` | Gemini Model ID | `gemini-2.0-flash` |
+| `GEMINI_MODEL` | Gemini Model ID | `gemini-3.5-flash-lite` |
 | `CLIENT_ORIGIN` | Allowed Frontend Origin for CORS | `http://localhost:5173` |
 
 ---
