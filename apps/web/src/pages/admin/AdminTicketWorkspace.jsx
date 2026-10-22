@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { api } from '../../api/client.js';
 import { useSocket } from '../../context/SocketContext.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { useToast } from '../../context/ToastContext.jsx';
 import { StatusBadge, PriorityBadge, CategoryBadge } from '../../components/common/Badge.jsx';
 import { Currency } from '../../components/common/Currency.jsx';
 import { Button } from '../../components/common/Button.jsx';
@@ -33,6 +34,7 @@ export function AdminTicketWorkspace() {
   const { ticketId } = useParams();
   const { user } = useAuth();
   const { socket } = useSocket();
+  const toast = useToast();
 
   const [ticketData, setTicketData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -64,6 +66,7 @@ export function AdminTicketWorkspace() {
   const [draftModel, setDraftModel] = useState('');
 
   const messagesEndRef = useRef(null);
+  const replyTextareaRef = useRef(null);
 
   const fetchDetail = async () => {
     try {
@@ -145,6 +148,46 @@ export function AdminTicketWorkspace() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [ticketData?.messages]);
 
+  // Keyboard Shortcuts for Rapid Triage
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Ctrl+Enter or Cmd+Enter: Send Reply
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        if (replyMessage.trim() && !isSendingReply) {
+          handleSendReply(e);
+        } else {
+          toast.info('Please write a message before sending', 'Empty Response');
+          replyTextareaRef.current?.focus();
+        }
+      }
+      // Alt+A: Assign to me
+      if (e.altKey && e.key.toLowerCase() === 'a') {
+        e.preventDefault();
+        handleAssignToMe();
+      }
+      // Alt+D: Insert AI draft
+      if (e.altKey && e.key.toLowerCase() === 'd') {
+        e.preventDefault();
+        if (aiDraft) {
+          setReplyMessage(aiDraft);
+          toast.success('AI Draft inserted into response composer', 'Draft Inserted');
+          replyTextareaRef.current?.focus();
+        } else {
+          handleGenerateDraft(false);
+        }
+      }
+      // Alt+R: Focus response composer
+      if (e.altKey && e.key.toLowerCase() === 'r') {
+        e.preventDefault();
+        replyTextareaRef.current?.focus();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [replyMessage, isSendingReply, aiDraft, user, ticketId, autoResolveOnReply, status]);
+
   // Handle Category / Priority Override
   const handleApplyOverride = async (e) => {
     e.preventDefault();
@@ -159,9 +202,9 @@ export function AdminTicketWorkspace() {
         ...prev,
         ticket: { ...prev.ticket, ...res.data }
       }));
-      alert('Triage classification updated successfully!');
+      toast.success('Triage classification updated successfully!', 'Triage Saved');
     } catch (err) {
-      alert('Failed to update triage: ' + err.message);
+      toast.error('Failed to update triage: ' + err.message, 'Override Failed');
     } finally {
       setIsOverriding(false);
     }
@@ -177,8 +220,9 @@ export function AdminTicketWorkspace() {
         ...prev,
         ticket: { ...prev.ticket, ...res.data }
       }));
+      toast.success(`Ticket marked as ${newStatus}`, 'Status Updated');
     } catch (err) {
-      alert('Failed to update status: ' + err.message);
+      toast.error('Failed to update status: ' + err.message, 'Update Failed');
     } finally {
       setIsUpdatingStatus(false);
     }
@@ -193,8 +237,9 @@ export function AdminTicketWorkspace() {
         ...prev,
         ticket: { ...prev.ticket, ...res.data }
       }));
+      toast.success('Ticket successfully assigned to you', 'Assigned');
     } catch (err) {
-      alert('Failed to assign ticket: ' + err.message);
+      toast.error('Failed to assign ticket: ' + err.message, 'Assignment Failed');
     } finally {
       setIsAssigning(false);
     }
@@ -207,8 +252,9 @@ export function AdminTicketWorkspace() {
       const res = await api.generateAiDraft(ticketId, force);
       setAiDraft(res.data.draft_text);
       setDraftModel(res.data.model_used);
+      toast.success('Grounded draft generated with ' + (res.data.model_used || 'Gemini'), 'AI Copilot');
     } catch (err) {
-      alert('AI draft generation failed: ' + err.message);
+      toast.error('AI draft generation failed: ' + err.message, 'AI Generation Failed');
     } finally {
       setIsDrafting(false);
     }
@@ -227,8 +273,9 @@ export function AdminTicketWorkspace() {
         internal_notes: [...prev.internal_notes, res.data]
       }));
       setNoteContent('');
+      toast.success('Private internal note saved to ticket ledger', 'Note Saved');
     } catch (err) {
-      alert('Failed to add note: ' + err.message);
+      toast.error('Failed to add note: ' + err.message, 'Note Failed');
     } finally {
       setIsSubmittingNote(false);
     }
@@ -236,7 +283,7 @@ export function AdminTicketWorkspace() {
 
   // Send Public Response
   const handleSendReply = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     if (!replyMessage.trim()) return;
 
     try {
@@ -248,12 +295,13 @@ export function AdminTicketWorkspace() {
         messages: [...prev.messages, res.data]
       }));
       setReplyMessage('');
+      toast.success('Official response dispatched to author', 'Reply Sent');
 
       if (autoResolveOnReply && status !== 'Resolved') {
         await handleStatusChange('Resolved');
       }
     } catch (err) {
-      alert('Failed to send reply: ' + err.message);
+      toast.error('Failed to send reply: ' + err.message, 'Reply Failed');
     } finally {
       setIsSendingReply(false);
     }
@@ -519,18 +567,29 @@ export function AdminTicketWorkspace() {
             </div>
 
             <textarea
+              ref={replyTextareaRef}
               rows={7}
               required
               value={replyMessage}
               onChange={(e) => setReplyMessage(e.target.value)}
-              placeholder="Type your official resolution or insert AI Draft from the right panel..."
+              placeholder="Type your official resolution or insert AI Draft from the right panel... (Press Ctrl+Enter to dispatch)"
               className="w-full text-sm border border-stone-300 rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-indigo-700 bg-white"
             />
 
-            <div className="flex justify-between items-center pt-1">
-              <span className="text-[11px] text-stone-400">
-                ⚡ Author will see this response immediately in real time.
-              </span>
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pt-1">
+              <div className="flex items-center gap-2 text-[11px] text-stone-500 flex-wrap">
+                <span className="flex items-center gap-1">
+                  <kbd>Ctrl+Enter</kbd> Send
+                </span>
+                <span>•</span>
+                <span className="flex items-center gap-1">
+                  <kbd>Alt+D</kbd> AI Draft
+                </span>
+                <span>•</span>
+                <span className="flex items-center gap-1">
+                  <kbd>Alt+A</kbd> Assign
+                </span>
+              </div>
               <Button
                 type="submit"
                 variant="primary"
@@ -668,7 +727,8 @@ export function AdminTicketWorkspace() {
                     variant="primary"
                     onClick={() => {
                       setReplyMessage(aiDraft);
-                      alert('AI Draft inserted into response composer! You can edit it before sending.');
+                      toast.success('AI Draft inserted into response composer! You can edit it before sending.', 'Draft Copied');
+                      replyTextareaRef.current?.focus();
                     }}
                     icon={Copy}
                   >

@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
 import { SocketProvider } from './context/SocketContext.jsx';
+import { ToastProvider } from './context/ToastContext.jsx';
 import { ProtectedRoute } from './layouts/ProtectedRoute.jsx';
 import { AuthorLayout } from './layouts/AuthorLayout.jsx';
 import { AdminLayout } from './layouts/AdminLayout.jsx';
@@ -39,7 +40,8 @@ export function App() {
     <BrowserRouter>
       <AuthProvider>
         <SocketProvider>
-          <Routes>
+          <ToastProvider>
+            <Routes>
             {/* Root & Public */}
             <Route path="/" element={<RootRedirect />} />
             <Route path="/login" element={<LoginPage />} />
@@ -68,6 +70,7 @@ export function App() {
             {/* 404 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </ToastProvider>
         </SocketProvider>
       </AuthProvider>
     </BrowserRouter>

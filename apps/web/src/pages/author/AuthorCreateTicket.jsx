@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { api } from '../../api/client.js';
+import { useToast } from '../../context/ToastContext.jsx';
 import { Button } from '../../components/common/Button.jsx';
 import {
   LifeBuoy,
@@ -56,6 +57,7 @@ export function AuthorCreateTicket() {
   const [createdTicket, setCreatedTicket] = useState(null);
 
   const navigate = useNavigate();
+  const toast = useToast();
 
   useEffect(() => {
     async function loadAuthorBooks() {
@@ -119,6 +121,7 @@ export function AuthorCreateTicket() {
 
       const res = await api.createTicket(payload);
       setCreatedTicket(res.data);
+      toast.success('Your ticket reference is ' + res.data.ticket_number, 'Inquiry Submitted');
     } catch (err) {
       setErrors({ form: err.message || 'Failed to submit inquiry. Please try again.' });
     } finally {

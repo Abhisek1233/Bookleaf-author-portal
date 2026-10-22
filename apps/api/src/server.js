@@ -52,6 +52,11 @@ try {
   console.warn('Swagger documentation could not be loaded:', err.message);
 }
 
+// Root Redirect to Swagger Documentation
+app.get('/', (req, res) => {
+  res.redirect('/api/docs');
+});
+
 // REST API Routes
 app.use(process.env.API_PREFIX || '/api/v1', routes);
 

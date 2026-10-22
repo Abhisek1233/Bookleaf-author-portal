@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { api } from '../../api/client.js';
 import { useSocket } from '../../context/SocketContext.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { useToast } from '../../context/ToastContext.jsx';
 import { StatusBadge, PriorityBadge, CategoryBadge } from '../../components/common/Badge.jsx';
 import { Button } from '../../components/common/Button.jsx';
 import { Skeleton } from '../../components/common/EmptyState.jsx';
@@ -25,6 +26,7 @@ export function AuthorTicketDetail() {
   const { ticketId } = useParams();
   const { user } = useAuth();
   const { socket } = useSocket();
+  const toast = useToast();
 
   const [ticket, setTicket] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -95,8 +97,9 @@ export function AuthorTicketDetail() {
         return [...prev, res.data];
       });
       setReplyText('');
+      toast.success('Your reply was delivered to operations', 'Reply Sent');
     } catch (err) {
-      alert('Failed to send reply: ' + err.message);
+      toast.error('Failed to send reply: ' + err.message, 'Delivery Failed');
     } finally {
       setIsSending(false);
     }

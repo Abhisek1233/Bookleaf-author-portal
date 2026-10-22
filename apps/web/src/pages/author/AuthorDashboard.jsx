@@ -22,6 +22,7 @@ export function AuthorDashboard() {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showSchedule, setShowSchedule] = useState(false);
 
   useEffect(() => {
     async function loadDashboard() {
@@ -175,6 +176,58 @@ export function AuthorDashboard() {
             style={{ width: `${thresholdPct}%` }}
           />
         </div>
+
+        {/* Expandable Quarterly Disbursement Calendar */}
+        <div className="pt-2 border-t border-stone-100 flex items-center justify-between">
+          <button
+            type="button"
+            onClick={() => setShowSchedule(!showSchedule)}
+            className="text-xs font-semibold text-indigo-700 hover:text-indigo-900 flex items-center gap-1.5 cursor-pointer transition-colors"
+          >
+            <span>{showSchedule ? 'Hide Payout Calendar' : 'View 2026 Quarterly Payout Calendar'}</span>
+            <span className="text-[10px] bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 rounded font-bold">
+              {showSchedule ? '▲' : '▼'}
+            </span>
+          </button>
+          <span className="text-[11px] text-stone-400 font-mono hidden sm:inline">
+            Direct Bank Transfer (NEFT / IMPS)
+          </span>
+        </div>
+
+        {showSchedule && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2 animate-in fade-in slide-in-from-top-2 duration-200">
+            {[
+              { q: 'Q1 Payout', cycle: 'Jan 1 – Mar 31', date: 'May 15', status: 'Closed' },
+              { q: 'Q2 Payout', cycle: 'Apr 1 – Jun 30', date: 'Aug 15', status: 'Processing' },
+              { q: 'Q3 Payout', cycle: 'Jul 1 – Sep 30', date: 'Nov 15', status: 'Next Cycle', active: true },
+              { q: 'Q4 Payout', cycle: 'Oct 1 – Dec 31', date: 'Feb 15', status: 'Upcoming' }
+            ].map((cycle) => (
+              <div
+                key={cycle.q}
+                className={`p-3.5 rounded-2xl border text-xs ${
+                  cycle.active
+                    ? 'bg-indigo-50/80 border-indigo-200 text-indigo-950 font-medium'
+                    : 'bg-stone-50/80 border-stone-200 text-stone-600'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className="font-bold">{cycle.q}</span>
+                  <span
+                    className={`text-[9px] font-bold px-2 py-0.5 rounded-full uppercase ${
+                      cycle.active
+                        ? 'bg-indigo-700 text-white'
+                        : 'bg-stone-200 text-stone-600'
+                    }`}
+                  >
+                    {cycle.status}
+                  </span>
+                </div>
+                <div className="text-[11px] text-stone-500">{cycle.cycle}</div>
+                <div className="font-bold text-slate-900 mt-1 font-mono">Disbursed by: {cycle.date}</div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Recent Support Tickets Section */}
