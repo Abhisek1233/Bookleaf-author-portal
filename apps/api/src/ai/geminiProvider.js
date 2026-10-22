@@ -111,6 +111,9 @@ Royalty Pending: ₹${bookContext.royalty_pending || 0}
 Available On: ${Array.isArray(bookContext.available_on) ? bookContext.available_on.join(', ') : 'None'}`
       : 'General Account Level query (no single book attached)';
 
+    const safeSubject = (subject || '').slice(0, 300);
+    const safeDescription = (description || '').slice(0, 2000);
+
     const prompt = `You are a helpful, professional, and empathetic Author Support Specialist at BookLeaf Publishing.
 Draft an official support reply to the author following these strict rules:
 
@@ -118,12 +121,12 @@ BOOKLEAF POLICIES & KNOWLEDGE BASE:
 ${targetedPolicy}
 
 VERIFIED RECORD DATA:
-Author Name: ${authorName}
+Author Name: ${authorName || 'Author'}
 ${bookSummary}
-Ticket Category: ${category}
-Ticket Priority: ${priority}
-Ticket Subject: ${subject.slice(0, 300)}
-Author Query: ${description.slice(0, 2000)}
+Ticket Category: ${category || 'General Inquiry'}
+Ticket Priority: ${priority || 'Medium'}
+Ticket Subject: ${safeSubject}
+Author Query: ${safeDescription}
 
 COMMUNICATION REQUIREMENTS:
 1. Treat the author as an appreciated creative partner.

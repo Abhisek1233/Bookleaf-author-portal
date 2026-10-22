@@ -12,10 +12,14 @@ import routes from './routes/index.js';
 import { errorHandler } from './middleware/errorHandler.middleware.js';
 import { initializeSocket } from './socket/socket.server.js';
 
-dotenv.config();
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Load .env from both apps/api/.env and repo root .env
+dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
 const app = express();
 const httpServer = http.createServer(app);
