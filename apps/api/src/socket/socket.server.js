@@ -7,7 +7,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_jwt_key_bookleaf_supp
 export function initializeSocket(httpServer) {
   ioInstance = new Server(httpServer, {
     cors: {
-      origin: process.env.CLIENT_ORIGIN || '*',
+      origin: (origin, callback) => callback(null, true),
       methods: ['GET', 'POST'],
       credentials: true
     }

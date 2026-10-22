@@ -18,7 +18,9 @@ export function SocketProvider({ children }) {
       return;
     }
 
-    const socketUrl = window.location.origin;
+    const socketUrl = import.meta.env.VITE_API_URL 
+      ? import.meta.env.VITE_API_URL.replace(/\/+$/, '') 
+      : window.location.origin;
     const newSocket = io(socketUrl, {
       auth: { token },
       transports: ['websocket', 'polling'],

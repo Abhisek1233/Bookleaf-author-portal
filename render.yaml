@@ -1,12 +1,12 @@
 services:
-  # Backend Node.js Express API & Real-time WebSockets
+  # 1. Backend Node.js Express REST API & WebSockets
   - type: web
     name: bookleaf-api
     env: node
     plan: free
     rootDir: apps/api
     buildCommand: npm install
-    startCommand: node src/server.js
+    startCommand: npm run start:prod
     healthCheckPath: /api/v1/health
     envVars:
       - key: NODE_ENV
@@ -24,10 +24,29 @@ services:
       - key: GEMINI_MODEL
         value: gemini-3.5-flash-lite
       - key: CLIENT_ORIGIN
-        value: https://bookleaf-portal.vercel.app
+        value: "*"
+
+  # 2. Frontend React 18 + Vite SPA (Static Site)
+  - type: web
+    name: bookleaf-web
+    runtime: static
+    plan: free
+    rootDir: apps/web
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: bookleaf-api
+          property: host
 
 databases:
-  # Managed PostgreSQL Database
+  # 3. Managed PostgreSQL Database
   - name: bookleaf-db
     plan: free
     databaseName: bookleaf_support

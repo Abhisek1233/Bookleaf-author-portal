@@ -32,12 +32,22 @@ app.use(helmet({
   contentSecurityPolicy: false // Allows Swagger UI to render assets correctly
 }));
 
-const allowedOrigins = process.env.CLIENT_ORIGIN
-  ? [process.env.CLIENT_ORIGIN, 'http://localhost:5173', 'http://127.0.0.1:5173']
-  : '*';
-
+const clientOrigin = process.env.CLIENT_ORIGIN;
 app.use(cors({
-  origin: allowedOrigins,
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g. mobile apps, curl, server-to-server, Swagger UI)
+    if (!origin) return callback(null, true);
+    if (!clientOrigin || clientOrigin === '*') return callback(null, true);
+    
+    const whitelist = clientOrigin.split(',').map(s => s.trim().replace(/\/+$/, ''));
+    whitelist.push('http://localhost:5173', 'http://127.0.0.1:5173');
+    
+    const cleanOrigin = origin.replace(/\/+$/, '');
+    if (whitelist.includes(cleanOrigin) || cleanOrigin.endsWith('.onrender.com') || cleanOrigin.endsWith('.vercel.app')) {
+      return callback(null, true);
+    }
+    return callback(null, true);
+  },
   credentials: true
 }));
 
