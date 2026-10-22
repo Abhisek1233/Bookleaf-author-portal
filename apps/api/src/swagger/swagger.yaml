@@ -1,0 +1,234 @@
+openapi: 3.0.3
+info:
+  title: BookLeaf Publishing Author Support & Communication API
+  version: 1.0.0
+  description: RESTful API for BookLeaf Publishing Author Support Portal & Internal Operations Triage Engine.
+servers:
+  - url: http://localhost:4000/api/v1
+    description: Local Development Server
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Provide the JWT token received from /api/v1/auth/login
+
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          example: priya.sharma@email.com
+        password:
+          type: string
+          example: Author123!
+
+    CreateTicketRequest:
+      type: object
+      required:
+        - subject
+        - description
+      properties:
+        book_id:
+          type: string
+          nullable: true
+          example: BK001
+        subject:
+          type: string
+          example: Query regarding pending royalty calculation
+        description:
+          type: string
+          example: My book has sold 342 copies but I have not received the remaining pending royalties.
+        attachment_url:
+          type: string
+          nullable: true
+        attachment_name:
+          type: string
+          nullable: true
+
+    OverrideRequest:
+      type: object
+      required:
+        - category
+        - priority
+      properties:
+        category:
+          type: string
+          enum:
+            - Royalty & Payments
+            - ISBN & Metadata Issues
+            - Printing & Quality
+            - Distribution & Availability
+            - Book Status & Production Updates
+            - General Inquiry
+        priority:
+          type: string
+          enum:
+            - Critical
+            - High
+            - Medium
+            - Low
+        override_reason:
+          type: string
+
+    StatusUpdateRequest:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - Open
+            - In Progress
+            - Resolved
+            - Closed
+
+    ReplyRequest:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: We have reviewed your account and triggered the disbursement.
+        status:
+          type: string
+          enum: [Open, In Progress, Resolved, Closed]
+          nullable: true
+
+    InternalNoteRequest:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: string
+          example: Verified bank NEFT IFSC code with finance operations team.
+
+paths:
+  /health:
+    get:
+      summary: Service Health & Readiness Check
+      responses:
+        '200':
+          description: System is healthy
+
+  /auth/login:
+    post:
+      summary: User Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Successful authentication with JWT token
+
+  /auth/me:
+    get:
+      summary: Get authenticated user profile
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Current user information
+
+  /author/dashboard:
+    get:
+      summary: Author Dashboard Metrics
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Real author analytics and royalty summaries
+
+  /author/books:
+    get:
+      summary: List authenticated author books
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of books owned by author
+
+  /author/tickets:
+    get:
+      summary: List author support tickets
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Author tickets
+    post:
+      summary: Submit a new author support ticket
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTicketRequest'
+      responses:
+        '201':
+          description: Ticket successfully created and classified
+
+  /admin/dashboard:
+    get:
+      summary: Admin Operational Overview KPIs
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Operational statistics
+
+  /admin/tickets:
+    get:
+      summary: Admin Support Queue
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: priority
+          in: query
+          schema:
+            type: string
+        - name: category
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Paginated ticket queue

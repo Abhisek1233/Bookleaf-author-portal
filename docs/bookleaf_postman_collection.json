@@ -1,0 +1,201 @@
+{
+  "info": {
+    "name": "BookLeaf Publishing Author Support & Communication API",
+    "description": "Comprehensive Postman collection for BookLeaf Author Support Portal REST API and Operations Triage Engine.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "health"]
+        }
+      }
+    },
+    {
+      "name": "Auth - Login as Author (Priya Sharma)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"priya.sharma@email.com\",\n  \"password\": \"Author123!\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "auth", "login"]
+        }
+      }
+    },
+    {
+      "name": "Auth - Login as Admin (Editorial Ops)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"admin@bookleafpub.com\",\n  \"password\": \"AdminPassword123!\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "auth", "login"]
+        }
+      }
+    },
+    {
+      "name": "Author - Get Dashboard Summary",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{authorToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/author/dashboard",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "author", "dashboard"]
+        }
+      }
+    },
+    {
+      "name": "Author - List My Books",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{authorToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/author/books",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "author", "books"]
+        }
+      }
+    },
+    {
+      "name": "Author - Submit Support Query",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authorToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"book_id\": \"BK001\",\n  \"subject\": \"Inquiry regarding my Q3 royalty disbursement\",\n  \"description\": \"I would like to verify if my bank account details are properly linked for the upcoming payout.\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/author/tickets",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "author", "tickets"]
+        }
+      }
+    },
+    {
+      "name": "Admin - Get Operations Overview Dashboard",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/admin/dashboard",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "admin", "dashboard"]
+        }
+      }
+    },
+    {
+      "name": "Admin - Get Support Ticket Queue",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/admin/tickets?page=1&limit=10&sort=urgent_first",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "admin", "tickets"],
+          "query": [
+            { "key": "page", "value": "1" },
+            { "key": "limit", "value": "10" },
+            { "key": "sort", "value": "urgent_first" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Admin - Override Ticket Category and Priority",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"category\": \"Printing & Quality\",\n  \"priority\": \"Critical\",\n  \"override_reason\": \"Severe binding defect reported on multi-copy print run\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/admin/tickets/{{ticketId}}/override",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "admin", "tickets", "{{ticketId}}", "override"]
+        }
+      }
+    },
+    {
+      "name": "Admin - Generate AI Response Draft",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/admin/tickets/{{ticketId}}/draft?force=true",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "admin", "tickets", "{{ticketId}}", "draft"],
+          "query": [{ "key": "force", "value": "true" }]
+        }
+      }
+    },
+    {
+      "name": "Admin - Add Private Internal Note",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"content\": \"Internal Note: Verified bank IFSC code with finance operations team.\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/admin/tickets/{{ticketId}}/notes",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "admin", "tickets", "{{ticketId}}", "notes"]
+        }
+      }
+    },
+    {
+      "name": "Admin - Send Official Response to Author",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"message\": \"Dear Author,\\n\\nWe have verified your query and triggered the disbursement update.\\n\\nWarm regards,\\nBookLeaf Author Support Team\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/admin/tickets/{{ticketId}}/reply",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "admin", "tickets", "{{ticketId}}", "reply"]
+        }
+      }
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:4000" },
+    { "key": "authorToken", "value": "" },
+    { "key": "adminToken", "value": "" },
+    { "key": "ticketId", "value": "ticket-seed-001" }
+  ]
+}

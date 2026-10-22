@@ -1,0 +1,28 @@
+{
+  "name": "bookleaf-portal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "BookLeaf Publishing Author Support & Communication Portal",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev:api": "npm run dev --workspace=apps/api",
+    "dev:web": "npm run dev --workspace=apps/web",
+    "build:web": "npm run build --workspace=apps/web",
+    "db:migrate": "npm run db:migrate --workspace=apps/api",
+    "db:seed": "npm run db:seed --workspace=apps/api",
+    "test:api": "npm run test --workspace=apps/api",
+    "test:web": "npm run test --workspace=apps/web",
+    "test": "npm run test:api && npm run test:web"
+  },
+  "keywords": [
+    "bookleaf",
+    "author-portal",
+    "customer-support",
+    "ai-support",
+    "publishing"
+  ],
+  "author": "BookLeaf Team",
+  "license": "ISC"
+}
