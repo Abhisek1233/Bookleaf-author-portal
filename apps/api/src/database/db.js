@@ -7,11 +7,15 @@ const { Pool } = pg;
 
 const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:root@localhost:5432/bookleaf_support?schema=public';
 
-const isRemote = !connectionString.includes('localhost') && !connectionString.includes('127.0.0.1');
+// Render internal network (dpg-*) does not use SSL; external connections require SSL
+const isInternalRender = connectionString.includes('dpg-') && !connectionString.includes('.render.com');
+const isExternalSSL = connectionString.includes('.render.com') || connectionString.includes('neon.tech') || connectionString.includes('ssl=true') || connectionString.includes('sslmode=require');
+
+const sslConfig = !isInternalRender && isExternalSSL ? { rejectUnauthorized: false } : false;
 
 export const pool = new Pool({
   connectionString,
-  ssl: isRemote ? { rejectUnauthorized: false } : false,
+  ssl: sslConfig,
   max: 20,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 10000,
