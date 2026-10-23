@@ -126,11 +126,17 @@ The implementation strictly honors every constraint specified in the assignment 
 
 ```mermaid
 flowchart TD
+    TopBuffer[" "]
+    style TopBuffer fill:none,stroke:none,color:none
+
     subgraph Client["Frontend Client (React 18 + Vite + Tailwind v4)"]
         AuthorUI["Author Portal (/author/*)"]
         AdminUI["Admin Operations Portal (/admin/*)"]
         AuthCtx["Auth Context (JWT State)"]
         SocketCl["Socket.IO Client (Real-time updates)"]
+        TopRightPad[" "]
+        AdminUI ~~~ TopRightPad
+        style TopRightPad fill:none,stroke:none,color:none
     end
 
     subgraph Server["Backend REST API (Node.js + Express ESM)"]
@@ -162,9 +168,18 @@ flowchart TD
             T_Messages["ticket_messages (Public thread)"]
             T_Notes["internal_notes (Admin-only)"]
             T_Drafts["ai_drafts (Grounded suggestions)"]
+            BottomRightPad[" "]
+            T_Drafts ~~~ BottomRightPad
+            style BottomRightPad fill:none,stroke:none,color:none
         end
         CoreTables ~~~ SupportTables
     end
+
+    BottomBuffer[" "]
+    style BottomBuffer fill:none,stroke:none,color:none
+
+    TopBuffer ~~~ AuthorUI
+    TopBuffer ~~~ TopRightPad
 
     AuthorUI -->|REST API Requests| Router
     AdminUI -->|REST API Requests| Router
@@ -186,9 +201,8 @@ flowchart TD
     AdminCtrl --> Storage
     SocketSvr --> Storage
 
-    CornerPad[" \n \n "]
-    Storage ~~~ CornerPad
-    style CornerPad fill:none,stroke:none,color:none
+    T_Tickets ~~~ BottomBuffer
+    BottomRightPad ~~~ BottomBuffer
 ```
 
 ---
