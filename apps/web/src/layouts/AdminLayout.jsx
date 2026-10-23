@@ -155,12 +155,17 @@ export function AdminLayout() {
           </div>
 
           {/* Real-time Status Badge */}
-          <div className="px-5 py-3 border-b border-slate-800/80 flex items-center justify-between text-xs text-slate-400 bg-slate-950/60">
-            <span className="flex items-center gap-2">
-              <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`} aria-hidden="true" />
-              <span className="font-medium text-slate-300">{isConnected ? 'Live Gateway Sync' : 'Polling Sync Mode'}</span>
+          <div
+            className="px-5 py-2.5 border-b border-slate-800/80 flex items-center justify-between gap-3 text-xs bg-slate-950/60"
+            title={isConnected ? 'WebSocket Gateway Connected (Real-time updates enabled)' : 'HTTP Polling Fallback Mode'}
+          >
+            <span className="flex items-center gap-2 min-w-0">
+              <span className={`w-2 h-2 rounded-full shrink-0 ${isConnected ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`} aria-hidden="true" />
+              <span className="font-medium text-slate-300 truncate">
+                {isConnected ? 'Live Gateway' : 'Polling Sync'}
+              </span>
             </span>
-            <span className="flex items-center gap-1 font-bold text-indigo-300 bg-indigo-950/90 px-2 py-0.5 rounded border border-indigo-800/60">
+            <span className="inline-flex items-center gap-1 font-semibold text-[11px] text-indigo-300 bg-indigo-950/90 px-2.5 py-0.5 rounded-md border border-indigo-800/60 shrink-0">
               <Sparkles className="w-3 h-3 text-indigo-400" />
               AI Copilot
             </span>

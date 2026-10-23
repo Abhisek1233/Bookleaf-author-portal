@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../../api/client.js';
 import { StatusBadge, PriorityBadge, CategoryBadge } from '../../components/common/Badge.jsx';
 import { Button } from '../../components/common/Button.jsx';
@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 
 export function AdminTicketQueue() {
+  const navigate = useNavigate();
   const [tickets, setTickets] = useState([]);
   const [pagination, setPagination] = useState({ page: 1, limit: 10, total: 0, total_pages: 1 });
   const [isLoading, setIsLoading] = useState(true);
@@ -307,7 +308,8 @@ export function AdminTicketQueue() {
                   return (
                     <tr
                       key={t.id}
-                      className={`hover:bg-stone-50/90 transition-colors min-h-[48px] ${
+                      onClick={() => navigate(`/admin/tickets/${t.id}`)}
+                      className={`hover:bg-stone-50/90 transition-colors min-h-[48px] cursor-pointer ${
                         isCritical ? 'bg-rose-50/40' : isHigh ? 'bg-orange-50/20' : ''
                       }`}
                     >
@@ -320,8 +322,11 @@ export function AdminTicketQueue() {
                           {t.book_title || 'General Account'}
                         </div>
                       </td>
-                      <td className="px-5 py-4">
-                        <div className="font-medium text-slate-900 max-w-xs truncate">
+                      <td className="px-5 py-4 min-w-[260px] max-w-md">
+                        <div
+                          className="font-medium text-slate-900 line-clamp-2 leading-snug hover:text-indigo-700 transition-colors"
+                          title={t.subject}
+                        >
                           {t.subject}
                         </div>
                       </td>
@@ -361,7 +366,7 @@ export function AdminTicketQueue() {
                           {new Date(t.updated_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })}
                         </div>
                       </td>
-                      <td className="px-5 py-4 text-center">
+                      <td className="px-5 py-4 text-center" onClick={(e) => e.stopPropagation()}>
                         <Link to={`/admin/tickets/${t.id}`}>
                           <Button size="sm" variant="secondary" className="group min-h-[38px]">
                             Triage <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />

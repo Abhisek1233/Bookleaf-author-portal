@@ -237,7 +237,7 @@ export function AdminDashboard() {
                       </span>
                     )}
                   </div>
-                  <h4 className="text-sm font-bold text-slate-900 truncate">{t.subject}</h4>
+                  <h4 className="text-sm font-bold text-slate-900 line-clamp-2 leading-snug" title={t.subject}>{t.subject}</h4>
                 </div>
 
                 <div className="flex items-center gap-4 text-xs text-stone-500 shrink-0">

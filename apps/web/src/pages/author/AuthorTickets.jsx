@@ -168,7 +168,7 @@ export function AuthorTickets() {
                     </span>
                   )}
                 </div>
-                <h3 className="text-sm sm:text-base font-bold text-slate-900 truncate">
+                <h3 className="text-sm sm:text-base font-bold text-slate-900 line-clamp-2 leading-snug" title={t.subject}>
                   {t.subject}
                 </h3>
               </div>
