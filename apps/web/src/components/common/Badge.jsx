@@ -19,7 +19,7 @@ export function StatusBadge({ status }) {
   const dot = dots[status] || 'bg-stone-500';
 
   return (
-    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${style}`}>
+    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border whitespace-nowrap shrink-0 ${style}`}>
       <span className={`w-2 h-2 rounded-full ${dot} shrink-0`} aria-hidden="true" />
       <span>{status}</span>
     </span>
@@ -45,7 +45,7 @@ export function PriorityBadge({ priority }) {
   const dot = dots[priority] || 'bg-stone-500';
 
   return (
-    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs border ${style}`}>
+    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs border whitespace-nowrap shrink-0 ${style}`}>
       <span className={`w-1.5 h-1.5 rounded-full ${dot} shrink-0`} aria-hidden="true" />
       <span>{priority}</span>
     </span>
@@ -54,7 +54,7 @@ export function PriorityBadge({ priority }) {
 
 export function CategoryBadge({ category }) {
   return (
-    <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-stone-100 text-stone-800 border border-stone-200">
+    <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-stone-100 text-stone-800 border border-stone-200 whitespace-nowrap shrink-0">
       {category}
     </span>
   );

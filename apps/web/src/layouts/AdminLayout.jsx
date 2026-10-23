@@ -203,10 +203,13 @@ export function AdminLayout() {
               <ShieldCheck className="w-4 h-4 text-indigo-400" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-bold text-slate-100 truncate" title={user?.name || 'Operations Lead'}>
-                {user?.name || 'Operations Lead'}
+              <p
+                className="text-sm font-bold text-slate-100 leading-snug break-words"
+                title={user?.name || 'Operations Lead'}
+              >
+                {user?.name === 'Editorial Operations Manager' ? 'Operations Manager' : (user?.name || 'Operations Lead')}
               </p>
-              <p className="text-xs text-slate-400 truncate font-mono" title={user?.email}>
+              <p className="text-xs text-slate-400 truncate font-mono mt-0.5" title={user?.email}>
                 {user?.email}
               </p>
             </div>

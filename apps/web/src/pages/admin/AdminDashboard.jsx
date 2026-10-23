@@ -93,51 +93,51 @@ export function AdminDashboard() {
       </div>
 
       {/* Operational KPI Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {/* Urgent Unresolved */}
-        <div className="bg-rose-50/30 p-5 rounded-2xl border border-rose-200 border-l-4 border-l-rose-600 shadow-xs flex flex-col justify-between">
+        <div className="bg-rose-50/30 p-3.5 sm:p-5 rounded-2xl border border-rose-200 border-l-4 border-l-rose-600 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-stone-500 mb-2">
             <span className="text-sm font-semibold text-rose-800 flex items-center gap-1.5">
               <Flame className="w-4 h-4 text-rose-600" /> Urgent unresolved
             </span>
           </div>
-          <div className="text-3xl font-bold text-rose-700 font-mono tracking-tight">
+          <div className="text-2xl sm:text-3xl font-bold text-rose-700 font-sans tabular-nums tracking-tight">
             {metrics.urgent_unresolved_tickets}
           </div>
           <p className="text-xs text-rose-700 mt-1 font-medium">Critical / High priority tickets</p>
         </div>
 
         {/* Open Inquiries */}
-        <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col justify-between">
+        <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-stone-500 mb-2">
             <span className="text-sm font-semibold text-stone-700">Open inquiries</span>
             <Inbox className="w-4 h-4 text-amber-600" />
           </div>
-          <div className="text-3xl font-bold text-slate-900 font-mono tracking-tight">
+          <div className="text-2xl sm:text-3xl font-bold text-slate-900 font-sans tabular-nums tracking-tight">
             {metrics.open_tickets}
           </div>
           <p className="text-xs text-stone-500 mt-1 font-medium">Awaiting staff triage or assignment</p>
         </div>
 
         {/* In Progress */}
-        <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col justify-between">
+        <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-stone-500 mb-2">
             <span className="text-sm font-semibold text-stone-700">In progress</span>
             <Clock className="w-4 h-4 text-indigo-600" />
           </div>
-          <div className="text-3xl font-bold text-indigo-700 font-mono tracking-tight">
+          <div className="text-2xl sm:text-3xl font-bold text-indigo-700 font-sans tabular-nums tracking-tight">
             {metrics.in_progress_tickets}
           </div>
           <p className="text-xs text-stone-500 mt-1 font-medium">Under active investigation</p>
         </div>
 
         {/* Resolved Overall */}
-        <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col justify-between">
+        <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-stone-500 mb-2">
             <span className="text-sm font-semibold text-stone-700">Resolved overall</span>
             <CheckCircle className="w-4 h-4 text-emerald-600" />
           </div>
-          <div className="text-3xl font-bold text-emerald-700 font-mono tracking-tight">
+          <div className="text-2xl sm:text-3xl font-bold text-emerald-700 font-sans tabular-nums tracking-tight">
             {metrics.resolved_tickets}
           </div>
           <p className="text-xs text-stone-500 mt-1 font-medium">Successfully processed inquiries</p>
@@ -163,7 +163,7 @@ export function AdminDashboard() {
                 <div key={p.label}>
                   <div className="flex justify-between text-xs font-medium mb-1.5">
                     <span className={`font-semibold ${p.text}`}>{p.label}</span>
-                    <span className="font-bold text-slate-800 font-mono">{p.count} ({pct.toFixed(0)}%)</span>
+                    <span className="font-bold text-slate-800 font-sans tabular-nums">{p.count} ({pct.toFixed(0)}%)</span>
                   </div>
                   <div className="w-full h-2 bg-stone-100 rounded-full overflow-hidden">
                     <div className={`h-full ${p.color} transition-all duration-500`} style={{ width: `${pct}%` }} />
@@ -179,11 +179,11 @@ export function AdminDashboard() {
           <h2 className="text-sm font-semibold text-slate-900 mb-4">
             Department inquiries (AI auto-classified)
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
             {Object.entries(category_distribution).map(([cat, count]) => (
-              <div key={cat} className="p-3.5 rounded-xl bg-stone-50 border border-stone-200/80 flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-700 truncate pr-2">{cat}</span>
-                <span className="text-xs font-bold font-mono px-2 py-0.5 rounded-md bg-white text-indigo-950 border border-stone-200 shrink-0 shadow-2xs">
+              <div key={cat} className="p-2.5 sm:p-3 rounded-xl bg-stone-50 border border-stone-200/80 flex items-center justify-between">
+                <span className="text-xs sm:text-sm font-semibold text-slate-700 truncate pr-2">{cat}</span>
+                <span className="text-xs font-bold font-sans tabular-nums px-2 py-0.5 rounded-md bg-white text-indigo-950 border border-stone-200 shrink-0 shadow-2xs">
                   {count}
                 </span>
               </div>
@@ -196,17 +196,17 @@ export function AdminDashboard() {
       <div className="bg-white rounded-3xl border border-stone-200 shadow-xs overflow-hidden">
         <div className="px-6 py-5 border-b border-stone-100 flex items-center justify-between">
           <div>
-            <h2 className="text-sm font-serif font-bold text-slate-900 flex items-center gap-2">
+            <h2 className="text-sm sm:text-base font-serif font-bold text-slate-900 flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-rose-600" />
               Oldest Urgent Unresolved Inquiries
             </h2>
-            <p className="text-xs text-stone-500 mt-0.5">
+            <p className="text-xs sm:text-sm text-stone-500 mt-0.5">
               Surfaced by operational triage urgency score (Critical/High and oldest created)
             </p>
           </div>
           <Link
             to="/admin/tickets"
-            className="text-xs font-semibold text-indigo-700 hover:text-indigo-900 flex items-center gap-1"
+            className="text-xs sm:text-sm font-semibold text-indigo-700 hover:text-indigo-900 flex items-center gap-1 whitespace-nowrap shrink-0"
           >
             All Queue Tickets <ArrowRight className="w-3.5 h-3.5" />
           </Link>
@@ -226,20 +226,20 @@ export function AdminDashboard() {
               >
                 <div className="space-y-1.5 min-w-0 flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-mono text-xs font-bold text-stone-600 bg-stone-100 px-2 py-0.5 rounded-md">{t.ticket_number}</span>
+                    <span className="font-mono text-xs font-bold text-stone-700 bg-stone-100 px-2.5 py-0.5 rounded-md">{t.ticket_number}</span>
                     <PriorityBadge priority={t.priority} />
                     <StatusBadge status={t.status} />
-                    <span className="text-xs font-semibold text-slate-700">Author: {t.author_name}</span>
+                    <span className="text-sm font-semibold text-slate-800">Author: {t.author_name}</span>
                     {t.book_title && (
-                      <span className="text-xs text-stone-500 font-serif italic truncate">
+                      <span className="text-sm text-stone-600 font-serif italic truncate">
                         • {t.book_title}
                       </span>
                     )}
                   </div>
-                  <h4 className="text-sm font-bold text-slate-900 line-clamp-2 leading-snug" title={t.subject}>{t.subject}</h4>
+                  <h4 className="text-sm sm:text-base font-bold text-slate-900 line-clamp-2 leading-snug" title={t.subject}>{t.subject}</h4>
                 </div>
 
-                <div className="flex items-center gap-4 text-xs text-stone-500 shrink-0">
+                <div className="flex items-center gap-4 text-xs sm:text-sm text-stone-500 shrink-0">
                   <span className="text-rose-800 font-semibold font-sans">
                     Waiting since {new Date(t.created_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })}
                   </span>

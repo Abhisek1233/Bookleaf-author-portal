@@ -216,27 +216,27 @@ export function AuthorBooks() {
                   <div className="grid grid-cols-3 gap-2 text-xs">
                     <div>
                       <span className="text-xs text-stone-600 font-medium block">Retail MRP</span>
-                      <span className="font-bold text-slate-900 font-mono text-sm"><Currency value={b.mrp} /></span>
+                      <span className="font-bold text-slate-900 font-sans tabular-nums text-sm"><Currency value={b.mrp} /></span>
                     </div>
                     <div>
                       <span className="text-xs text-stone-600 font-medium block">Copies sold</span>
-                      <span className="font-bold text-slate-900 font-mono text-sm">{b.total_copies_sold.toLocaleString('en-IN')}</span>
+                      <span className="font-bold text-slate-900 font-sans tabular-nums text-sm">{b.total_copies_sold.toLocaleString('en-IN')}</span>
                     </div>
                     <div>
                       <span className="text-xs text-stone-600 font-medium block">Net / copy</span>
-                      <span className="font-bold text-indigo-700 font-mono text-sm"><Currency value={b.author_royalty_per_copy} /></span>
+                      <span className="font-bold text-indigo-700 font-sans tabular-nums text-sm"><Currency value={b.author_royalty_per_copy} /></span>
                     </div>
                     <div>
                       <span className="text-xs text-stone-600 font-medium block">Total earned</span>
-                      <span className="font-bold text-slate-900 font-mono text-sm"><Currency value={b.total_royalty_earned} /></span>
+                      <span className="font-bold text-slate-900 font-sans tabular-nums text-sm"><Currency value={b.total_royalty_earned} /></span>
                     </div>
                     <div>
                       <span className="text-xs text-stone-600 font-medium block">Royalty paid</span>
-                      <span className="font-bold text-emerald-700 font-mono text-sm"><Currency value={b.royalty_paid} /></span>
+                      <span className="font-bold text-emerald-700 font-sans tabular-nums text-sm"><Currency value={b.royalty_paid} /></span>
                     </div>
                     <div>
                       <span className="text-xs text-stone-600 font-medium block">Pending payout</span>
-                      <span className="font-bold text-amber-700 font-mono text-sm"><Currency value={b.royalty_pending} /></span>
+                      <span className="font-bold text-amber-700 font-sans tabular-nums text-sm"><Currency value={b.royalty_pending} /></span>
                     </div>
                   </div>
 
@@ -407,27 +407,27 @@ export function AuthorBooks() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 pt-1">
                   <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
                     <span className="text-xs text-stone-600 font-medium block">Retail MRP</span>
-                    <span className="font-bold text-slate-900 text-sm mt-0.5 block font-mono"><Currency value={selectedBook.mrp} /></span>
+                    <span className="font-bold text-slate-900 text-sm mt-0.5 block font-sans tabular-nums"><Currency value={selectedBook.mrp} /></span>
                   </div>
                   <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
                     <span className="text-xs text-stone-600 font-medium block">Net / copy</span>
-                    <span className="font-bold text-indigo-700 text-sm mt-0.5 block font-mono"><Currency value={selectedBook.author_royalty_per_copy} /></span>
+                    <span className="font-bold text-indigo-700 text-sm mt-0.5 block font-sans tabular-nums"><Currency value={selectedBook.author_royalty_per_copy} /></span>
                   </div>
                   <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
                     <span className="text-xs text-stone-600 font-medium block">Copies sold</span>
-                    <span className="font-bold text-slate-900 text-sm mt-0.5 block font-mono">{selectedBook.total_copies_sold.toLocaleString('en-IN')}</span>
+                    <span className="font-bold text-slate-900 text-sm mt-0.5 block font-sans tabular-nums">{selectedBook.total_copies_sold.toLocaleString('en-IN')}</span>
                   </div>
                   <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
                     <span className="text-xs text-stone-600 font-medium block">Total earned</span>
-                    <span className="font-bold text-slate-900 text-sm mt-0.5 block font-mono"><Currency value={selectedBook.total_royalty_earned} /></span>
+                    <span className="font-bold text-slate-900 text-sm mt-0.5 block font-sans tabular-nums"><Currency value={selectedBook.total_royalty_earned} /></span>
                   </div>
                   <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
                     <span className="text-xs text-stone-600 font-medium block">Royalty paid</span>
-                    <span className="font-bold text-emerald-700 text-sm mt-0.5 block font-mono"><Currency value={selectedBook.royalty_paid} /></span>
+                    <span className="font-bold text-emerald-700 text-sm mt-0.5 block font-sans tabular-nums"><Currency value={selectedBook.royalty_paid} /></span>
                   </div>
                   <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
                     <span className="text-xs text-stone-600 font-medium block">Pending payout</span>
-                    <span className="font-bold text-amber-700 text-sm mt-0.5 block font-mono"><Currency value={selectedBook.royalty_pending} /></span>
+                    <span className="font-bold text-amber-700 text-sm mt-0.5 block font-sans tabular-nums"><Currency value={selectedBook.royalty_pending} /></span>
                   </div>
                 </div>
               </div>

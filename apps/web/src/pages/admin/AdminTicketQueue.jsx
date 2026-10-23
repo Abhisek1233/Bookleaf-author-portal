@@ -286,19 +286,82 @@ export function AdminTicketQueue() {
         />
       ) : (
         <div className="bg-white rounded-3xl border border-stone-200 shadow-xs overflow-hidden">
-          <div className="overflow-x-auto custom-scrollbar-h max-h-[650px]">
+          {/* Mobile Stacked Card View (< md) */}
+          <div className="block md:hidden divide-y divide-stone-100">
+            {tickets.map((t) => {
+              const isCritical = t.priority === 'Critical';
+              const isHigh = t.priority === 'High';
+              return (
+                <div
+                  key={t.id}
+                  onClick={() => navigate(`/admin/tickets/${t.id}`)}
+                  className={`p-4 space-y-3 hover:bg-stone-50/90 transition-colors cursor-pointer ${
+                    isCritical ? 'bg-rose-50/30' : isHigh ? 'bg-orange-50/15' : ''
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <span className="font-mono text-xs font-bold text-slate-900 bg-stone-100 px-2.5 py-0.5 rounded-md">
+                      {t.ticket_number}
+                    </span>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <PriorityBadge priority={t.priority} />
+                      <StatusBadge status={t.status} />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex items-baseline justify-between gap-2">
+                      <span className="font-bold text-slate-900 text-sm">{t.author_name}</span>
+                      {t.book_title && (
+                        <span className="text-xs text-stone-500 font-serif italic truncate max-w-[150px]">
+                          {t.book_title}
+                        </span>
+                      )}
+                    </div>
+                    <h4 className="font-semibold text-slate-900 text-sm mt-1 line-clamp-2 leading-snug" title={t.subject}>
+                      {t.subject}
+                    </h4>
+                  </div>
+
+                  <div className="flex items-center justify-between text-xs text-stone-500 pt-1 border-t border-stone-100">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <CategoryBadge category={t.category} />
+                      <span className="flex items-center gap-1 font-sans text-stone-600">
+                        <MessageSquare className="w-3.5 h-3.5 text-stone-400" />
+                        {t.message_count || 0}
+                      </span>
+                    </div>
+                    <span className="font-sans text-stone-500">
+                      {new Date(t.updated_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })}
+                    </span>
+                  </div>
+
+                  <div onClick={(e) => e.stopPropagation()} className="pt-1">
+                    <Link to={`/admin/tickets/${t.id}`} className="block">
+                      <Button size="sm" variant="secondary" className="w-full justify-center min-h-[44px]">
+                        Triage Ticket <ArrowRight className="w-3.5 h-3.5" />
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Desktop Table View (md and up) */}
+          <div className="hidden md:block overflow-x-auto custom-scrollbar-h max-h-[650px]">
             <table className="w-full text-left text-sm text-slate-700">
               <thead className="bg-stone-50/95 text-stone-600 font-semibold border-b border-stone-200 uppercase tracking-wider text-xs sticky top-0 z-10 backdrop-blur">
                 <tr>
-                  <th className="px-5 py-3.5">Ticket Ref</th>
-                  <th className="px-5 py-3.5">Author & Title</th>
-                  <th className="px-5 py-3.5">Subject</th>
-                  <th className="px-5 py-3.5">Category</th>
-                  <th className="px-5 py-3.5">Priority</th>
-                  <th className="px-5 py-3.5">Status</th>
-                  <th className="px-5 py-3.5">Assignee</th>
-                  <th className="px-5 py-3.5 text-right">Messages</th>
-                  <th className="px-5 py-3.5 text-center">Triage</th>
+                  <th className="px-5 py-3.5 whitespace-nowrap min-w-[110px]">Ticket Ref</th>
+                  <th className="px-5 py-3.5 min-w-[160px]">Author & Title</th>
+                  <th className="px-5 py-3.5 min-w-[240px]">Subject</th>
+                  <th className="px-5 py-3.5 whitespace-nowrap min-w-[170px]">Category</th>
+                  <th className="px-5 py-3.5 whitespace-nowrap min-w-[130px]">Priority</th>
+                  <th className="px-5 py-3.5 whitespace-nowrap min-w-[120px]">Status</th>
+                  <th className="px-5 py-3.5 whitespace-nowrap min-w-[150px]">Assignee</th>
+                  <th className="px-5 py-3.5 text-right whitespace-nowrap min-w-[100px]">Messages</th>
+                  <th className="px-5 py-3.5 text-center sticky right-0 bg-stone-50/95 shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.06)] z-20 whitespace-nowrap">Triage</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-100">
@@ -309,20 +372,20 @@ export function AdminTicketQueue() {
                     <tr
                       key={t.id}
                       onClick={() => navigate(`/admin/tickets/${t.id}`)}
-                      className={`hover:bg-stone-50/90 transition-colors min-h-[48px] cursor-pointer ${
+                      className={`hover:bg-stone-50/90 transition-colors min-h-[48px] cursor-pointer group ${
                         isCritical ? 'bg-rose-50/40' : isHigh ? 'bg-orange-50/20' : ''
                       }`}
                     >
                       <td className="px-5 py-4 font-mono font-bold text-slate-900 whitespace-nowrap text-xs">
                         {t.ticket_number}
                       </td>
-                      <td className="px-5 py-4">
+                      <td className="px-5 py-4 min-w-[160px]">
                         <div className="font-bold text-slate-900">{t.author_name}</div>
                         <div className="text-xs text-stone-500 font-serif italic truncate max-w-xs mt-0.5">
                           {t.book_title || 'General Account'}
                         </div>
                       </td>
-                      <td className="px-5 py-4 min-w-[260px] max-w-md">
+                      <td className="px-5 py-4 min-w-[240px] max-w-md">
                         <div
                           className="font-medium text-slate-900 line-clamp-2 leading-snug hover:text-indigo-700 transition-colors"
                           title={t.subject}
@@ -330,26 +393,33 @@ export function AdminTicketQueue() {
                           {t.subject}
                         </div>
                       </td>
-                      <td className="px-5 py-4">
+                      <td className="px-5 py-4 whitespace-nowrap min-w-[170px]">
                         <CategoryBadge category={t.category} />
                       </td>
-                      <td className="px-5 py-4">
+                      <td className="px-5 py-4 whitespace-nowrap min-w-[130px]">
                         <PriorityBadge priority={t.priority} />
                         {t.is_priority_overridden && (
                           <span className="text-xs text-indigo-800 block mt-1 font-semibold uppercase tracking-wider">Overridden</span>
                         )}
                       </td>
-                      <td className="px-5 py-4">
+                      <td className="px-5 py-4 whitespace-nowrap min-w-[120px]">
                         <StatusBadge status={t.status} />
                       </td>
-                      <td className="px-5 py-4 text-stone-600 text-xs">
+                      <td className="px-5 py-4 whitespace-nowrap min-w-[150px]">
                         {t.assigned_admin_name ? (
-                          <span className="font-medium text-slate-900">{t.assigned_admin_name}</span>
+                          <div className="flex items-center gap-2" title={`Assigned to: ${t.assigned_admin_name}`}>
+                            <div className="w-6 h-6 rounded-full bg-slate-800 text-indigo-300 font-bold flex items-center justify-center text-[10px] shrink-0 border border-slate-700">
+                              {t.assigned_admin_name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+                            </div>
+                            <span className="font-medium text-slate-900 text-xs truncate">
+                              {t.assigned_admin_name.split(' ')[0]}
+                            </span>
+                          </div>
                         ) : (
-                          <span className="text-stone-400 italic">Unassigned</span>
+                          <span className="text-stone-400 italic text-xs">Unassigned</span>
                         )}
                       </td>
-                      <td className="px-5 py-4 text-right text-stone-500 whitespace-nowrap">
+                      <td className="px-5 py-4 text-right text-stone-500 whitespace-nowrap min-w-[100px]">
                         <div className="flex items-center justify-end gap-2 text-stone-600">
                           <span className="flex items-center gap-1">
                             <MessageSquare className="w-3.5 h-3.5 text-stone-500" />
@@ -366,7 +436,7 @@ export function AdminTicketQueue() {
                           {new Date(t.updated_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })}
                         </div>
                       </td>
-                      <td className="px-5 py-4 text-center" onClick={(e) => e.stopPropagation()}>
+                      <td className="px-5 py-4 text-center sticky right-0 bg-white group-hover:bg-stone-50 shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.06)] z-10 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                         <Link to={`/admin/tickets/${t.id}`}>
                           <Button size="sm" variant="secondary" className="group min-h-[38px]">
                             Triage <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />

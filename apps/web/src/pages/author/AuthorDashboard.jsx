@@ -79,7 +79,7 @@ export function AuthorDashboard() {
       <div className="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <span className="text-[11px] font-bold text-indigo-800 bg-indigo-50 border border-indigo-200/90 px-3 py-0.5 rounded-full uppercase tracking-wider">
-            Verified Author Record • ID: {author.id}
+            Verified author
           </span>
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-slate-900 mt-2.5 tracking-tight">
             Welcome back, {author.name}
@@ -104,14 +104,14 @@ export function AuthorDashboard() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {/* Total Books */}
-        <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col justify-between">
+        <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-stone-400 mb-2">
             <span className="text-sm font-semibold text-stone-600">Published titles</span>
             <BookOpen className="w-4 h-4 text-stone-400" />
           </div>
-          <div className="text-3xl font-bold text-slate-900 font-mono tracking-tight">
+          <div className="text-2xl sm:text-3xl font-bold text-slate-900 font-sans tabular-nums tracking-tight">
             {metrics.total_books}
           </div>
           <p className="text-xs text-stone-500 mt-1 font-medium">
@@ -120,36 +120,36 @@ export function AuthorDashboard() {
         </div>
 
         {/* Copies Sold */}
-        <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col justify-between">
+        <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-stone-400 mb-2">
             <span className="text-sm font-semibold text-stone-600">Copies sold</span>
             <TrendingUp className="w-4 h-4 text-emerald-600" />
           </div>
-          <div className="text-3xl font-bold text-slate-900 font-mono tracking-tight">
+          <div className="text-2xl sm:text-3xl font-bold text-slate-900 font-sans tabular-nums tracking-tight">
             {metrics.total_copies_sold.toLocaleString('en-IN')}
           </div>
           <p className="text-xs text-stone-500 mt-1 font-medium">Amazon, Flipkart & Direct</p>
         </div>
 
         {/* Total Royalty Earned */}
-        <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col justify-between">
+        <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-stone-400 mb-2">
             <span className="text-sm font-semibold text-stone-600">Cumulative royalties</span>
             <CreditCard className="w-4 h-4 text-indigo-600" />
           </div>
-          <div className="text-3xl font-bold text-indigo-700 tracking-tight font-mono">
+          <div className="text-2xl sm:text-3xl font-bold text-indigo-700 tracking-tight font-sans tabular-nums">
             <Currency value={metrics.total_royalty_earned} />
           </div>
           <p className="text-xs text-stone-500 mt-1 font-medium">80% Net profit share</p>
         </div>
 
         {/* Royalty Pending */}
-        <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col justify-between">
+        <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-stone-400 mb-2">
             <span className="text-sm font-semibold text-stone-600">Pending payout</span>
             <Clock className="w-4 h-4 text-amber-600" />
           </div>
-          <div className="text-3xl font-bold text-amber-700 tracking-tight font-mono">
+          <div className="text-2xl sm:text-3xl font-bold text-amber-700 tracking-tight font-sans tabular-nums">
             <Currency value={metrics.royalty_pending} />
           </div>
           <p className="text-xs text-stone-500 mt-1 font-medium">
@@ -170,7 +170,7 @@ export function AuthorDashboard() {
               Accumulated earnings are disbursed via direct bank transfer within 45 days of each quarter ending.
             </p>
           </div>
-          <span className="text-xs font-bold font-mono px-3 py-1 rounded-full bg-stone-100 text-slate-800 shrink-0">
+          <span className="text-xs font-bold font-sans tabular-nums px-3 py-1 rounded-full bg-stone-100 text-slate-800 shrink-0">
             Current Balance: <Currency value={metrics.royalty_pending} /> / ₹1,000
           </span>
         </div>
@@ -197,7 +197,7 @@ export function AuthorDashboard() {
               {showSchedule ? '▲' : '▼'}
             </span>
           </button>
-          <span className="text-xs text-stone-500 font-mono hidden sm:inline">
+          <span className="text-xs text-stone-500 font-sans hidden sm:inline">
             Direct Bank Transfer (NEFT / IMPS)
           </span>
         </div>
@@ -247,7 +247,7 @@ export function AuthorDashboard() {
           </div>
           <Link
             to="/author/tickets"
-            className="text-xs font-semibold text-indigo-700 hover:text-indigo-900 flex items-center gap-1"
+            className="text-xs font-semibold text-indigo-700 hover:text-indigo-900 flex items-center gap-1 whitespace-nowrap shrink-0"
           >
             All Tickets <ArrowRight className="w-3.5 h-3.5" />
           </Link>

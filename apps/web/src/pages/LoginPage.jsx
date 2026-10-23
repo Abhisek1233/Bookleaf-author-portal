@@ -22,7 +22,12 @@ export function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [demoOpen, setDemoOpen] = useState(true);
+  const [demoOpen, setDemoOpen] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth >= 1024;
+    }
+    return false;
+  });
   const [activeDemoTab, setActiveDemoTab] = useState('author'); // 'author' | 'admin'
 
   const { login } = useAuth();
