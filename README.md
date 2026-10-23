@@ -151,13 +151,19 @@ flowchart TD
     end
 
     subgraph Storage["PostgreSQL Database (pg driver)"]
-        T_Users["users (Admin + 10 Authors)"]
-        T_Authors["authors (BookLeaf author profiles)"]
-        T_Books["books (18 Seeded titles)"]
-        T_Tickets["tickets (Support inquiries)"]
-        T_Messages["ticket_messages (Public thread)"]
-        T_Notes["internal_notes (Admin-only)"]
-        T_Drafts["ai_drafts (Grounded suggestions)"]
+        direction TB
+        subgraph CoreTables["Core Entity Records"]
+            T_Users["users (Admin + 10 Authors)"]
+            T_Authors["authors (BookLeaf author profiles)"]
+            T_Books["books (18 Seeded titles)"]
+        end
+        subgraph SupportTables["Support, Triage & AI Records"]
+            T_Tickets["tickets (Support inquiries)"]
+            T_Messages["ticket_messages (Public thread)"]
+            T_Notes["internal_notes (Admin-only)"]
+            T_Drafts["ai_drafts (Grounded suggestions)"]
+        end
+        CoreTables ~~~ SupportTables
     end
 
     AuthorUI -->|REST API Requests| Router
@@ -179,6 +185,10 @@ flowchart TD
     AuthorCtrl --> Storage
     AdminCtrl --> Storage
     SocketSvr --> Storage
+
+    CornerPad[" \n \n "]
+    Storage ~~~ CornerPad
+    style CornerPad fill:none,stroke:none,color:none
 ```
 
 ---
