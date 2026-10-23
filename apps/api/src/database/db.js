@@ -7,11 +7,14 @@ const { Pool } = pg;
 
 const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:root@localhost:5432/bookleaf_support?schema=public';
 
+const isRemote = !connectionString.includes('localhost') && !connectionString.includes('127.0.0.1');
+
 export const pool = new Pool({
   connectionString,
+  ssl: isRemote ? { rejectUnauthorized: false } : false,
   max: 20,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 5000,
+  connectionTimeoutMillis: 10000,
 });
 
 pool.on('error', (err) => {
