@@ -10,6 +10,11 @@
 
 A production-grade, two-sided publishing support portal and AI-powered operational triage engine built for **BookLeaf Publishing** — one of India's leading self-publishing houses processing 1,200+ monthly books across a 22,000+ title catalog.
 
+### 🌐 Live Deployment
+- 💻 **Live Application Portal:** [https://bookleaf-author-portal-khaki.vercel.app](https://bookleaf-author-portal-khaki.vercel.app)
+- ⚙️ **Live Backend API & Swagger UI:** [https://bookleaf-author-portal-bdly.onrender.com/api/docs](https://bookleaf-author-portal-bdly.onrender.com/api/docs)
+- 🩺 **Live Health & AI Diagnostics:** [https://bookleaf-author-portal-bdly.onrender.com/api/v1/health](https://bookleaf-author-portal-bdly.onrender.com/api/v1/health)
+
 ---
 
 ## 📑 Table of Contents
