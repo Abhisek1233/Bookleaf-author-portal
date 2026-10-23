@@ -126,83 +126,58 @@ The implementation strictly honors every constraint specified in the assignment 
 
 ```mermaid
 flowchart TD
-    TopBuffer[" "]
-    style TopBuffer fill:none,stroke:none,color:none
+    classDef client fill:#EEF2FF,stroke:#6366F1,stroke-width:2px,color:#1E1B4B
+    classDef gateway fill:#F0FDF4,stroke:#22C55E,stroke-width:2px,color:#14532D
+    classDef service fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#78350F
+    classDef ai fill:#FAF5FF,stroke:#A855F7,stroke-width:2px,color:#581C87
+    classDef db fill:#F8FAFC,stroke:#64748B,stroke-width:2px,color:#0F172A
 
-    subgraph Client["Frontend Client (React 18 + Vite + Tailwind v4)"]
-        AuthorUI["Author Portal (/author/*)"]
-        AdminUI["Admin Operations Portal (/admin/*)"]
-        AuthCtx["Auth Context (JWT State)"]
-        SocketCl["Socket.IO Client (Real-time updates)"]
-        TopRightPad[" "]
-        AdminUI ~~~ TopRightPad
-        style TopRightPad fill:none,stroke:none,color:none
+    subgraph Tier1["1. Client Tier (React 18.3 + Vite + Tailwind CSS v4)"]
+        AuthorApp["Author Portal (/author/*)<br/>Dashboard · Books Catalog · Query Submission"]:::client
+        AdminApp["Admin Operations Portal (/admin/*)<br/>Triage Queue · 2-Column Dossier · Staff Assignment"]:::client
     end
 
-    subgraph Server["Backend REST API (Node.js + Express ESM)"]
-        Router["Express Router (/api/v1)"]
-        AuthMw["Auth & RBAC Middleware"]
-        AuthorCtrl["Author Controller"]
-        AdminCtrl["Admin Controller"]
-        
-        subgraph AISubsystem["AI Operations Engine"]
-            AISvc["AI Service Layer"]
-            GeminiProv["Google Gemini Adapter (gemini-3.5-flash-lite)"]
-            FallbackProv["Deterministic Heuristic Fallback"]
-            KB["Targeted Knowledge Base Policy Slices"]
-            Cache["SHA-256 Prompt & Draft Cache"]
-        end
-
-        SocketSvr["Socket.IO Server (Rooms & Segregation)"]
+    subgraph Tier2["2. API Gateway & Security (Node.js + Express ESM)"]
+        Router["REST API Router (/api/v1)"]:::gateway
+        AuthLayer["Auth & RBAC Middleware<br/>JWT Verification & Author Data Isolation"]:::gateway
+        SocketGateway["Socket.IO Real-Time Server<br/>Rooms: author, admin_ops, ticket"]:::gateway
     end
 
-    subgraph Storage["PostgreSQL Database (pg driver)"]
-        direction TB
-        subgraph CoreTables["Core Entity Records"]
-            T_Users["users (Admin + 10 Authors)"]
-            T_Authors["authors (BookLeaf author profiles)"]
-            T_Books["books (18 Seeded titles)"]
+    subgraph Tier3["3. Application Services & AI Engine"]
+        DomainServices["Domain Services Layer<br/>Authors, Books, Royalties & Ticket State Machine"]:::service
+        subgraph AIEngine["AI Operations & Triage Engine"]
+            Gemini["Google Gemini 3.5 Flash Lite<br/>Live Structured JSON Triage"]:::ai
+            Fallback["Deterministic Heuristics<br/>Zero-Failure Rule Fallback"]:::ai
+            Knowledge["Targeted Knowledge Base<br/>Cost-Conscious Policy Slices"]:::ai
+            Cache["SHA-256 Draft Cache<br/>Prevents Redundant API Calls"]:::ai
         end
-        subgraph SupportTables["Support, Triage & AI Records"]
-            T_Tickets["tickets (Support inquiries)"]
-            T_Messages["ticket_messages (Public thread)"]
-            T_Notes["internal_notes (Admin-only)"]
-            T_Drafts["ai_drafts (Grounded suggestions)"]
-            BottomRightPad[" "]
-            T_Drafts ~~~ BottomRightPad
-            style BottomRightPad fill:none,stroke:none,color:none
-        end
-        CoreTables ~~~ SupportTables
     end
 
-    BottomBuffer[" "]
-    style BottomBuffer fill:none,stroke:none,color:none
+    subgraph Tier4["4. Persistence Layer (PostgreSQL 14+)"]
+        CoreData[("Core Publishing Tables<br/>users · authors · books")]:::db
+        OpsData[("Operations & Support Tables<br/>tickets · ticket_messages · internal_notes · ai_drafts")]:::db
+    end
 
-    TopBuffer ~~~ AuthorUI
-    TopBuffer ~~~ TopRightPad
+    %% Client to Gateway
+    AuthorApp -->|HTTP REST Requests| Router
+    AdminApp -->|HTTP REST Requests| Router
+    AuthorApp <-->|WebSocket Events| SocketGateway
+    AdminApp <-->|WebSocket Events| SocketGateway
 
-    AuthorUI -->|REST API Requests| Router
-    AdminUI -->|REST API Requests| Router
-    AuthorUI <-->|WebSocket Events| SocketSvr
-    AdminUI <-->|WebSocket Events| SocketSvr
+    %% Gateway to Services
+    Router --> AuthLayer
+    AuthLayer --> DomainServices
+    SocketGateway -.->|Event Sync| DomainServices
 
-    Router --> AuthMw
-    AuthMw --> AuthorCtrl
-    AuthMw --> AdminCtrl
-    
-    AuthorCtrl --> AISvc
-    AdminCtrl --> AISvc
-    AISvc --> Cache
-    Cache --> GeminiProv
-    GeminiProv -.->|On Rate Limit or Offline| FallbackProv
-    GeminiProv --> KB
-    
-    AuthorCtrl --> Storage
-    AdminCtrl --> Storage
-    SocketSvr --> Storage
+    %% Services to AI Engine
+    DomainServices <--> AIEngine
+    Gemini -.->|On Rate Limit or Offline| Fallback
+    Gemini --> Knowledge
+    AIEngine --> Cache
 
-    T_Tickets ~~~ BottomBuffer
-    BottomRightPad ~~~ BottomBuffer
+    %% Services to Database
+    DomainServices -->|Parameterized SQL| CoreData
+    DomainServices -->|Parameterized SQL| OpsData
 ```
 
 ---
