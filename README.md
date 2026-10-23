@@ -248,8 +248,8 @@ The login screen also features a **1-Click Demo Login Bar** for instant switchin
 
 ### 1. Clone & Install Dependencies
 ```bash
-git clone https://github.com/your-username/bookleaf-portal.git
-cd bookleaf-portal
+git clone https://github.com/Abhisek1233/Bookleaf-author-portal.git
+cd Bookleaf-author-portal
 npm install
 ```
 
@@ -327,7 +327,8 @@ npm run test:web
 ## 📑 REST API Documentation (Swagger & Postman)
 
 ### Interactive Documentation
-- **Swagger UI:** Accessible at **`http://localhost:4000/api/docs`** while the server is running.
+- **Swagger UI (Live):** Accessible directly at **[https://bookleaf-author-portal-bdly.onrender.com/api/docs](https://bookleaf-author-portal-bdly.onrender.com/api/docs)**
+- **Swagger UI (Local):** Accessible at `http://localhost:4000/api/docs` while running locally.
 - **OpenAPI 3.0 Spec:** Available at `http://localhost:4000/api/v1/openapi.json`.
 - **Postman Collection:** Ready-to-import file located at [`docs/bookleaf_postman_collection.json`](file:///E:/bookleaf-portal/docs/bookleaf_postman_collection.json).
 
