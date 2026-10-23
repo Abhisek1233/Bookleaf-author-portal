@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import { api } from '../api/client.js';
 import { Button } from '../components/common/Button.jsx';
 import {
   Eye,
@@ -29,6 +30,23 @@ export function LoginPage() {
     return false;
   });
   const [activeDemoTab, setActiveDemoTab] = useState('author'); // 'author' | 'admin'
+  const [isWakingServer, setIsWakingServer] = useState(false);
+
+  // Pre-warm the backend immediately upon landing on the login page
+  useEffect(() => {
+    api.request('/health').catch(() => {});
+  }, []);
+
+  // Show a helpful status message if backend is spinning up from cold sleep (> 2.5s)
+  useEffect(() => {
+    let timer;
+    if (isSubmitting) {
+      timer = setTimeout(() => setIsWakingServer(true), 2500);
+    } else {
+      setIsWakingServer(false);
+    }
+    return () => clearTimeout(timer);
+  }, [isSubmitting]);
 
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -249,6 +267,11 @@ export function LoginPage() {
             >
               Sign In to Portal
             </Button>
+            {isWakingServer && (
+              <p className="text-xs text-stone-500 text-center animate-pulse pt-1 font-medium">
+                Connecting to cloud server (waking up instance, please wait)...
+              </p>
+            )}
           </form>
 
           {/* Quick Demo Access (Collapsible, placed cleanly BELOW the form) */}
