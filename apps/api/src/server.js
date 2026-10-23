@@ -76,7 +76,7 @@ app.use(errorHandler);
 const PORT = parseInt(process.env.PORT, 10) || 4000;
 
 if (process.env.NODE_ENV !== 'test') {
-  httpServer.listen(PORT, () => {
+  httpServer.listen(PORT, '0.0.0.0', () => {
     console.log(`====================================================`);
     console.log(` BookLeaf Publishing Support API running on port ${PORT}`);
     console.log(` REST Endpoints: http://localhost:${PORT}/api/v1`);
