@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import {
@@ -19,10 +19,54 @@ export function AuthorLayout() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const menuButtonRef = useRef(null);
+  const drawerRef = useRef(null);
+
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
+
+  // Close mobile drawer on Escape and trap focus
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const drawer = drawerRef.current;
+    if (drawer) {
+      const focusable = drawer.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      const handleKeyDown = (e) => {
+        if (e.key === 'Escape') {
+          setMobileMenuOpen(false);
+          menuButtonRef.current?.focus();
+        }
+        if (e.key === 'Tab') {
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last?.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first?.focus();
+          }
+        }
+      };
+
+      window.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+    }
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [mobileMenuOpen]);
 
   const navItems = [
     { label: 'Overview', to: '/author/dashboard', icon: LayoutDashboard },
@@ -33,7 +77,12 @@ export function AuthorLayout() {
   ];
 
   return (
-    <div className="h-screen bg-[#FAF9F5] flex flex-col md:flex-row text-slate-900 font-sans overflow-hidden relative">
+    <div className="h-dvh bg-[#FAF9F5] flex flex-col md:flex-row text-slate-900 font-sans overflow-hidden relative">
+      {/* Skip Link for Accessibility */}
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+
       {/* Mobile Top Header */}
       <header className="md:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-stone-200 sticky top-0 z-30 shrink-0">
         <div className="flex items-center gap-2.5">
@@ -42,13 +91,16 @@ export function AuthorLayout() {
           </div>
           <div>
             <span className="font-serif font-bold text-slate-900 tracking-tight block leading-none text-base">BookLeaf</span>
-            <span className="text-[10px] text-indigo-700 font-bold tracking-wider uppercase">Author Portal</span>
+            <span className="text-xs text-indigo-800 font-bold tracking-wider uppercase">Author Portal</span>
           </div>
         </div>
         <button
+          ref={menuButtonRef}
+          type="button"
           onClick={() => setMobileMenuOpen(true)}
-          className="p-2 rounded-xl text-stone-600 hover:bg-stone-100 transition-colors cursor-pointer"
-          aria-label="Open Navigation Menu"
+          className="p-2.5 rounded-xl text-stone-700 hover:bg-stone-100 transition-colors cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
+          aria-label="Open navigation menu"
+          aria-expanded={mobileMenuOpen}
         >
           <Menu className="w-5 h-5" />
         </button>
@@ -56,17 +108,26 @@ export function AuthorLayout() {
 
       {/* Mobile Backdrop Overlay */}
       {mobileMenuOpen && (
-        <div
-          onClick={() => setMobileMenuOpen(false)}
-          className="fixed inset-0 bg-slate-950/50 backdrop-blur-xs z-40 md:hidden animate-in fade-in duration-200 cursor-pointer"
+        <button
+          type="button"
+          onClick={() => {
+            setMobileMenuOpen(false);
+            menuButtonRef.current?.focus();
+          }}
+          aria-label="Close navigation overlay"
+          className="fixed inset-0 bg-slate-950/50 backdrop-blur-xs z-40 md:hidden animate-in fade-in duration-200 cursor-pointer w-full h-full border-0 p-0 text-left"
         />
       )}
 
-      {/* Sidebar: Fixed on Desktop, Slide-Over Sheet on Mobile */}
+      {/* Sidebar Navigation */}
       <aside
+        ref={drawerRef}
+        role={mobileMenuOpen ? 'dialog' : undefined}
+        aria-modal={mobileMenuOpen ? 'true' : undefined}
+        aria-label="Author Navigation"
         className={`
           fixed md:static inset-y-0 left-0 z-50
-          w-72 md:w-64 bg-white border-r border-stone-200 shrink-0 h-screen flex flex-col justify-between
+          w-72 md:w-64 bg-white border-r border-stone-200 shrink-0 h-dvh flex flex-col justify-between
           custom-scrollbar overflow-y-auto transition-transform duration-300 ease-in-out
           ${mobileMenuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full md:translate-x-0'}
         `}
@@ -80,34 +141,38 @@ export function AuthorLayout() {
               </div>
               <div>
                 <span className="font-serif font-bold text-lg text-slate-900 tracking-tight block leading-tight">BookLeaf</span>
-                <span className="text-[10px] text-indigo-700 font-bold tracking-widest uppercase">Author Portal</span>
+                <span className="text-xs text-indigo-800 font-bold tracking-widest uppercase">Author Portal</span>
               </div>
             </div>
             {/* Close Button on Mobile Drawer */}
             <button
-              onClick={() => setMobileMenuOpen(false)}
-              className="md:hidden p-1.5 text-stone-400 hover:text-stone-700 hover:bg-stone-100 rounded-lg transition-colors cursor-pointer"
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                menuButtonRef.current?.focus();
+              }}
+              className="md:hidden p-2 text-stone-500 hover:text-stone-900 hover:bg-stone-100 rounded-lg transition-colors cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
+              aria-label="Close navigation menu"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* Publishing Badge */}
-          <div className="px-5 py-3 border-b border-stone-100 flex items-center justify-between text-xs text-stone-500 bg-stone-50/50">
-            <span className="text-[11px] font-semibold text-stone-600">Self-Publishing Hub</span>
-            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-indigo-800 bg-indigo-50 border border-indigo-200/80 px-2 py-0.5 rounded-full">
-              <Sparkles className="w-3 h-3 text-indigo-600" />
+          <div className="px-5 py-3 border-b border-stone-100 flex items-center justify-between text-xs text-stone-600 bg-stone-50/50">
+            <span className="font-semibold text-stone-700">Self-Publishing Hub</span>
+            <span className="inline-flex items-center gap-1 font-bold text-indigo-900 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full">
+              <Sparkles className="w-3 h-3 text-indigo-700" />
               Verified
             </span>
           </div>
 
           {/* Navigation Links */}
-          <nav className="p-3.5 space-y-1">
+          <nav className="p-3.5 space-y-1.5" aria-label="Main menu">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isNewTicketPage = location.pathname.startsWith('/author/tickets/new');
               const isItemActive = (isActive) => {
-                // If on 'Submit Query' (/author/tickets/new), don't highlight 'My Tickets' (/author/tickets)
                 if (item.to === '/author/tickets') {
                   return isActive && !isNewTicketPage;
                 }
@@ -122,15 +187,16 @@ export function AuthorLayout() {
                   className={({ isActive }) => {
                     const active = isItemActive(isActive);
                     return `
-                      flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all
+                      flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all min-h-[44px]
                       ${active
-                        ? 'bg-indigo-50 text-indigo-800 shadow-2xs font-bold border border-indigo-200/90'
-                        : 'text-stone-600 hover:text-slate-900 hover:bg-stone-50'}
+                        ? 'bg-indigo-50 text-indigo-950 shadow-2xs font-bold border-l-4 border-indigo-700'
+                        : 'text-stone-700 hover:text-slate-950 hover:bg-stone-50'}
                     `;
                   }}
+                  aria-current={isItemActive(location.pathname === item.to) ? 'page' : undefined}
                 >
                   <Icon className="w-4 h-4 shrink-0" />
-                  {item.label}
+                  <span>{item.label}</span>
                 </NavLink>
               );
             })}
@@ -138,28 +204,33 @@ export function AuthorLayout() {
         </div>
 
         {/* User Card & Logout */}
-        <div className="p-4 border-t border-stone-100 bg-stone-50/70">
+        <div className="p-4 border-t border-stone-200 bg-stone-50/80">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-9 h-9 rounded-full bg-indigo-100 text-indigo-800 font-bold flex items-center justify-center text-xs shrink-0 border border-indigo-200">
+            <div className="w-9 h-9 rounded-full bg-indigo-100 text-indigo-900 font-bold flex items-center justify-center text-xs shrink-0 border border-indigo-200">
               {user?.name ? user.name.slice(0, 2).toUpperCase() : 'AU'}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-bold text-slate-900 truncate">{user?.name}</p>
-              <p className="text-[11px] text-stone-500 truncate font-mono">{user?.email}</p>
+              <p className="text-sm font-bold text-slate-900 truncate" title={user?.name}>{user?.name}</p>
+              <p className="text-xs text-stone-600 truncate font-mono" title={user?.email}>{user?.email}</p>
             </div>
           </div>
           <button
+            type="button"
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-50 rounded-xl transition-colors border border-rose-200 cursor-pointer"
+            className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-semibold text-rose-800 hover:bg-rose-50 rounded-xl transition-colors border border-rose-200 cursor-pointer min-h-[44px]"
           >
-            <LogOut className="w-3.5 h-3.5" />
-            Sign Out
+            <LogOut className="w-4 h-4" />
+            <span>Sign Out</span>
           </button>
         </div>
       </aside>
 
-      {/* Main Content Workspace (Single Clean Scroll Container with Page Enter Animation) */}
-      <main className="flex-1 h-screen overflow-y-auto custom-scrollbar">
+      {/* Main Content Workspace */}
+      <main
+        id="main-content"
+        tabIndex="-1"
+        className="flex-1 h-dvh overflow-y-auto custom-scrollbar focus:outline-none"
+      >
         <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 page-enter">
           <Outlet />
         </div>

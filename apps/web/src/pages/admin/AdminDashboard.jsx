@@ -21,18 +21,20 @@ export function AdminDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    async function loadDashboard() {
-      try {
-        setIsLoading(true);
-        const res = await api.getAdminDashboard();
-        setData(res.data);
-      } catch (err) {
-        setError(err.message || 'Failed to load operational metrics');
-      } finally {
-        setIsLoading(false);
-      }
+  const loadDashboard = async () => {
+    try {
+      setIsLoading(true);
+      setError('');
+      const res = await api.getAdminDashboard();
+      setData(res.data);
+    } catch (err) {
+      setError(err.message || 'Failed to load operational metrics');
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  useEffect(() => {
     loadDashboard();
   }, []);
 
@@ -53,9 +55,14 @@ export function AdminDashboard() {
 
   if (error || !data) {
     return (
-      <div className="p-6 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800">
-        <p className="font-semibold">Unable to load admin metrics</p>
-        <p className="text-sm mt-1">{error}</p>
+      <div className="p-6 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <p className="font-semibold text-base">Unable to load admin metrics</p>
+          <p className="text-sm mt-1 text-rose-700">{error}</p>
+        </div>
+        <Button variant="secondary" onClick={loadDashboard} className="shrink-0 min-h-[44px]">
+          Try again
+        </Button>
       </div>
     );
   }
@@ -233,11 +240,11 @@ export function AdminDashboard() {
                   <h4 className="text-sm font-bold text-slate-900 truncate">{t.subject}</h4>
                 </div>
 
-                <div className="flex items-center gap-4 text-xs text-stone-400 shrink-0">
-                  <span className="text-rose-700 font-semibold font-mono">
+                <div className="flex items-center gap-4 text-xs text-stone-500 shrink-0">
+                  <span className="text-rose-800 font-semibold font-mono">
                     Waiting since {new Date(t.created_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })}
                   </span>
-                  <span className="text-indigo-700 font-bold bg-indigo-50 px-3 py-1 rounded-lg border border-indigo-200 flex items-center gap-1">
+                  <span className="text-indigo-700 font-bold bg-indigo-50 px-3.5 py-1.5 rounded-lg border border-indigo-200 flex items-center gap-1 min-h-[40px]">
                     Triage →
                   </span>
                 </div>

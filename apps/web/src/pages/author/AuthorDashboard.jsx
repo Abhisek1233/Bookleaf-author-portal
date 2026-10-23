@@ -24,18 +24,20 @@ export function AuthorDashboard() {
   const [error, setError] = useState('');
   const [showSchedule, setShowSchedule] = useState(false);
 
-  useEffect(() => {
-    async function loadDashboard() {
-      try {
-        setIsLoading(true);
-        const res = await api.getAuthorDashboard();
-        setData(res.data);
-      } catch (err) {
-        setError(err.message || 'Failed to load dashboard');
-      } finally {
-        setIsLoading(false);
-      }
+  const loadDashboard = async () => {
+    try {
+      setIsLoading(true);
+      setError('');
+      const res = await api.getAuthorDashboard();
+      setData(res.data);
+    } catch (err) {
+      setError(err.message || 'Failed to load dashboard');
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  useEffect(() => {
     loadDashboard();
   }, []);
 
@@ -56,9 +58,14 @@ export function AuthorDashboard() {
 
   if (error || !data) {
     return (
-      <div className="p-6 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800">
-        <p className="font-semibold">Unable to load author dashboard</p>
-        <p className="text-sm mt-1">{error}</p>
+      <div className="p-6 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <p className="font-semibold text-base">Unable to load author dashboard</p>
+          <p className="text-sm mt-1 text-rose-700">{error}</p>
+        </div>
+        <Button variant="secondary" onClick={loadDashboard} className="shrink-0 min-h-[44px]">
+          Try again
+        </Button>
       </div>
     );
   }
@@ -182,14 +189,15 @@ export function AuthorDashboard() {
           <button
             type="button"
             onClick={() => setShowSchedule(!showSchedule)}
-            className="text-xs font-semibold text-indigo-700 hover:text-indigo-900 flex items-center gap-1.5 cursor-pointer transition-colors"
+            className="text-xs font-semibold text-indigo-700 hover:text-indigo-900 flex items-center gap-1.5 cursor-pointer transition-colors min-h-[40px]"
+            aria-expanded={showSchedule}
           >
             <span>{showSchedule ? 'Hide Payout Calendar' : 'View 2026 Quarterly Payout Calendar'}</span>
-            <span className="text-[10px] bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 rounded font-bold">
+            <span className="text-xs bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 rounded font-bold">
               {showSchedule ? '▲' : '▼'}
             </span>
           </button>
-          <span className="text-[11px] text-stone-400 font-mono hidden sm:inline">
+          <span className="text-xs text-stone-500 font-mono hidden sm:inline">
             Direct Bank Transfer (NEFT / IMPS)
           </span>
         </div>
@@ -213,16 +221,16 @@ export function AuthorDashboard() {
                 <div className="flex items-center justify-between mb-1">
                   <span className="font-bold">{cycle.q}</span>
                   <span
-                    className={`text-[9px] font-bold px-2 py-0.5 rounded-full uppercase ${
+                    className={`text-xs font-semibold px-2 py-0.5 rounded-full uppercase ${
                       cycle.active
                         ? 'bg-indigo-700 text-white'
-                        : 'bg-stone-200 text-stone-600'
+                        : 'bg-stone-200 text-stone-700'
                     }`}
                   >
                     {cycle.status}
                   </span>
                 </div>
-                <div className="text-[11px] text-stone-500">{cycle.cycle}</div>
+                <div className="text-xs text-stone-500">{cycle.cycle}</div>
                 <div className="font-bold text-slate-900 mt-1 font-mono">Disbursed by: {cycle.date}</div>
               </div>
             ))}

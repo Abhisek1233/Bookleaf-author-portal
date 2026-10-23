@@ -91,10 +91,11 @@ An intelligent, full-stack, two-sided support ecosystem:
   - <kbd>Alt</kbd> + <kbd>R</kbd>: Focus reply editor
 
 ### 3. Design & User Experience
-- **Typography & Aesthetics:** Warm editorial theme inspired by literary publishing. Headings set in **Merriweather** serif, interface in **Inter** sans-serif, and numeric values in monospace **JetBrains Mono**.
-- **Mobile Responsive Drawer:** Slide-over navigation drawer with backdrop blur overlay for smartphones and tablets.
+- **Typography & Aesthetics:** Warm editorial theme inspired by literary publishing: `#FAF9F5` warm cream canvas, crisp white cards, and ink-toned typography. Headings set in **Lora** serif, interface in **Plus Jakarta Sans**, and numeric values/identifiers in monospace **JetBrains Mono**.
+- **Design Tokens & Accessibility (WCAG 2.1 AA):** Standardized Tailwind CSS v4 `@theme` design tokens, minimum 44×44px touch targets on mobile, high-contrast text and dual-indicator status badges (dots + labels), `prefers-reduced-motion` support, visible `:focus-visible` keyboard rings, and accessible skip navigation links.
+- **Mobile Responsive Drawer:** Slide-over navigation drawer with backdrop blur overlay, escape key dismissal, and scroll lock for smartphones and tablets.
 - **Universal Sleek Scrollbars:** Custom thin, rounded scrollbars styled consistently across all browsers and pages.
-- **Toast Notifications:** Replaced all native browser alert dialogs with sleek, floating toast notifications.
+- **Toast Notifications:** Floating accessible toast notification system for feedback without blocking browser alerts.
 
 ---
 

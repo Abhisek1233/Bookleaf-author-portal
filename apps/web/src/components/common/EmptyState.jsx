@@ -14,9 +14,9 @@ export function EmptyState({
       <div className="w-14 h-14 rounded-2xl bg-stone-100 border border-stone-200/80 flex items-center justify-center text-stone-500 shadow-xs">
         <Icon className="w-7 h-7" />
       </div>
-      <div className="space-y-1">
-        <h3 className="text-lg font-serif font-bold text-slate-900">{title}</h3>
-        <p className="text-xs text-stone-500 max-w-sm leading-relaxed">{description}</p>
+      <div className="space-y-1.5">
+        <h3 className="text-xl font-serif font-bold text-slate-900">{title}</h3>
+        <p className="text-sm text-stone-600 max-w-sm leading-relaxed">{description}</p>
       </div>
       {actionLabel && onAction && (
         <div className="pt-2">

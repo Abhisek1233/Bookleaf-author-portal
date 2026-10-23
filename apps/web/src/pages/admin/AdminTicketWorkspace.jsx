@@ -477,10 +477,10 @@ export function AdminTicketWorkspace() {
 
             {/* Full Query Description */}
             <div>
-              <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider block mb-1.5">
+              <span className="text-xs font-semibold text-stone-600 uppercase tracking-wider block mb-1.5">
                 Author Inquiry Text
               </span>
-              <div className="bg-stone-50/80 p-5 rounded-2xl border border-stone-200 text-sm text-slate-900 whitespace-pre-wrap leading-relaxed">
+              <div className="bg-stone-50 p-5 rounded-2xl border border-stone-200 text-base text-slate-900 whitespace-pre-wrap leading-relaxed">
                 {ticket.description}
               </div>
             </div>
@@ -488,12 +488,12 @@ export function AdminTicketWorkspace() {
 
           {/* Conversation Timeline */}
           <div className="space-y-4">
-            <h3 className="text-sm font-serif font-bold text-slate-900">
+            <h3 className="text-base font-serif font-bold text-slate-900">
               Public Discussion Stream ({messages.length} replies)
             </h3>
 
             {messages.length === 0 ? (
-              <div className="bg-white rounded-2xl p-6 text-center border border-stone-200 text-xs text-stone-500">
+              <div className="bg-white rounded-2xl p-6 text-center border border-stone-200 text-sm text-stone-500">
                 No replies sent to the author yet. Use the AI response draft from the right panel to compose an official response.
               </div>
             ) : (
@@ -503,31 +503,31 @@ export function AdminTicketWorkspace() {
                   return (
                     <div
                       key={m.id}
-                      className={`p-6 rounded-3xl border ${
+                      className={`p-6 rounded-3xl border transition-all ${
                         isAdmin
-                          ? 'bg-indigo-50/60 border-indigo-200/90 sm:mr-8 shadow-xs'
-                          : 'bg-white border-stone-200 sm:ml-8 shadow-2xs'
+                          ? 'bg-gradient-to-br from-indigo-50/90 via-white to-indigo-50/40 border-indigo-200 sm:mr-6 shadow-xs'
+                          : 'bg-white border-stone-200 sm:ml-6 shadow-2xs'
                       }`}
                     >
-                      <div className="flex items-center justify-between mb-2.5">
-                        <div className="flex items-center gap-2">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2.5">
                           <div
-                            className={`w-7 h-7 rounded-xl flex items-center justify-center text-xs font-bold ${
-                              isAdmin ? 'bg-indigo-950 text-white font-serif' : 'bg-stone-300 text-stone-800'
+                            className={`w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold ${
+                              isAdmin ? 'bg-indigo-950 text-white font-serif' : 'bg-stone-200 text-stone-900'
                             }`}
                           >
                             {isAdmin ? <ShieldCheck className="w-4 h-4 text-indigo-300" /> : <User className="w-4 h-4" />}
                           </div>
                           <div>
-                            <span className="text-xs font-bold text-slate-900">
+                            <span className="text-sm font-bold text-slate-900 block leading-tight">
                               {isAdmin ? `BookLeaf Staff (${m.sender_name})` : m.sender_name}
                             </span>
-                            <span className="text-[10px] text-stone-400 block">
+                            <span className="text-xs text-stone-500 block">
                               {isAdmin ? 'Official Staff Reply' : 'Author Message'}
                             </span>
                           </div>
                         </div>
-                        <span className="text-[11px] text-stone-400 font-mono">
+                        <span className="text-xs text-stone-500 font-mono">
                           {new Date(m.created_at).toLocaleDateString('en-IN', {
                             month: 'short',
                             day: 'numeric',
@@ -536,7 +536,7 @@ export function AdminTicketWorkspace() {
                           })}
                         </span>
                       </div>
-                      <div className="text-sm text-slate-800 whitespace-pre-wrap leading-relaxed pl-9">
+                      <div className="text-base text-slate-900 whitespace-pre-wrap leading-relaxed pl-10">
                         {m.message}
                       </div>
                     </div>
@@ -549,44 +549,45 @@ export function AdminTicketWorkspace() {
 
           {/* Official Response Composer */}
           <form onSubmit={handleSendReply} className="bg-white rounded-3xl border border-stone-200 shadow-xs p-6 sm:p-7 space-y-4">
-            <div className="flex items-center justify-between">
-              <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider">
-                Compose Official Response to Author
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <label htmlFor="admin-reply-composer" className="block text-sm font-semibold text-slate-800">
+                Compose official response to author
               </label>
               <div className="flex items-center gap-2 text-xs">
-                <label className="flex items-center gap-1.5 cursor-pointer text-stone-600 font-medium select-none">
+                <label className="flex items-center gap-2 cursor-pointer text-stone-700 font-medium select-none">
                   <input
                     type="checkbox"
                     checked={autoResolveOnReply}
                     onChange={(e) => setAutoResolveOnReply(e.target.checked)}
-                    className="rounded text-indigo-600 focus:ring-indigo-500"
+                    className="w-4 h-4 rounded text-indigo-700 focus:ring-indigo-600"
                   />
-                  Mark as Resolved upon sending
+                  <span>Mark as Resolved upon sending</span>
                 </label>
               </div>
             </div>
 
             <textarea
+              id="admin-reply-composer"
               ref={replyTextareaRef}
               rows={7}
               required
               value={replyMessage}
               onChange={(e) => setReplyMessage(e.target.value)}
               placeholder="Type your official resolution or insert AI Draft from the right panel... (Press Ctrl+Enter to dispatch)"
-              className="w-full text-sm border border-stone-300 rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-indigo-700 bg-white"
+              className="w-full text-base sm:text-sm border border-stone-300 rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-indigo-700 bg-white text-slate-900 shadow-2xs leading-relaxed"
             />
 
-            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pt-1">
-              <div className="flex items-center gap-2 text-[11px] text-stone-500 flex-wrap">
-                <span className="flex items-center gap-1">
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pt-1">
+              <div className="flex items-center gap-2.5 text-xs text-stone-600 flex-wrap">
+                <span className="flex items-center gap-1.5">
                   <kbd>Ctrl+Enter</kbd> Send
                 </span>
                 <span>•</span>
-                <span className="flex items-center gap-1">
+                <span className="flex items-center gap-1.5">
                   <kbd>Alt+D</kbd> AI Draft
                 </span>
                 <span>•</span>
-                <span className="flex items-center gap-1">
+                <span className="flex items-center gap-1.5">
                   <kbd>Alt+A</kbd> Assign
                 </span>
               </div>
@@ -594,6 +595,7 @@ export function AdminTicketWorkspace() {
                 type="submit"
                 variant="primary"
                 size="md"
+                className="min-h-[44px]"
                 isLoading={isSendingReply}
                 icon={Send}
               >
@@ -695,7 +697,7 @@ export function AdminTicketWorkspace() {
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-indigo-950 flex items-center gap-1.5 uppercase tracking-wider">
                 <Sparkles className="w-4 h-4 text-indigo-600" />
-                AI Response Generator
+                AI-suggested draft — review before sending
               </span>
               <Button
                 size="sm"
@@ -708,23 +710,24 @@ export function AdminTicketWorkspace() {
               </Button>
             </div>
 
-            <p className="text-[11px] text-stone-500 leading-relaxed">
+            <p className="text-xs text-stone-600 leading-relaxed">
               Grounded strictly in BookLeaf policies (80/20 royalty formula, 45-day quarterly payout, free reprints) and verified catalog data.
             </p>
 
             {aiDraft ? (
               <div className="space-y-3">
-                <div className="bg-stone-50 p-4 rounded-2xl border border-stone-200/80 text-xs text-slate-800 max-h-64 overflow-y-auto whitespace-pre-wrap leading-relaxed font-sans custom-scrollbar">
+                <div className="bg-stone-50 p-4 rounded-2xl border border-stone-200 text-sm text-slate-900 max-h-64 overflow-y-auto whitespace-pre-wrap leading-relaxed font-sans custom-scrollbar">
                   {aiDraft}
                 </div>
 
-                <div className="flex items-center justify-between pt-1">
-                  <span className="text-[10px] text-stone-400 font-mono">
-                    Provider: {draftModel}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1">
+                  <span className="text-xs text-stone-500 font-mono">
+                    Model: {draftModel}
                   </span>
                   <Button
                     size="sm"
                     variant="primary"
+                    className="min-h-[40px]"
                     onClick={() => {
                       setReplyMessage(aiDraft);
                       toast.success('AI Draft inserted into response composer! You can edit it before sending.', 'Draft Copied');
@@ -732,16 +735,17 @@ export function AdminTicketWorkspace() {
                     }}
                     icon={Copy}
                   >
-                    Use in Reply Composer
+                    Insert Draft into Reply (Alt+D)
                   </Button>
                 </div>
               </div>
             ) : (
-              <div className="p-6 text-center border border-dashed border-stone-200 rounded-2xl bg-stone-50/50 space-y-2">
-                <p className="text-xs text-stone-500">Draft response ready to generate based on policy context.</p>
+              <div className="p-6 text-center border border-dashed border-stone-300 rounded-2xl bg-stone-50/50 space-y-2.5">
+                <p className="text-sm text-stone-600">Draft response ready to generate based on policy context.</p>
                 <Button
                   size="sm"
                   variant="primary"
+                  className="min-h-[40px]"
                   onClick={() => handleGenerateDraft(false)}
                   isLoading={isDrafting}
                   icon={Sparkles}
@@ -753,57 +757,59 @@ export function AdminTicketWorkspace() {
           </div>
 
           {/* Private Ops Internal Notes (Confidential) */}
-          <div className="bg-[#FFFDF5] rounded-3xl border border-amber-200/90 shadow-xs p-6 space-y-4">
+          <div className="bg-amber-50/50 rounded-3xl border border-amber-300 shadow-xs p-6 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
-                <Lock className="w-4 h-4 text-amber-700" />
+                <Lock className="w-4 h-4 text-amber-800" />
                 <span className="text-xs font-bold text-amber-950 uppercase tracking-wider">
-                  Internal Ops Scratchpad
+                  Internal notes
                 </span>
               </div>
-              <span className="text-[10px] text-amber-900 bg-amber-100/80 border border-amber-300 px-2 py-0.5 rounded-full font-bold">
-                Private
+              <span className="text-xs text-amber-950 bg-amber-100 border border-amber-300 px-2.5 py-0.5 rounded-full font-bold">
+                Private — staff only
               </span>
             </div>
 
-            <p className="text-[11px] text-amber-800/80 leading-relaxed">
-              Notes are strictly stored internally. Never rendered to authors or emitted over author websocket channels.
+            <p className="text-xs text-amber-900/90 leading-relaxed">
+              Notes are strictly internal. Never visible to authors or transmitted across public author channels.
             </p>
 
             {/* Existing Notes */}
             <div className="space-y-2.5 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
               {internal_notes.length === 0 ? (
-                <p className="text-xs text-amber-700/60 italic">No internal notes logged yet.</p>
+                <p className="text-xs text-amber-800/70 italic">No internal notes logged yet.</p>
               ) : (
                 internal_notes.map((n) => (
-                  <div key={n.id} className="p-3 rounded-xl bg-white/80 border border-amber-200 text-xs shadow-2xs">
-                    <div className="flex items-center justify-between text-[10px] text-amber-900 font-bold mb-1">
+                  <div key={n.id} className="p-3.5 rounded-xl bg-white border border-amber-200 text-xs shadow-2xs">
+                    <div className="flex items-center justify-between text-xs text-amber-950 font-bold mb-1">
                       <span>{n.admin_name}</span>
-                      <span className="text-stone-400 font-normal font-mono">
+                      <span className="text-stone-500 font-normal font-mono text-[11px]">
                         {new Date(n.created_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
-                    <div className="text-slate-800 whitespace-pre-wrap">{n.content}</div>
+                    <div className="text-sm text-slate-900 whitespace-pre-wrap leading-relaxed">{n.content}</div>
                   </div>
                 ))
               )}
             </div>
 
             {/* Add Note Form */}
-            <form onSubmit={handleAddNote} className="space-y-2 pt-2 border-t border-amber-200/70">
+            <form onSubmit={handleAddNote} className="space-y-2 pt-2 border-t border-amber-200">
+              <label htmlFor="internal-note-textarea" className="sr-only">Internal staff note</label>
               <textarea
+                id="internal-note-textarea"
                 rows={2}
                 required
                 value={noteContent}
                 onChange={(e) => setNoteContent(e.target.value)}
-                placeholder="Log internal note (e.g. verified with Delhi printing hub)..."
-                className="w-full text-xs border border-amber-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-amber-600 bg-white"
+                placeholder="Log internal note (e.g. verified tracking with Delhi hub)..."
+                className="w-full text-sm border border-amber-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-amber-700 bg-white text-slate-900 shadow-2xs"
               />
               <Button
                 type="submit"
                 variant="secondary"
                 size="sm"
-                className="w-full bg-white hover:bg-amber-50 text-amber-950 border-amber-300"
+                className="w-full bg-white hover:bg-amber-100/60 text-amber-950 border-amber-300 min-h-[40px]"
                 isLoading={isSubmittingNote}
               >
                 Save Private Note

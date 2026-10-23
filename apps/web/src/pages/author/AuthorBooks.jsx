@@ -125,24 +125,26 @@ export function AuthorBooks() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-white p-3.5 rounded-2xl border border-stone-200 shadow-xs flex flex-col sm:flex-row gap-3 items-center justify-between">
+      <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-xs flex flex-col sm:flex-row gap-3 items-center justify-between">
         <form onSubmit={handleSearchSubmit} className="relative w-full sm:w-80">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400" />
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-500" aria-hidden="true" />
           <input
-            type="text"
+            type="search"
             placeholder="Search by title, ISBN, genre..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-xs border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-stone-50/50"
+            aria-label="Search titles by title, ISBN, or genre"
+            className="w-full pl-9 pr-3 py-2.5 text-sm border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-stone-50/50 min-h-[44px]"
           />
         </form>
 
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <Filter className="w-4 h-4 text-stone-400" />
+          <Filter className="w-4 h-4 text-stone-500" aria-hidden="true" />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="text-xs border border-stone-200 rounded-xl px-3 py-2 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-600 font-medium"
+            aria-label="Filter by publishing status"
+            className="text-sm border border-stone-200 rounded-xl px-3 py-2.5 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-600 font-medium min-h-[44px] cursor-pointer"
           >
             <option value="">All Publishing Statuses</option>
             <option value="Published">Published & Live</option>
@@ -189,13 +191,13 @@ export function AuthorBooks() {
 
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5 flex-wrap mb-1">
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${
+                      <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${
                         isLive ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-amber-50 text-amber-800 border border-amber-200'
                       }`}>
                         {b.status || 'In Production'}
                       </span>
                       {b.genre && (
-                        <span className="text-[10px] text-stone-500 font-semibold bg-stone-100 px-2 py-0.5 rounded-full">
+                        <span className="text-xs text-stone-600 font-semibold bg-stone-100 px-2 py-0.5 rounded-full">
                           {b.genre}
                         </span>
                       )}
@@ -203,7 +205,7 @@ export function AuthorBooks() {
                     <h3 className="font-serif font-bold text-base text-slate-900 group-hover:text-indigo-800 transition-colors line-clamp-2 leading-snug">
                       {b.title}
                     </h3>
-                    <span className="text-[10px] text-stone-400 font-mono block mt-1">
+                    <span className="text-xs text-stone-500 font-mono block mt-1">
                       {b.publication_date ? `Pub Date: ${new Date(b.publication_date).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}` : 'Status: Manuscript in Production'}
                     </span>
                   </div>
@@ -213,35 +215,35 @@ export function AuthorBooks() {
                 <div className="p-5 space-y-3.5">
                   <div className="grid grid-cols-3 gap-2 text-xs">
                     <div>
-                      <span className="text-[9px] text-stone-400 uppercase font-semibold block">Retail MRP</span>
-                      <span className="font-bold text-slate-900 font-mono"><Currency value={b.mrp} /></span>
+                      <span className="text-[11px] text-stone-500 uppercase font-semibold block">Retail MRP</span>
+                      <span className="font-bold text-slate-900 font-mono text-sm"><Currency value={b.mrp} /></span>
                     </div>
                     <div>
-                      <span className="text-[9px] text-stone-400 uppercase font-semibold block">Copies Sold</span>
-                      <span className="font-bold text-slate-900 font-mono">{b.total_copies_sold.toLocaleString('en-IN')}</span>
+                      <span className="text-[11px] text-stone-500 uppercase font-semibold block">Copies Sold</span>
+                      <span className="font-bold text-slate-900 font-mono text-sm">{b.total_copies_sold.toLocaleString('en-IN')}</span>
                     </div>
                     <div>
-                      <span className="text-[9px] text-stone-400 uppercase font-semibold block">Net / Copy</span>
-                      <span className="font-bold text-indigo-700 font-mono"><Currency value={b.author_royalty_per_copy} /></span>
+                      <span className="text-[11px] text-stone-500 uppercase font-semibold block">Net / Copy</span>
+                      <span className="font-bold text-indigo-700 font-mono text-sm"><Currency value={b.author_royalty_per_copy} /></span>
                     </div>
                     <div>
-                      <span className="text-[9px] text-stone-400 uppercase font-semibold block">Total Earned</span>
-                      <span className="font-bold text-slate-900 font-mono"><Currency value={b.total_royalty_earned} /></span>
+                      <span className="text-[11px] text-stone-500 uppercase font-semibold block">Total Earned</span>
+                      <span className="font-bold text-slate-900 font-mono text-sm"><Currency value={b.total_royalty_earned} /></span>
                     </div>
                     <div>
-                      <span className="text-[9px] text-stone-400 uppercase font-semibold block">Royalty Paid</span>
-                      <span className="font-bold text-emerald-700 font-mono"><Currency value={b.royalty_paid} /></span>
+                      <span className="text-[11px] text-stone-500 uppercase font-semibold block">Royalty Paid</span>
+                      <span className="font-bold text-emerald-700 font-mono text-sm"><Currency value={b.royalty_paid} /></span>
                     </div>
                     <div>
-                      <span className="text-[9px] text-stone-400 uppercase font-semibold block">Pending Payout</span>
-                      <span className="font-bold text-amber-700 font-mono"><Currency value={b.royalty_pending} /></span>
+                      <span className="text-[11px] text-stone-500 uppercase font-semibold block">Pending Payout</span>
+                      <span className="font-bold text-amber-700 font-mono text-sm"><Currency value={b.royalty_pending} /></span>
                     </div>
                   </div>
 
-                  <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-[11px] text-stone-500">
+                  <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-xs text-stone-600">
                     <span className="font-mono truncate max-w-[170px]">ISBN: {b.isbn || 'Pending Assignment'}</span>
                     <span className="text-indigo-700 font-bold group-hover:underline flex items-center gap-0.5">
-                      View Details <ArrowRight className="w-3 h-3" />
+                      View Details <ArrowRight className="w-3.5 h-3.5" />
                     </span>
                   </div>
                 </div>
@@ -252,20 +254,20 @@ export function AuthorBooks() {
       ) : (
         /* Data Table View */
         <div className="bg-white rounded-3xl border border-stone-200 shadow-xs overflow-hidden">
-          <div className="overflow-x-auto custom-scrollbar-h">
-            <table className="w-full text-left text-xs text-slate-700">
-              <thead className="bg-stone-50/80 text-stone-500 font-semibold border-b border-stone-200 uppercase tracking-wider text-[10px]">
+          <div className="overflow-x-auto custom-scrollbar-h max-h-[600px]">
+            <table className="w-full text-left text-sm text-slate-700">
+              <thead className="bg-stone-50/95 text-stone-600 font-semibold border-b border-stone-200 uppercase tracking-wider text-xs sticky top-0 z-10 backdrop-blur">
                 <tr>
-                  <th className="px-5 py-4">Title & Genre</th>
-                  <th className="px-3 py-4">Status</th>
-                  <th className="px-3 py-4">ISBN</th>
-                  <th className="px-3 py-4">Pub Date</th>
-                  <th className="px-3 py-4 text-right">MRP</th>
-                  <th className="px-3 py-4 text-right">Sold</th>
-                  <th className="px-3 py-4 text-right">Earned</th>
-                  <th className="px-3 py-4 text-right">Paid</th>
-                  <th className="px-3 py-4 text-right">Pending</th>
-                  <th className="px-5 py-4 text-center">Action</th>
+                  <th className="px-5 py-3.5">Title & Genre</th>
+                  <th className="px-3 py-3.5">Status</th>
+                  <th className="px-3 py-3.5">ISBN</th>
+                  <th className="px-3 py-3.5">Pub Date</th>
+                  <th className="px-3 py-3.5 text-right">MRP</th>
+                  <th className="px-3 py-3.5 text-right">Sold</th>
+                  <th className="px-3 py-3.5 text-right">Earned</th>
+                  <th className="px-3 py-3.5 text-right">Paid</th>
+                  <th className="px-3 py-3.5 text-right">Pending</th>
+                  <th className="px-5 py-3.5 text-center">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-100">
@@ -273,28 +275,28 @@ export function AuthorBooks() {
                   <tr
                     key={b.id}
                     onClick={() => setSelectedBook(b)}
-                    className="hover:bg-stone-50/90 transition-colors cursor-pointer"
+                    className="hover:bg-stone-50/90 transition-colors cursor-pointer min-h-[48px]"
                   >
                     <td className="px-5 py-4 font-bold text-slate-900 font-serif">
                       <div>{b.title}</div>
-                      <div className="text-[10px] text-stone-400 font-sans font-normal">{b.genre}</div>
+                      <div className="text-xs text-stone-500 font-sans font-normal mt-0.5">{b.genre}</div>
                     </td>
                     <td className="px-3 py-4">
-                      <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-800 border border-indigo-200">
+                      <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-800 border border-indigo-200">
                         {b.status}
                       </span>
                     </td>
-                    <td className="px-3 py-4 font-mono text-stone-500">{b.isbn || 'Pending'}</td>
-                    <td className="px-3 py-4 font-mono text-stone-500 text-[11px]">
+                    <td className="px-3 py-4 font-mono text-stone-600 text-xs">{b.isbn || 'Pending'}</td>
+                    <td className="px-3 py-4 font-mono text-stone-600 text-xs">
                       {b.publication_date ? new Date(b.publication_date).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }) : '—'}
                     </td>
-                    <td className="px-3 py-4 text-right font-mono font-medium"><Currency value={b.mrp} /></td>
-                    <td className="px-3 py-4 text-right font-mono font-medium">{b.total_copies_sold.toLocaleString('en-IN')}</td>
+                    <td className="px-3 py-4 text-right font-mono font-medium text-slate-900"><Currency value={b.mrp} /></td>
+                    <td className="px-3 py-4 text-right font-mono font-medium text-slate-900">{b.total_copies_sold.toLocaleString('en-IN')}</td>
                     <td className="px-3 py-4 text-right font-mono font-bold text-indigo-700"><Currency value={b.total_royalty_earned} /></td>
                     <td className="px-3 py-4 text-right font-mono font-semibold text-emerald-700"><Currency value={b.royalty_paid} /></td>
                     <td className="px-3 py-4 text-right font-mono font-bold text-amber-700"><Currency value={b.royalty_pending} /></td>
                     <td className="px-5 py-4 text-center">
-                      <Button size="sm" variant="secondary">
+                      <Button size="sm" variant="secondary" className="min-h-[36px]">
                         Inspect
                       </Button>
                     </td>
@@ -316,7 +318,7 @@ export function AuthorBooks() {
             {/* Pinned Modal Header */}
             <div className="p-6 border-b border-stone-100 flex items-start justify-between bg-white shrink-0">
               <div className="min-w-0 pr-4">
-                <span className="text-[10px] font-bold text-indigo-800 bg-indigo-50 border border-indigo-200 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                <span className="text-xs font-semibold text-indigo-800 bg-indigo-50 border border-indigo-200 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                   Book Dossier • {selectedBook.genre || 'General'}
                 </span>
                 <h2 className="text-xl sm:text-2xl font-serif font-bold text-slate-900 mt-1.5 leading-snug">
@@ -328,7 +330,8 @@ export function AuthorBooks() {
               </div>
               <button
                 onClick={() => setSelectedBook(null)}
-                className="p-2 text-stone-400 hover:text-stone-800 rounded-full hover:bg-stone-100 cursor-pointer shrink-0 transition-colors"
+                aria-label="Close book details modal"
+                className="p-2.5 text-stone-500 hover:text-stone-900 rounded-full hover:bg-stone-100 cursor-pointer shrink-0 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -403,27 +406,27 @@ export function AuthorBooks() {
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 pt-1">
                   <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
-                    <span className="text-[10px] text-stone-400 uppercase font-semibold block">Retail MRP</span>
+                    <span className="text-[11px] text-stone-500 uppercase font-semibold block">Retail MRP</span>
                     <span className="font-bold text-slate-900 text-sm mt-0.5 block font-mono"><Currency value={selectedBook.mrp} /></span>
                   </div>
                   <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
-                    <span className="text-[10px] text-stone-400 uppercase font-semibold block">Net / Copy</span>
+                    <span className="text-[11px] text-stone-500 uppercase font-semibold block">Net / Copy</span>
                     <span className="font-bold text-indigo-700 text-sm mt-0.5 block font-mono"><Currency value={selectedBook.author_royalty_per_copy} /></span>
                   </div>
                   <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
-                    <span className="text-[10px] text-stone-400 uppercase font-semibold block">Copies Sold</span>
+                    <span className="text-[11px] text-stone-500 uppercase font-semibold block">Copies Sold</span>
                     <span className="font-bold text-slate-900 text-sm mt-0.5 block font-mono">{selectedBook.total_copies_sold.toLocaleString('en-IN')}</span>
                   </div>
                   <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
-                    <span className="text-[10px] text-stone-400 uppercase font-semibold block">Total Earned</span>
+                    <span className="text-[11px] text-stone-500 uppercase font-semibold block">Total Earned</span>
                     <span className="font-bold text-slate-900 text-sm mt-0.5 block font-mono"><Currency value={selectedBook.total_royalty_earned} /></span>
                   </div>
                   <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
-                    <span className="text-[10px] text-stone-400 uppercase font-semibold block">Royalty Paid</span>
+                    <span className="text-[11px] text-stone-500 uppercase font-semibold block">Royalty Paid</span>
                     <span className="font-bold text-emerald-700 text-sm mt-0.5 block font-mono"><Currency value={selectedBook.royalty_paid} /></span>
                   </div>
                   <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
-                    <span className="text-[10px] text-stone-400 uppercase font-semibold block">Pending Payout</span>
+                    <span className="text-[11px] text-stone-500 uppercase font-semibold block">Pending Payout</span>
                     <span className="font-bold text-amber-700 text-sm mt-0.5 block font-mono"><Currency value={selectedBook.royalty_pending} /></span>
                   </div>
                 </div>
