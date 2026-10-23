@@ -13,6 +13,13 @@ const isExternalSSL = connectionString.includes('.render.com') || connectionStri
 
 const sslConfig = !isInternalRender && isExternalSSL ? { rejectUnauthorized: false } : false;
 
+try {
+  const parsed = new URL(connectionString);
+  console.log(`[Database] Connecting to PostgreSQL host: ${parsed.hostname}:${parsed.port || 5432}, db: ${parsed.pathname}, ssl: ${Boolean(sslConfig)}`);
+} catch {
+  console.log('[Database] Initializing database pool with custom connection string');
+}
+
 export const pool = new Pool({
   connectionString,
   ssl: sslConfig,

@@ -10,7 +10,8 @@ export async function healthCheck(req, res) {
     await query('SELECT 1');
     dbLatencyMs = Date.now() - start;
   } catch (err) {
-    dbStatus = `unhealthy: ${err.message}`;
+    console.error('[HealthCheck] Database query failed:', err.message || err);
+    dbStatus = `unhealthy: ${err.message || err.code || 'Connection failed'}`;
   }
 
   const aiStatus = geminiProvider.isConfigured() ? 'configured' : 'fallback-heuristics-active';
