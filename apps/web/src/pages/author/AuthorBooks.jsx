@@ -256,7 +256,7 @@ export function AuthorBooks() {
         <div className="bg-white rounded-3xl border border-stone-200 shadow-xs overflow-hidden">
           <div className="overflow-x-auto custom-scrollbar-h max-h-[600px]">
             <table className="w-full text-left text-sm text-slate-700">
-              <thead className="bg-stone-50/95 text-stone-600 font-semibold border-b border-stone-200 uppercase tracking-wider text-xs sticky top-0 z-10 backdrop-blur">
+              <thead className="bg-stone-50 text-stone-600 font-semibold border-b border-stone-200 uppercase tracking-wider text-xs sticky top-0 z-10">
                 <tr>
                   <th className="px-5 py-3.5">Title & Genre</th>
                   <th className="px-3 py-3.5">Status</th>

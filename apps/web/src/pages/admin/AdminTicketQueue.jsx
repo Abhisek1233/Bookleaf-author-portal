@@ -351,7 +351,7 @@ export function AdminTicketQueue() {
           {/* Desktop Table View (md and up) */}
           <div className="hidden md:block overflow-x-auto custom-scrollbar-h max-h-[650px]">
             <table className="w-full text-left text-sm text-slate-700">
-              <thead className="bg-stone-50/95 text-stone-600 font-semibold border-b border-stone-200 uppercase tracking-wider text-xs sticky top-0 z-10 backdrop-blur">
+              <thead className="bg-stone-50 text-stone-600 font-semibold border-b border-stone-200 uppercase tracking-wider text-xs sticky top-0 z-10">
                 <tr>
                   <th className="px-5 py-3.5 whitespace-nowrap min-w-[110px]">Ticket Ref</th>
                   <th className="px-5 py-3.5 min-w-[160px]">Author & Title</th>
@@ -361,7 +361,7 @@ export function AdminTicketQueue() {
                   <th className="px-5 py-3.5 whitespace-nowrap min-w-[120px]">Status</th>
                   <th className="px-5 py-3.5 whitespace-nowrap min-w-[150px]">Assignee</th>
                   <th className="px-5 py-3.5 text-right whitespace-nowrap min-w-[100px]">Messages</th>
-                  <th className="px-5 py-3.5 text-center sticky right-0 bg-stone-50/95 shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.06)] z-20 whitespace-nowrap">Triage</th>
+                  <th className="px-5 py-3.5 text-center sticky right-0 bg-stone-50 shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.06)] z-20 whitespace-nowrap">Triage</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-100">
@@ -436,7 +436,12 @@ export function AdminTicketQueue() {
                           {new Date(t.updated_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })}
                         </div>
                       </td>
-                      <td className="px-5 py-4 text-center sticky right-0 bg-white group-hover:bg-stone-50 shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.06)] z-10 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                      <td
+                        className={`px-5 py-4 text-center sticky right-0 shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.06)] z-10 whitespace-nowrap ${
+                          isCritical ? 'bg-rose-50 group-hover:bg-stone-100' : isHigh ? 'bg-orange-50 group-hover:bg-stone-100' : 'bg-white group-hover:bg-stone-50'
+                        }`}
+                        onClick={(e) => e.stopPropagation()}
+                      >
                         <Link to={`/admin/tickets/${t.id}`}>
                           <Button size="sm" variant="secondary" className="group min-h-[38px]">
                             Triage <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
