@@ -52,7 +52,8 @@ An intelligent, full-stack, two-sided support ecosystem:
 
 ### 1. Author-Facing Portal (`/author/*`)
 - **Author Dashboard:**
-  - Real-time catalog summary (total published books, lifetime copies sold, total royalties earned, royalties paid, pending balance).
+  - Real-time catalog summary (total published books, lifetime copies sold, total royalties earned, royalties paid, pending balance) organized in a mobile-first 2-column responsive grid (`grid-cols-2 lg:grid-cols-4`).
+  - Clean "Verified author" indicator and proportional tabular figures for natural currency readability.
   - Payout eligibility banner showing minimum ₹1,000 threshold status and roll-over notifications.
   - Interactive **2026 Quarterly Payout Schedule** breakdown (Q1–Q4 cycle dates and 45-day payment windows).
 - **My Books Catalog:**
@@ -77,6 +78,7 @@ An intelligent, full-stack, two-sided support ecosystem:
 - **Support Queue:**
   - Server-paginated, multi-filter queue (Filter by Status, Category, Priority, Search Query, and Sort Order).
   - **Urgency-First Sorting:** Surfaces critical queries and oldest unresolved tickets to prevent SLA breaches.
+  - **Multi-Device Queue Architecture:** Responsive stacked ticket cards on mobile screens (`<md`) with one-tap 44px triage action buttons; desktop data table (`md+`) with dedicated column widths and a sticky right-pinned Triage column engineered with solid background rendering to guarantee zero opacity bleed-through.
 - **2-Column Triage Workspace:**
   - **Left Column:** Full ticket thread, author context card, linked book metadata, and official reply editor.
   - **Right Column:** AI classification breakdown, priority rating with explainable justification, **1-Click Admin Overrides** (change Category or Priority instantly), status transition manager, staff assignment, and **Private Internal Notes** (strictly filtered out from author view).
@@ -91,8 +93,8 @@ An intelligent, full-stack, two-sided support ecosystem:
   - <kbd>Alt</kbd> + <kbd>R</kbd>: Focus reply editor
 
 ### 3. Design & User Experience
-- **Typography & Aesthetics:** Warm editorial theme inspired by literary publishing: `#FAF9F5` warm cream canvas, crisp white cards, and ink-toned typography. Headings set in **Lora** serif, interface in **Plus Jakarta Sans**, and numeric values/identifiers in monospace **JetBrains Mono**.
-- **Design Tokens & Accessibility (WCAG 2.1 AA):** Standardized Tailwind CSS v4 `@theme` design tokens, minimum 44×44px touch targets on mobile, high-contrast text and dual-indicator status badges (dots + labels), `prefers-reduced-motion` support, visible `:focus-visible` keyboard rings, and accessible skip navigation links.
+- **Typography & Aesthetics:** Warm editorial theme inspired by literary publishing: `#FAF9F5` warm cream canvas, crisp white cards, and ink-toned typography. Headings set in **Lora** serif, interface in **Plus Jakarta Sans**, tabular figures with standard proportional kerning for financial metrics (`₹`), and monospace **JetBrains Mono** reserved strictly for IDs, ISBNs, emails, and ticket reference codes.
+- **Design Tokens & Accessibility (WCAG 2.1 AA):** Standardized Tailwind CSS v4 `@theme` design tokens, minimum 44×44px touch targets on mobile, high-contrast text and dual-indicator non-wrapping status badges (dots + labels), `prefers-reduced-motion` support, visible `:focus-visible` keyboard rings, and accessible skip navigation links.
 - **Mobile Responsive Drawer:** Slide-over navigation drawer with backdrop blur overlay, escape key dismissal, and scroll lock for smartphones and tablets.
 - **Universal Sleek Scrollbars:** Custom thin, rounded scrollbars styled consistently across all browsers and pages.
 - **Toast Notifications:** Floating accessible toast notification system for feedback without blocking browser alerts.
