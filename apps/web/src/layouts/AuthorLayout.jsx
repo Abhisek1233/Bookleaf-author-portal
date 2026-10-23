@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import {
   BookOpen,
@@ -17,6 +17,7 @@ export function AuthorLayout() {
   const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
     logout();
@@ -104,17 +105,29 @@ export function AuthorLayout() {
           <nav className="p-3.5 space-y-1">
             {navItems.map((item) => {
               const Icon = item.icon;
+              const isNewTicketPage = location.pathname.startsWith('/author/tickets/new');
+              const isItemActive = (isActive) => {
+                // If on 'Submit Query' (/author/tickets/new), don't highlight 'My Tickets' (/author/tickets)
+                if (item.to === '/author/tickets') {
+                  return isActive && !isNewTicketPage;
+                }
+                return isActive;
+              };
+
               return (
                 <NavLink
                   key={item.to}
                   to={item.to}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={({ isActive }) => `
-                    flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all
-                    ${isActive
-                      ? 'bg-indigo-50 text-indigo-800 shadow-2xs font-bold border border-indigo-200/90'
-                      : 'text-stone-600 hover:text-slate-900 hover:bg-stone-50'}
-                  `}
+                  className={({ isActive }) => {
+                    const active = isItemActive(isActive);
+                    return `
+                      flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all
+                      ${active
+                        ? 'bg-indigo-50 text-indigo-800 shadow-2xs font-bold border border-indigo-200/90'
+                        : 'text-stone-600 hover:text-slate-900 hover:bg-stone-50'}
+                    `;
+                  }}
                 >
                   <Icon className="w-4 h-4 shrink-0" />
                   {item.label}
