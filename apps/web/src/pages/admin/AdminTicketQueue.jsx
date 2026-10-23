@@ -362,7 +362,7 @@ export function AdminTicketQueue() {
                             </span>
                           )}
                         </div>
-                        <div className="text-xs text-stone-500 mt-1 font-mono">
+                        <div className="text-xs text-stone-500 mt-1 font-sans">
                           {new Date(t.updated_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })}
                         </div>
                       </td>

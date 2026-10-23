@@ -417,22 +417,22 @@ export function AdminTicketWorkspace() {
             {/* Author Background Strip */}
             <div className="bg-stone-50 p-4 rounded-2xl border border-stone-200/80 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
               <div>
-                <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider block">Author Profile</span>
-                <span className="font-bold text-slate-900 text-sm">{author.name}</span>
+                <span className="text-xs font-semibold text-stone-600 block">Author profile</span>
+                <span className="font-bold text-slate-900 text-sm mt-0.5 block">{author.name}</span>
                 <span className="text-stone-500 block truncate font-mono">{author.email}</span>
-                <span className="text-stone-400 text-[11px] block mt-0.5 font-mono">{author.phone} • {author.city}</span>
+                <span className="text-stone-500 text-xs block mt-0.5 font-mono">{author.phone} • {author.city}</span>
               </div>
               <div>
-                <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider block">Catalog Experience</span>
-                <span className="font-medium text-slate-800 text-sm font-mono">{author.total_books} Published Titles</span>
+                <span className="text-xs font-semibold text-stone-600 block">Catalog experience</span>
+                <span className="font-medium text-slate-800 text-sm block mt-0.5">{author.total_books} Published Titles</span>
                 <span className="text-stone-500 block">Member since {new Date(author.joined_date).getFullYear()}</span>
               </div>
               <div>
-                <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider block">Accrued Royalties</span>
-                <span className="font-bold text-sm text-amber-700 block font-mono">
+                <span className="text-xs font-semibold text-stone-600 block">Accrued royalties</span>
+                <span className="font-bold text-sm text-amber-700 block font-mono mt-0.5">
                   Pending: <Currency value={author.total_royalty_pending} />
                 </span>
-                <span className="text-[11px] text-stone-500">
+                <span className="text-xs text-stone-600">
                   {author.total_royalty_pending >= 1000 ? '✓ Exceeds ₹1k threshold' : 'Below payout threshold'}
                 </span>
               </div>
@@ -450,7 +450,7 @@ export function AdminTicketWorkspace() {
                     ISBN: {book.isbn}
                   </span>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] pt-1">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs pt-1">
                   <div>
                     <span className="text-stone-500 block">Copies Sold:</span>
                     <span className="font-bold text-slate-900 font-mono">{book.total_copies_sold.toLocaleString('en-IN')}</span>
@@ -527,7 +527,7 @@ export function AdminTicketWorkspace() {
                             </span>
                           </div>
                         </div>
-                        <span className="text-xs text-stone-500 font-mono">
+                        <span className="text-xs text-stone-500 font-sans">
                           {new Date(m.created_at).toLocaleDateString('en-IN', {
                             month: 'short',
                             day: 'numeric',
@@ -554,8 +554,9 @@ export function AdminTicketWorkspace() {
                 Compose official response to author
               </label>
               <div className="flex items-center gap-2 text-xs">
-                <label className="flex items-center gap-2 cursor-pointer text-stone-700 font-medium select-none">
+                <label htmlFor="auto-resolve-checkbox" className="flex items-center gap-2 cursor-pointer text-stone-700 font-medium select-none">
                   <input
+                    id="auto-resolve-checkbox"
                     type="checkbox"
                     checked={autoResolveOnReply}
                     onChange={(e) => setAutoResolveOnReply(e.target.checked)}
@@ -610,11 +611,11 @@ export function AdminTicketWorkspace() {
           {/* AI Copilot & Classification Card */}
           <div className="bg-white rounded-3xl border border-stone-200 shadow-xs p-6 space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-indigo-950 flex items-center gap-2 uppercase tracking-wider">
+              <span className="text-sm font-semibold text-indigo-950 flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-indigo-600" />
-                AI Triage Copilot
+                AI triage copilot
               </span>
-              <span className="text-[10px] font-mono font-bold bg-indigo-50 text-indigo-800 px-2.5 py-0.5 rounded-full border border-indigo-200">
+              <span className="text-xs font-mono font-semibold bg-indigo-50 text-indigo-800 px-2.5 py-0.5 rounded-full border border-indigo-200">
                 Confidence: {ticket.ai_confidence ? `${(ticket.ai_confidence * 100).toFixed(0)}%` : '95%'}
               </span>
             </div>
@@ -622,18 +623,18 @@ export function AdminTicketWorkspace() {
             {/* AI Suggested Breakdown */}
             <div className="bg-stone-50 p-4 rounded-2xl border border-stone-200/70 space-y-3 text-xs">
               <div>
-                <span className="text-stone-400 block text-[10px] uppercase font-bold">Suggested Category</span>
-                <span className="font-bold text-slate-900 text-sm">{ticket.ai_category || ticket.category}</span>
+                <span className="text-xs font-semibold text-stone-600 block">Suggested category</span>
+                <span className="font-bold text-slate-900 text-sm mt-0.5 block">{ticket.ai_category || ticket.category}</span>
                 {ticket.ai_category_reason && (
-                  <p className="text-[11px] text-stone-500 mt-1 leading-relaxed">{ticket.ai_category_reason}</p>
+                  <p className="text-xs text-stone-600 mt-1 leading-relaxed">{ticket.ai_category_reason}</p>
                 )}
               </div>
 
               <div className="pt-2 border-t border-stone-200/60">
-                <span className="text-stone-400 block text-[10px] uppercase font-bold">Priority Assessment</span>
-                <span className="font-bold text-slate-900 text-sm">{ticket.ai_priority || ticket.priority}</span>
+                <span className="text-xs font-semibold text-stone-600 block">Priority assessment</span>
+                <span className="font-bold text-slate-900 text-sm mt-0.5 block">{ticket.ai_priority || ticket.priority}</span>
                 {ticket.ai_priority_reason && (
-                  <p className="text-[11px] text-stone-500 mt-1 leading-relaxed">{ticket.ai_priority_reason}</p>
+                  <p className="text-xs text-stone-600 mt-1 leading-relaxed">{ticket.ai_priority_reason}</p>
                 )}
               </div>
             </div>
@@ -641,20 +642,21 @@ export function AdminTicketWorkspace() {
             {/* Admin Override Controls */}
             <form onSubmit={handleApplyOverride} className="space-y-3 pt-2 border-t border-stone-100">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-stone-700">Administrator Override</span>
+                <span className="text-xs font-semibold text-stone-700">Administrator override</span>
                 {(ticket.is_category_overridden || ticket.is_priority_overridden) && (
-                  <span className="text-[10px] text-indigo-700 font-bold bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">
+                  <span className="text-xs text-indigo-800 font-semibold bg-indigo-50 px-2.5 py-0.5 rounded border border-indigo-200">
                     Active Override
                   </span>
                 )}
               </div>
 
               <div>
-                <label className="text-[11px] text-stone-500 block mb-1">Override Category</label>
+                <label htmlFor="override-category-select" className="text-xs text-stone-600 font-semibold block mb-1">Override category</label>
                 <select
+                  id="override-category-select"
                   value={overrideCategory}
                   onChange={(e) => setOverrideCategory(e.target.value)}
-                  className="w-full text-xs border border-stone-300 rounded-xl p-2.5 bg-white text-slate-800 font-medium"
+                  className="w-full text-sm border border-stone-300 rounded-xl p-2.5 bg-white text-slate-800 font-medium min-h-[44px]"
                 >
                   <option value="Royalty & Payments">Royalty & Payments</option>
                   <option value="ISBN & Metadata Issues">ISBN & Metadata Issues</option>
@@ -666,11 +668,12 @@ export function AdminTicketWorkspace() {
               </div>
 
               <div>
-                <label className="text-[11px] text-stone-500 block mb-1">Override Priority</label>
+                <label htmlFor="override-priority-select" className="text-xs text-stone-600 font-semibold block mb-1">Override priority</label>
                 <select
+                  id="override-priority-select"
                   value={overridePriority}
                   onChange={(e) => setOverridePriority(e.target.value)}
-                  className="w-full text-xs border border-stone-300 rounded-xl p-2.5 bg-white text-slate-800 font-medium"
+                  className="w-full text-sm border border-stone-300 rounded-xl p-2.5 bg-white text-slate-800 font-medium min-h-[44px]"
                 >
                   <option value="Critical">Critical</option>
                   <option value="High">High</option>
@@ -761,7 +764,7 @@ export function AdminTicketWorkspace() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
                 <Lock className="w-4 h-4 text-amber-800" />
-                <span className="text-xs font-bold text-amber-950 uppercase tracking-wider">
+                <span className="text-sm font-semibold text-amber-950">
                   Internal notes
                 </span>
               </div>
@@ -783,7 +786,7 @@ export function AdminTicketWorkspace() {
                   <div key={n.id} className="p-3.5 rounded-xl bg-white border border-amber-200 text-xs shadow-2xs">
                     <div className="flex items-center justify-between text-xs text-amber-950 font-bold mb-1">
                       <span>{n.admin_name}</span>
-                      <span className="text-stone-500 font-normal font-mono text-[11px]">
+                      <span className="text-stone-500 font-normal font-sans text-xs">
                         {new Date(n.created_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>

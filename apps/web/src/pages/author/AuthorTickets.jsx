@@ -173,7 +173,7 @@ export function AuthorTickets() {
                 </h3>
               </div>
 
-              <div className="flex items-center gap-4 text-xs text-stone-500 shrink-0 font-mono">
+              <div className="flex items-center gap-4 text-xs text-stone-500 shrink-0 font-sans">
                 <div className="flex items-center gap-1.5 text-stone-600 font-medium">
                   <MessageSquare className="w-4 h-4 text-stone-500" />
                   <span>{t.message_count || 0}</span>

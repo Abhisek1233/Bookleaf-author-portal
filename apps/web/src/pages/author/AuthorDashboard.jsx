@@ -108,7 +108,7 @@ export function AuthorDashboard() {
         {/* Total Books */}
         <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-stone-400 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-stone-500">Published Titles</span>
+            <span className="text-sm font-semibold text-stone-600">Published titles</span>
             <BookOpen className="w-4 h-4 text-stone-400" />
           </div>
           <div className="text-3xl font-bold text-slate-900 font-mono tracking-tight">
@@ -122,7 +122,7 @@ export function AuthorDashboard() {
         {/* Copies Sold */}
         <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-stone-400 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-stone-500">Copies Sold</span>
+            <span className="text-sm font-semibold text-stone-600">Copies sold</span>
             <TrendingUp className="w-4 h-4 text-emerald-600" />
           </div>
           <div className="text-3xl font-bold text-slate-900 font-mono tracking-tight">
@@ -134,7 +134,7 @@ export function AuthorDashboard() {
         {/* Total Royalty Earned */}
         <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-stone-400 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-stone-500">Cumulative Royalties</span>
+            <span className="text-sm font-semibold text-stone-600">Cumulative royalties</span>
             <CreditCard className="w-4 h-4 text-indigo-600" />
           </div>
           <div className="text-3xl font-bold text-indigo-700 tracking-tight font-mono">
@@ -146,7 +146,7 @@ export function AuthorDashboard() {
         {/* Royalty Pending */}
         <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-stone-400 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-stone-500">Pending Payout</span>
+            <span className="text-sm font-semibold text-stone-600">Pending payout</span>
             <Clock className="w-4 h-4 text-amber-600" />
           </div>
           <div className="text-3xl font-bold text-amber-700 tracking-tight font-mono">
@@ -231,7 +231,7 @@ export function AuthorDashboard() {
                   </span>
                 </div>
                 <div className="text-xs text-stone-500">{cycle.cycle}</div>
-                <div className="font-bold text-slate-900 mt-1 font-mono">Disbursed by: {cycle.date}</div>
+                <div className="font-bold text-slate-900 mt-1 font-sans">Disbursed by: {cycle.date}</div>
               </div>
             ))}
           </div>
@@ -283,7 +283,7 @@ export function AuthorDashboard() {
                   <h4 className="text-sm font-semibold text-slate-900 line-clamp-2 leading-snug" title={t.subject}>{t.subject}</h4>
                 </div>
 
-                <div className="text-xs text-stone-400 shrink-0 text-left sm:text-right font-mono">
+                <div className="text-xs text-stone-500 shrink-0 text-left sm:text-right font-sans">
                   Updated {new Date(t.updated_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                 </div>
               </Link>

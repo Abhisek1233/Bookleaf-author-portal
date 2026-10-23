@@ -48,7 +48,7 @@ export function AuthorProfile() {
             <div className="bg-stone-50 p-4 rounded-2xl border border-stone-200 flex items-center gap-3">
               <Mail className="w-5 h-5 text-indigo-700 shrink-0" aria-hidden="true" />
               <div className="min-w-0">
-                <span className="text-xs font-semibold text-stone-600 uppercase tracking-wider block">Email Address</span>
+                <span className="text-xs font-semibold text-stone-600 block">Email address</span>
                 <span className="text-sm font-semibold text-slate-900 truncate block mt-0.5 font-mono">{user?.email}</span>
               </div>
             </div>
@@ -56,7 +56,7 @@ export function AuthorProfile() {
             <div className="bg-stone-50 p-4 rounded-2xl border border-stone-200 flex items-center gap-3">
               <Phone className="w-5 h-5 text-indigo-700 shrink-0" aria-hidden="true" />
               <div className="min-w-0">
-                <span className="text-xs font-semibold text-stone-600 uppercase tracking-wider block">Contact Phone</span>
+                <span className="text-xs font-semibold text-stone-600 block">Contact phone</span>
                 <span className="text-sm font-semibold text-slate-900 truncate block mt-0.5 font-mono">{author.phone || '—'}</span>
               </div>
             </div>
@@ -64,7 +64,7 @@ export function AuthorProfile() {
             <div className="bg-stone-50 p-4 rounded-2xl border border-stone-200 flex items-center gap-3">
               <MapPin className="w-5 h-5 text-indigo-700 shrink-0" aria-hidden="true" />
               <div className="min-w-0">
-                <span className="text-xs font-semibold text-stone-600 uppercase tracking-wider block">City</span>
+                <span className="text-xs font-semibold text-stone-600 block">City</span>
                 <span className="text-sm font-semibold text-slate-900 truncate block mt-0.5">{author.city || '—'}</span>
               </div>
             </div>
@@ -72,8 +72,8 @@ export function AuthorProfile() {
             <div className="bg-stone-50 p-4 rounded-2xl border border-stone-200 flex items-center gap-3">
               <Calendar className="w-5 h-5 text-indigo-700 shrink-0" aria-hidden="true" />
               <div className="min-w-0">
-                <span className="text-xs font-semibold text-stone-600 uppercase tracking-wider block">Author Since</span>
-                <span className="text-sm font-semibold text-slate-900 truncate block mt-0.5 font-mono">
+                <span className="text-xs font-semibold text-stone-600 block">Author since</span>
+                <span className="text-sm font-semibold text-slate-900 truncate block mt-0.5 font-sans">
                   {author.joined_date ? new Date(author.joined_date).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' }) : '—'}
                 </span>
               </div>

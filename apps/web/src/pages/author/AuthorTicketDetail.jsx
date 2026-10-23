@@ -257,7 +257,7 @@ export function AuthorTicketDetail() {
                       </div>
                     </div>
 
-                    <span className="text-xs text-stone-500 font-mono">
+                    <span className="text-xs text-stone-500 font-sans">
                       {new Date(msg.created_at).toLocaleDateString('en-IN', {
                         month: 'short',
                         day: 'numeric',

@@ -157,7 +157,7 @@ export function LoginPage() {
         </div>
 
         {/* Footer Meta: Desktop only */}
-        <div className="hidden lg:flex relative z-10 pt-6 border-t border-white/10 text-xs text-indigo-300/70 items-center justify-between font-mono">
+        <div className="hidden lg:flex relative z-10 pt-6 border-t border-white/15 text-xs text-indigo-200 items-center justify-between font-sans">
           <span>In-House Delhi Hub & Repro India</span>
           <span>India & Global Distribution</span>
         </div>
@@ -310,8 +310,8 @@ export function LoginPage() {
                             </span>
                             <ArrowRight className="w-3 h-3 text-stone-400 group-hover:text-indigo-600 shrink-0" />
                           </div>
-                          <span className="text-[11px] text-stone-600 block truncate">{auth.genre}</span>
-                          <span className="text-[11px] text-indigo-800 font-medium block mt-0.5 font-mono">
+                          <span className="text-xs text-stone-600 block truncate">{auth.genre}</span>
+                          <span className="text-xs text-indigo-800 font-medium block mt-0.5 font-sans">
                             {auth.titlesCount} {auth.titlesCount === 1 ? 'Title' : 'Titles'}
                           </span>
                         </div>
@@ -328,7 +328,7 @@ export function LoginPage() {
                       <p className="text-xs text-indigo-900 leading-snug">
                         Full queue triage, AI classification overrides & draft responses.
                       </p>
-                      <span className="text-[11px] text-stone-600 block font-mono">admin@bookleafpub.com</span>
+                      <span className="text-xs text-stone-600 block font-mono">admin@bookleafpub.com</span>
                     </div>
                     <Button
                       variant="primary"

@@ -190,7 +190,7 @@ export function AuthorLayout() {
                       flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all min-h-[44px]
                       ${active
                         ? 'bg-indigo-50 text-indigo-950 shadow-2xs font-bold border-l-4 border-indigo-700'
-                        : 'text-stone-700 hover:text-slate-950 hover:bg-stone-50'}
+                        : 'text-stone-700 hover:text-slate-950 hover:bg-stone-50 border-l-4 border-transparent'}
                     `;
                   }}
                   aria-current={isItemActive(location.pathname === item.to) ? 'page' : undefined}

@@ -95,23 +95,22 @@ export function AdminDashboard() {
       {/* Operational KPI Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Urgent Unresolved */}
-        <div className="bg-white p-5 rounded-2xl border border-rose-200 shadow-xs relative overflow-hidden flex flex-col justify-between">
-          <div className="absolute top-0 right-0 w-1.5 h-full bg-rose-600" />
+        <div className="bg-rose-50/30 p-5 rounded-2xl border border-rose-200 border-l-4 border-l-rose-600 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-stone-500 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-rose-700 flex items-center gap-1.5">
-              <Flame className="w-4 h-4 text-rose-600" /> Urgent Unresolved
+            <span className="text-sm font-semibold text-rose-800 flex items-center gap-1.5">
+              <Flame className="w-4 h-4 text-rose-600" /> Urgent unresolved
             </span>
           </div>
           <div className="text-3xl font-bold text-rose-700 font-mono tracking-tight">
             {metrics.urgent_unresolved_tickets}
           </div>
-          <p className="text-xs text-rose-600/90 mt-1 font-medium">Critical / High priority tickets</p>
+          <p className="text-xs text-rose-700 mt-1 font-medium">Critical / High priority tickets</p>
         </div>
 
         {/* Open Inquiries */}
         <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-stone-500 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-stone-600">Open Inquiries</span>
+            <span className="text-sm font-semibold text-stone-700">Open inquiries</span>
             <Inbox className="w-4 h-4 text-amber-600" />
           </div>
           <div className="text-3xl font-bold text-slate-900 font-mono tracking-tight">
@@ -123,7 +122,7 @@ export function AdminDashboard() {
         {/* In Progress */}
         <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-stone-500 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-stone-600">In Progress</span>
+            <span className="text-sm font-semibold text-stone-700">In progress</span>
             <Clock className="w-4 h-4 text-indigo-600" />
           </div>
           <div className="text-3xl font-bold text-indigo-700 font-mono tracking-tight">
@@ -132,10 +131,10 @@ export function AdminDashboard() {
           <p className="text-xs text-stone-500 mt-1 font-medium">Under active investigation</p>
         </div>
 
-        {/* Resolved Today */}
+        {/* Resolved Overall */}
         <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-stone-500 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-stone-600">Resolved Overall</span>
+            <span className="text-sm font-semibold text-stone-700">Resolved overall</span>
             <CheckCircle className="w-4 h-4 text-emerald-600" />
           </div>
           <div className="text-3xl font-bold text-emerald-700 font-mono tracking-tight">
@@ -149,8 +148,8 @@ export function AdminDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Priority Breakdown */}
         <div className="bg-white p-6 rounded-3xl border border-stone-200 shadow-xs space-y-4">
-          <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-            Urgency & Priority Distribution
+          <h2 className="text-sm font-semibold text-slate-900">
+            Urgency & priority distribution
           </h2>
           <div className="space-y-3">
             {[
@@ -177,8 +176,8 @@ export function AdminDashboard() {
 
         {/* Category Breakdown */}
         <div className="lg:col-span-2 bg-white p-6 rounded-3xl border border-stone-200 shadow-xs">
-          <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-4">
-            Department Inquiries (AI Auto-Classified)
+          <h2 className="text-sm font-semibold text-slate-900 mb-4">
+            Department inquiries (AI auto-classified)
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {Object.entries(category_distribution).map(([cat, count]) => (
@@ -241,7 +240,7 @@ export function AdminDashboard() {
                 </div>
 
                 <div className="flex items-center gap-4 text-xs text-stone-500 shrink-0">
-                  <span className="text-rose-800 font-semibold font-mono">
+                  <span className="text-rose-800 font-semibold font-sans">
                     Waiting since {new Date(t.created_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })}
                   </span>
                   <span className="text-indigo-700 font-bold bg-indigo-50 px-3.5 py-1.5 rounded-lg border border-indigo-200 flex items-center gap-1 min-h-[40px]">

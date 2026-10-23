@@ -165,7 +165,7 @@ export function AdminLayout() {
                 {isConnected ? 'Live Gateway' : 'Polling Sync'}
               </span>
             </span>
-            <span className="inline-flex items-center gap-1 font-semibold text-[11px] text-indigo-300 bg-indigo-950/90 px-2.5 py-0.5 rounded-md border border-indigo-800/60 shrink-0">
+            <span className="inline-flex items-center gap-1 font-semibold text-xs text-indigo-300 bg-indigo-950/90 px-2.5 py-0.5 rounded-md border border-indigo-800/60 shrink-0">
               <Sparkles className="w-3 h-3 text-indigo-400" />
               AI Copilot
             </span>
@@ -184,7 +184,7 @@ export function AdminLayout() {
                     flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all min-h-[44px]
                     ${isActive
                       ? 'bg-indigo-600 text-white shadow-xs font-bold border-l-4 border-indigo-400'
-                      : 'text-slate-300 hover:text-white hover:bg-slate-900'}
+                      : 'text-slate-300 hover:text-white hover:bg-slate-900 border-l-4 border-transparent'}
                   `}
                   aria-current={location.pathname.startsWith(item.to) ? 'page' : undefined}
                 >
@@ -203,7 +203,7 @@ export function AdminLayout() {
               <ShieldCheck className="w-4 h-4 text-indigo-400" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-bold text-slate-200 truncate" title={user?.name || 'Operations Lead'}>
+              <p className="text-sm font-bold text-slate-100 truncate" title={user?.name || 'Operations Lead'}>
                 {user?.name || 'Operations Lead'}
               </p>
               <p className="text-xs text-slate-400 truncate font-mono" title={user?.email}>
@@ -214,7 +214,7 @@ export function AdminLayout() {
           <button
             type="button"
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-semibold text-rose-300 hover:text-white hover:bg-rose-950/60 rounded-xl transition-colors border border-rose-900/60 cursor-pointer min-h-[44px]"
+            className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-semibold text-rose-200 hover:text-white hover:bg-rose-950/80 rounded-xl transition-colors border border-rose-800 hover:border-rose-600 cursor-pointer min-h-[44px]"
           >
             <LogOut className="w-4 h-4" />
             <span>Sign Out</span>

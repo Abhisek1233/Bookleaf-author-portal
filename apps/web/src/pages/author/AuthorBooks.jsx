@@ -205,7 +205,7 @@ export function AuthorBooks() {
                     <h3 className="font-serif font-bold text-base text-slate-900 group-hover:text-indigo-800 transition-colors line-clamp-2 leading-snug">
                       {b.title}
                     </h3>
-                    <span className="text-xs text-stone-500 font-mono block mt-1">
+                    <span className="text-xs text-stone-500 font-sans block mt-1">
                       {b.publication_date ? `Pub Date: ${new Date(b.publication_date).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}` : 'Status: Manuscript in Production'}
                     </span>
                   </div>
@@ -215,27 +215,27 @@ export function AuthorBooks() {
                 <div className="p-5 space-y-3.5">
                   <div className="grid grid-cols-3 gap-2 text-xs">
                     <div>
-                      <span className="text-[11px] text-stone-500 uppercase font-semibold block">Retail MRP</span>
+                      <span className="text-xs text-stone-600 font-medium block">Retail MRP</span>
                       <span className="font-bold text-slate-900 font-mono text-sm"><Currency value={b.mrp} /></span>
                     </div>
                     <div>
-                      <span className="text-[11px] text-stone-500 uppercase font-semibold block">Copies Sold</span>
+                      <span className="text-xs text-stone-600 font-medium block">Copies sold</span>
                       <span className="font-bold text-slate-900 font-mono text-sm">{b.total_copies_sold.toLocaleString('en-IN')}</span>
                     </div>
                     <div>
-                      <span className="text-[11px] text-stone-500 uppercase font-semibold block">Net / Copy</span>
+                      <span className="text-xs text-stone-600 font-medium block">Net / copy</span>
                       <span className="font-bold text-indigo-700 font-mono text-sm"><Currency value={b.author_royalty_per_copy} /></span>
                     </div>
                     <div>
-                      <span className="text-[11px] text-stone-500 uppercase font-semibold block">Total Earned</span>
+                      <span className="text-xs text-stone-600 font-medium block">Total earned</span>
                       <span className="font-bold text-slate-900 font-mono text-sm"><Currency value={b.total_royalty_earned} /></span>
                     </div>
                     <div>
-                      <span className="text-[11px] text-stone-500 uppercase font-semibold block">Royalty Paid</span>
+                      <span className="text-xs text-stone-600 font-medium block">Royalty paid</span>
                       <span className="font-bold text-emerald-700 font-mono text-sm"><Currency value={b.royalty_paid} /></span>
                     </div>
                     <div>
-                      <span className="text-[11px] text-stone-500 uppercase font-semibold block">Pending Payout</span>
+                      <span className="text-xs text-stone-600 font-medium block">Pending payout</span>
                       <span className="font-bold text-amber-700 font-mono text-sm"><Currency value={b.royalty_pending} /></span>
                     </div>
                   </div>
@@ -324,8 +324,8 @@ export function AuthorBooks() {
                 <h2 className="text-xl sm:text-2xl font-serif font-bold text-slate-900 mt-1.5 leading-snug">
                   {selectedBook.title}
                 </h2>
-                <p className="text-xs text-stone-500 font-mono mt-0.5">
-                  ISBN: {selectedBook.isbn || 'Pending registration'} • Published: {selectedBook.publication_date ? new Date(selectedBook.publication_date).toLocaleDateString('en-IN', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Manuscript in Production'}
+                <p className="text-xs text-stone-500 mt-0.5">
+                  <span className="font-mono">ISBN: {selectedBook.isbn || 'Pending registration'}</span> • <span className="font-sans">Published: {selectedBook.publication_date ? new Date(selectedBook.publication_date).toLocaleDateString('en-IN', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Manuscript in Production'}</span>
                 </p>
               </div>
               <button
@@ -342,11 +342,11 @@ export function AuthorBooks() {
               {/* Publishing Stage Progress (All 9 Stages, non-truncated) */}
               <div className="bg-stone-50/80 p-5 rounded-2xl border border-stone-200/80 space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-bold text-slate-900 uppercase tracking-wider text-xs flex items-center gap-1.5">
+                  <h3 className="font-semibold text-slate-900 text-sm flex items-center gap-1.5">
                     <Layers className="w-4 h-4 text-indigo-600" />
-                    BookLeaf 9-Stage Publishing Lifecycle
+                    BookLeaf 9-stage publishing lifecycle
                   </h3>
-                  <span className="text-[11px] font-bold text-indigo-800 bg-white px-2.5 py-0.5 rounded-full border border-stone-200">
+                  <span className="text-xs font-semibold text-indigo-800 bg-white px-2.5 py-0.5 rounded-full border border-stone-200">
                     Stage {getStageIndex(selectedBook.status)} of 9
                   </span>
                 </div>
@@ -369,7 +369,7 @@ export function AuthorBooks() {
                         }`}
                       >
                         <div
-                          className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 ${
+                          className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
                             isDone
                               ? 'bg-emerald-600 text-white'
                               : isCurrent
@@ -381,10 +381,10 @@ export function AuthorBooks() {
                         </div>
                         <div className="min-w-0 flex-1">
                           <span className="block truncate">{st.name}</span>
-                          <span className="text-[10px] font-normal text-stone-500 block truncate">{st.desc}</span>
+                          <span className="text-xs font-normal text-stone-500 block truncate">{st.desc}</span>
                         </div>
                         {isCurrent && (
-                          <span className="text-[10px] font-bold text-indigo-800 bg-white px-2 py-0.5 rounded-md border border-indigo-200 shrink-0">
+                          <span className="text-xs font-semibold text-indigo-800 bg-white px-2 py-0.5 rounded-md border border-indigo-200 shrink-0">
                             Current Stage
                           </span>
                         )}
@@ -396,9 +396,9 @@ export function AuthorBooks() {
 
               {/* 80/20 Net Royalty Breakdown Card */}
               <div className="bg-white p-5 rounded-2xl border border-stone-200 shadow-xs space-y-3">
-                <h3 className="font-bold text-slate-900 uppercase tracking-wider text-xs flex items-center gap-1.5">
+                <h3 className="font-semibold text-slate-900 text-sm flex items-center gap-1.5">
                   <DollarSign className="w-4 h-4 text-indigo-600" />
-                  BookLeaf 80/20 Royalty Profit Policy
+                  BookLeaf 80/20 royalty profit policy
                 </h3>
                 <p className="text-xs text-stone-600 leading-relaxed">
                   Net Profit = MRP minus In-House Printing Cost, Channel Platform Fees (Amazon/Flipkart), and Courier Shipping. Author receives <strong>80% of net profit</strong> per book.
@@ -406,27 +406,27 @@ export function AuthorBooks() {
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 pt-1">
                   <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
-                    <span className="text-[11px] text-stone-500 uppercase font-semibold block">Retail MRP</span>
+                    <span className="text-xs text-stone-600 font-medium block">Retail MRP</span>
                     <span className="font-bold text-slate-900 text-sm mt-0.5 block font-mono"><Currency value={selectedBook.mrp} /></span>
                   </div>
                   <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
-                    <span className="text-[11px] text-stone-500 uppercase font-semibold block">Net / Copy</span>
+                    <span className="text-xs text-stone-600 font-medium block">Net / copy</span>
                     <span className="font-bold text-indigo-700 text-sm mt-0.5 block font-mono"><Currency value={selectedBook.author_royalty_per_copy} /></span>
                   </div>
                   <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
-                    <span className="text-[11px] text-stone-500 uppercase font-semibold block">Copies Sold</span>
+                    <span className="text-xs text-stone-600 font-medium block">Copies sold</span>
                     <span className="font-bold text-slate-900 text-sm mt-0.5 block font-mono">{selectedBook.total_copies_sold.toLocaleString('en-IN')}</span>
                   </div>
                   <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
-                    <span className="text-[11px] text-stone-500 uppercase font-semibold block">Total Earned</span>
+                    <span className="text-xs text-stone-600 font-medium block">Total earned</span>
                     <span className="font-bold text-slate-900 text-sm mt-0.5 block font-mono"><Currency value={selectedBook.total_royalty_earned} /></span>
                   </div>
                   <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
-                    <span className="text-[11px] text-stone-500 uppercase font-semibold block">Royalty Paid</span>
+                    <span className="text-xs text-stone-600 font-medium block">Royalty paid</span>
                     <span className="font-bold text-emerald-700 text-sm mt-0.5 block font-mono"><Currency value={selectedBook.royalty_paid} /></span>
                   </div>
                   <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 text-center">
-                    <span className="text-[11px] text-stone-500 uppercase font-semibold block">Pending Payout</span>
+                    <span className="text-xs text-stone-600 font-medium block">Pending payout</span>
                     <span className="font-bold text-amber-700 text-sm mt-0.5 block font-mono"><Currency value={selectedBook.royalty_pending} /></span>
                   </div>
                 </div>
@@ -437,14 +437,14 @@ export function AuthorBooks() {
                 <div className="bg-stone-50 p-4 rounded-xl border border-stone-200">
                   <span className="font-bold text-slate-800 block mb-2">Print & Fulfillment Partner</span>
                   <p className="text-slate-600 font-medium">{selectedBook.print_partner || 'In-House Delhi Facility'}</p>
-                  <p className="text-[11px] text-stone-400 mt-1">Standard print turnaround: 5–7 business days.</p>
+                  <p className="text-xs text-stone-500 mt-1">Standard print turnaround: 5–7 business days.</p>
                 </div>
                 <div className="bg-stone-50 p-4 rounded-xl border border-stone-200">
                   <span className="font-bold text-slate-800 block mb-2">Retail Platforms</span>
                   {selectedBook.available_on && selectedBook.available_on.length > 0 ? (
                     <div className="flex flex-wrap gap-1.5">
                       {selectedBook.available_on.map((p) => (
-                        <span key={p} className="px-2 py-0.5 rounded-md bg-white text-slate-700 border border-stone-200 text-[11px] font-medium">
+                        <span key={p} className="px-2 py-0.5 rounded-md bg-white text-slate-700 border border-stone-200 text-xs font-medium">
                           {p}
                         </span>
                       ))}

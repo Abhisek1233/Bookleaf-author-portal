@@ -25,7 +25,7 @@ function RootRedirect() {
   const { user, isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
-    return <div className="min-h-screen bg-[#FBFBF9]" />;
+    return <div className="min-h-dvh bg-[#FBFBF9]" />;
   }
 
   if (!isAuthenticated || !user) {

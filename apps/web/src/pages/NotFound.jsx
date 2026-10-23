@@ -5,7 +5,7 @@ import { BookOpen } from 'lucide-react';
 
 export function NotFound() {
   return (
-    <div className="min-h-screen bg-[#FAF9F5] flex items-center justify-center p-6 text-center">
+    <div className="min-h-dvh bg-[#FAF9F5] flex items-center justify-center p-6 text-center">
       <div className="max-w-md bg-white p-8 sm:p-10 rounded-3xl border border-stone-200 shadow-xs space-y-4">
         <div className="w-16 h-16 rounded-2xl bg-indigo-50 border border-indigo-200 text-indigo-700 flex items-center justify-center mx-auto shadow-xs">
           <BookOpen className="w-8 h-8" />
